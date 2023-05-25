@@ -8,6 +8,8 @@ import {
   UnauthorizedError,
 } from "../helpers/expressError";
 import { QueryResult } from "pg";
+import { IUser, UserUpdate } from "../types";
+import sqlForPartialUpdate from "../helpers/sql";
 
 /** Related functions for users */
 class User {
@@ -15,9 +17,9 @@ class User {
    * Register user
    * @param {string} username username must be unique
    * @param {string} password
-   * @returns {Promise<Object>}
+   * @returns {Promise<IUser>} { username, password, bio, avatarUrl, triviaScore }
    */
-  static async register(username: string, password: string): Promise<Object> {
+  static async register(username: string, password: string): Promise<IUser> {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     let result: QueryResult;
@@ -26,7 +28,11 @@ class User {
       result = await db.query(
         `INSERT INTO users (username, password)
               VALUES ($1, $2)
-              RETURNING username, password, bio, avatar_url, trivia_score
+              RETURNING username,
+                        password,
+                        bio,
+                        avatar_url AS "avatarUrl",
+                        trivia_score AS "triviaScore"
               `,
         [username, hashedPassword]
       );
@@ -45,14 +51,18 @@ class User {
    * Authenticate user
    * @param {string} username
    * @param {string} password
-   * @returns {Promise<Object>}
+   * @returns {Promise<IUser>} { username, password, bio, avatarUrl, triviaScore }
    */
   static async authenticate(
     username: string,
     password: string
-  ): Promise<Object> {
+  ): Promise<IUser> {
     const result = await db.query(
-      `SELECT username, password
+      `SELECT username,
+              password,
+              bio,
+              avatar_url AS "avatarUrl",
+              trivia_score AS "triviaScore"
         FROM users
         WHERE username = $1
         `,
@@ -69,7 +79,12 @@ class User {
     throw new UnauthorizedError("Invalid username/password");
   }
 
-  static async getList(limit = 100): Promise<Object[]> {
+  /**
+   * Get a list of users
+   * @param {number} [limit=100] how many users to get
+   * @returns {Promise<IUser[]>} [{ username, password, bio, avatarUrl, triviaScore }]
+   */
+  static async getList(limit: number = 100): Promise<IUser[]> {
     const result = await db.query(
       ` SELECT username, avatar_url
       FROM users
@@ -82,7 +97,12 @@ class User {
     return result.rows;
   }
 
-  static async getByUsername(username: string): Promise<Object> {
+  /**
+   * Get a user by username
+   * @param {string} username user to get
+   * @returns {Promise<IUser>}
+   */
+  static async getByUsername(username: string): Promise<IUser> {
     const result = await db.query(
       `SELECT username, bio, avatar_url, trivia_score
       FROM users
@@ -96,6 +116,54 @@ class User {
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
     return user;
+  }
+
+  /**
+   * Updates a user
+   * @param {string} username user to update
+   * @param {UserUpdate} data
+   * @returns {Promise<Object>} { username, bio, avatarUrl }
+   */
+  static async update(username: string, data: UserUpdate): Promise<Object> {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
+
+    const { setCols, values } = sqlForPartialUpdate(data);
+    const usernameVarIdx = `$${values.length + 1}`;
+
+    const result = await db.query(
+      `UPDATE users
+      SET ${setCols}
+      WHERE username = ${usernameVarIdx}
+      RETURNING username,
+                bio,
+                avatar_url
+      `,
+      [...values, username]
+    );
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    return user;
+  }
+
+  /**
+   * Removes a user
+   * @param {string} username user to remove
+   */
+  static async remove(username: string): Promise<void> {
+    const result = await db.query(
+      `DELETE FROM users
+      WHERE username = $1
+      RETURNING username
+      `,
+      [username]
+    );
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 }
 

@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "properties": {
+        "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 25
+        },
+        "password": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 20
+        },
+        "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 300
+        },
+        "avatarUrl": {
+            "type": "string",
+            "format": "uri"
+        }
+    },
+    "additionalProperties": false,
+    "required": []
+}

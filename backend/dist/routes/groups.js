@@ -13,49 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const group_1 = __importDefault(require("../models/group"));
 const jsonschema_1 = __importDefault(require("jsonschema"));
-const userRegister_json_1 = __importDefault(require("../schemas/userRegister.json"));
 const expressError_1 = require("../helpers/expressError");
-const user_1 = __importDefault(require("../models/user"));
-const token_1 = __importDefault(require("../helpers/token"));
+const groupCreate_json_1 = __importDefault(require("../schemas/groupCreate.json"));
+const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 /**
- * POST /auth/register
+ * POST /api/groups/
  */
-router.post("/register", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const validator = jsonschema_1.default.validate(req.body, userRegister_json_1.default);
+        const validator = jsonschema_1.default.validate(req.body, groupCreate_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
             throw new expressError_1.BadRequestError(errs.join("-"));
         }
-        const { username, password } = req.body;
-        const user = yield user_1.default.register(username, password);
-        const token = (0, token_1.default)(user);
-        return res.json({ token });
-    }
-    catch (error) {
-        return next(error);
-    }
-}));
-/**
- * POST /auth/login
- */
-router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const validator = jsonschema_1.default.validate(req.body, userRegister_json_1.default);
-        if (!validator.valid) {
-            const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
-        }
-        const { username, password } = req.body;
-        const user = yield user_1.default.authenticate(username, password);
-        const token = (0, token_1.default)(user);
-        return res.json({ token });
+        const group = yield group_1.default.create(res.locals.user.username, req.body);
+        return res.json({ group });
     }
     catch (error) {
         return next(error);
     }
 }));
 exports.default = router;
-//# sourceMappingURL=auth.js.map
+//# sourceMappingURL=groups.js.map

@@ -16,13 +16,14 @@ const db_1 = __importDefault(require("../db"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = require("../config");
 const expressError_1 = require("../helpers/expressError");
+const sql_1 = __importDefault(require("../helpers/sql"));
 /** Related functions for users */
 class User {
     /**
      * Register user
      * @param {string} username username must be unique
      * @param {string} password
-     * @returns {Promise<Object>}
+     * @returns {Promise<IUser>} { username, password, bio, avatarUrl, triviaScore }
      */
     static register(username, password) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +32,11 @@ class User {
             try {
                 result = yield db_1.default.query(`INSERT INTO users (username, password)
               VALUES ($1, $2)
-              RETURNING username, password, bio, avatar_url, trivia_score
+              RETURNING username,
+                        password,
+                        bio,
+                        avatar_url AS "avatarUrl",
+                        trivia_score AS "triviaScore"
               `, [username, hashedPassword]);
             }
             catch (error) {
@@ -48,11 +53,15 @@ class User {
      * Authenticate user
      * @param {string} username
      * @param {string} password
-     * @returns {Promise<Object>}
+     * @returns {Promise<IUser>} { username, password, bio, avatarUrl, triviaScore }
      */
     static authenticate(username, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(`SELECT username, password
+            const result = yield db_1.default.query(`SELECT username,
+              password,
+              bio,
+              avatar_url AS "avatarUrl",
+              trivia_score AS "triviaScore"
         FROM users
         WHERE username = $1
         `, [username]);
@@ -66,6 +75,11 @@ class User {
             throw new expressError_1.UnauthorizedError("Invalid username/password");
         });
     }
+    /**
+     * Get a list of users
+     * @param {number} [limit=100] how many users to get
+     * @returns {Promise<IUser[]>} [{ username, password, bio, avatarUrl, triviaScore }]
+     */
     static getList(limit = 100) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query(` SELECT username, avatar_url
@@ -76,6 +90,11 @@ class User {
             return result.rows;
         });
     }
+    /**
+     * Get a user by username
+     * @param {string} username user to get
+     * @returns {Promise<IUser>}
+     */
     static getByUsername(username) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query(`SELECT username, bio, avatar_url, trivia_score
@@ -86,6 +105,47 @@ class User {
             if (!user)
                 throw new expressError_1.NotFoundError(`No user: ${username}`);
             return user;
+        });
+    }
+    /**
+     * Updates a user
+     * @param {string} username user to update
+     * @param {UserUpdate} data
+     * @returns {Promise<Object>} { username, bio, avatarUrl }
+     */
+    static update(username, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (data.password) {
+                data.password = yield bcrypt_1.default.hash(data.password, config_1.BCRYPT_WORK_FACTOR);
+            }
+            const { setCols, values } = (0, sql_1.default)(data);
+            const usernameVarIdx = `$${values.length + 1}`;
+            const result = yield db_1.default.query(`UPDATE users
+      SET ${setCols}
+      WHERE username = ${usernameVarIdx}
+      RETURNING username,
+                bio,
+                avatar_url
+      `, [...values, username]);
+            const user = result.rows[0];
+            if (!user)
+                throw new expressError_1.NotFoundError(`No user: ${username}`);
+            return user;
+        });
+    }
+    /**
+     * Removes a user
+     * @param {string} username user to remove
+     */
+    static remove(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.default.query(`DELETE FROM users
+      WHERE username = $1
+      RETURNING username
+      `, [username]);
+            const user = result.rows[0];
+            if (!user)
+                throw new expressError_1.NotFoundError(`No user: ${username}`);
         });
     }
 }
