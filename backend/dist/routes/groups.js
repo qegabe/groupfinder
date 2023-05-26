@@ -17,6 +17,8 @@ const group_1 = __importDefault(require("../models/group"));
 const jsonschema_1 = __importDefault(require("jsonschema"));
 const expressError_1 = require("../helpers/expressError");
 const groupCreate_json_1 = __importDefault(require("../schemas/groupCreate.json"));
+const groupUpdate_json_1 = __importDefault(require("../schemas/groupUpdate.json"));
+const groupFilter_json_1 = __importDefault(require("../schemas/groupFilter.json"));
 const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 /**
@@ -31,6 +33,64 @@ router.post("/", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, vo
         }
         const group = yield group_1.default.create(res.locals.user.username, req.body);
         return res.json({ group });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * GET /api/groups/
+ */
+router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const validator = jsonschema_1.default.validate(req.query, groupFilter_json_1.default);
+        if (!validator.valid) {
+            const errs = validator.errors.map((e) => e.stack);
+            throw new expressError_1.BadRequestError(errs.join("-"));
+        }
+        const groups = yield group_1.default.getList(100, req.query);
+        return res.json({ groups });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * GET /api/groups/:id
+ */
+router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const group = yield group_1.default.getById(+req.params.id);
+        return res.json({ group });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * PATCH /api/groups/:id
+ */
+router.patch("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const validator = jsonschema_1.default.validate(req.body, groupUpdate_json_1.default);
+        if (!validator.valid) {
+            const errs = validator.errors.map((e) => e.stack);
+            throw new expressError_1.BadRequestError(errs.join("-"));
+        }
+        const group = yield group_1.default.update(+req.params.id, req.body);
+        return res.json({ group });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * DELETE /api/groups/:id
+ */
+router.delete("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield group_1.default.remove(+req.params.id);
+        return res.json({ message: `Group with id: ${req.params.id} removed` });
     }
     catch (error) {
         return next(error);

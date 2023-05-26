@@ -1,39 +1,26 @@
 interface IUser {
-  username: string;
-  password: string;
-  bio: string;
-  avatarUrl: string | null;
-  triviaScore: number | null;
-}
-
-interface UserMin {
-  username: string;
-  avatarUrl: string;
-}
-
-interface UserUpdate {
   username?: string;
   password?: string;
   bio?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
+  triviaScore?: number | null;
 }
 
 interface IGroup {
-  id: number;
-  title: string;
-  description: string;
-  startTime: Date;
-  endTime: Date;
-  location: string;
-  users: string[];
+  id?: number;
+  title?: string;
+  description?: string;
+  startTime?: Date;
+  endTime?: Date;
+  location?: string;
+  users?: string[];
 }
 
-interface GroupCreate {
-  title: string;
-  description: string;
-  startTime: Date;
-  endTime: Date;
-  location: string;
+interface Filter {
+  title?: string;
+  startTimeAfter?: string;
+  startTimeBefore?: string;
+  maxSize?: number;
 }
 
-export { IUser, UserMin, UserUpdate, IGroup, GroupCreate };
+export { IUser, IGroup, Filter };

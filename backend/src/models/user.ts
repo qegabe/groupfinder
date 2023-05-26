@@ -8,8 +8,8 @@ import {
   UnauthorizedError,
 } from "../helpers/expressError";
 import { QueryResult } from "pg";
-import { IUser, UserUpdate } from "../types";
-import sqlForPartialUpdate from "../helpers/sql";
+import { IUser } from "../types";
+import { sqlForPartialUpdate } from "../helpers/sql";
 
 /** Related functions for users */
 class User {
@@ -43,8 +43,10 @@ class User {
         );
       } else throw new ExpressError("Something went wrong", 500);
     }
+    const user = result.rows[0];
 
-    return result.rows[0];
+    delete user.password;
+    return user;
   }
 
   /**
@@ -73,6 +75,7 @@ class User {
     if (user) {
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid) {
+        delete user.password;
         return user;
       }
     }
@@ -82,7 +85,7 @@ class User {
   /**
    * Get a list of users
    * @param {number} [limit=100] how many users to get
-   * @returns {Promise<IUser[]>} [{ username, password, bio, avatarUrl, triviaScore }]
+   * @returns {Promise<IUser[]>} [{ username, avatarUrl }]
    */
   static async getList(limit: number = 100): Promise<IUser[]> {
     const result = await db.query(
@@ -100,11 +103,14 @@ class User {
   /**
    * Get a user by username
    * @param {string} username user to get
-   * @returns {Promise<IUser>}
+   * @returns {Promise<IUser>} { username, bio, avatarUrl, triviaScore }
    */
   static async getByUsername(username: string): Promise<IUser> {
     const result = await db.query(
-      `SELECT username, bio, avatar_url, trivia_score
+      `SELECT username,
+              bio,
+              avatar_url AS "avatarUrl",
+              trivia_score AS "triviaScore"
       FROM users
       WHERE username = $1
       `,
@@ -122,9 +128,9 @@ class User {
    * Updates a user
    * @param {string} username user to update
    * @param {UserUpdate} data
-   * @returns {Promise<Object>} { username, bio, avatarUrl }
+   * @returns {Promise<IUser>} { username, bio, avatarUrl }
    */
-  static async update(username: string, data: UserUpdate): Promise<Object> {
+  static async update(username: string, data: IUser): Promise<IUser> {
     if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }

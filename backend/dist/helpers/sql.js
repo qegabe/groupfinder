@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sqlForFiltering = exports.sqlForPartialUpdate = void 0;
 const expressError_1 = require("./expressError");
 const jsToSql = {
     avatarUrl: "avatar_url",
@@ -18,5 +19,43 @@ function sqlForPartialUpdate(dataToUpdate) {
         values: Object.values(dataToUpdate),
     };
 }
-exports.default = sqlForPartialUpdate;
+exports.sqlForPartialUpdate = sqlForPartialUpdate;
+function sqlForFiltering(filter) {
+    const keys = Object.keys(filter);
+    console.log(keys);
+    const matchers = [];
+    const values = [];
+    for (let key of keys) {
+        const i = values.length + 1;
+        switch (key) {
+            case "title":
+                matchers.push(`title ILIKE $${i}`);
+                values.push(`%${filter.title}%`);
+                break;
+            case "startTimeAfter":
+                matchers.push(`start_time >= $${i}`);
+                values.push(filter.startTimeAfter);
+                break;
+            case "startTimeBefore":
+                matchers.push(`start_time <= $${i}`);
+                values.push(filter.startTimeBefore);
+                break;
+            case "maxSize":
+                const m = `id IN (SELECT id
+                FROM groups
+                LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+                GROUP BY id
+                HAVING COUNT(*) <= $${i}
+              )`;
+                matchers.push(m);
+                values.push(filter.maxSize);
+                break;
+            default:
+                break;
+        }
+    }
+    console.log(matchers);
+    return { matchers, values };
+}
+exports.sqlForFiltering = sqlForFiltering;
 //# sourceMappingURL=sql.js.map

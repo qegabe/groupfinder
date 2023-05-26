@@ -1,5 +1,5 @@
 import { BadRequestError } from "./expressError";
-import type { UserUpdate } from "../types";
+import { Filter } from "../types";
 
 const jsToSql = {
   avatarUrl: "avatar_url",
@@ -8,7 +8,7 @@ const jsToSql = {
   endTime: "end_time",
 };
 
-function sqlForPartialUpdate(dataToUpdate: UserUpdate) {
+function sqlForPartialUpdate(dataToUpdate: object) {
   const keys = Object.keys(dataToUpdate);
   if (keys.length === 0) throw new BadRequestError("No data");
 
@@ -24,4 +24,44 @@ function sqlForPartialUpdate(dataToUpdate: UserUpdate) {
   };
 }
 
-export default sqlForPartialUpdate;
+function sqlForFiltering(filter: Filter) {
+  const keys = Object.keys(filter);
+  console.log(keys);
+
+  const matchers = [];
+  const values = [];
+  for (let key of keys) {
+    const i = values.length + 1;
+    switch (key) {
+      case "title":
+        matchers.push(`title ILIKE $${i}`);
+        values.push(`%${filter.title}%`);
+        break;
+      case "startTimeAfter":
+        matchers.push(`start_time >= $${i}`);
+        values.push(filter.startTimeAfter);
+        break;
+      case "startTimeBefore":
+        matchers.push(`start_time <= $${i}`);
+        values.push(filter.startTimeBefore);
+        break;
+      case "maxSize":
+        const m = `id IN (SELECT id
+                FROM groups
+                LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+                GROUP BY id
+                HAVING COUNT(*) <= $${i}
+              )`;
+        matchers.push(m);
+        values.push(filter.maxSize);
+        break;
+      default:
+        break;
+    }
+  }
+  console.log(matchers);
+
+  return { matchers, values };
+}
+
+export { sqlForPartialUpdate, sqlForFiltering };

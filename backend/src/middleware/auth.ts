@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../config";
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "../helpers/expressError";
+import Group from "../models/group";
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
   try {
@@ -36,4 +37,18 @@ function ensureCorrectUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { authenticateJWT, ensureLoggedIn, ensureCorrectUser };
+async function ensureIsOwner(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (
+      !res.locals.user ||
+      !(await Group.isOwner(+req.params.id, res.locals.user.username))
+    ) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export { authenticateJWT, ensureLoggedIn, ensureCorrectUser, ensureIsOwner };

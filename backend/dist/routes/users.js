@@ -17,6 +17,7 @@ const user_1 = __importDefault(require("../models/user"));
 const jsonschema_1 = __importDefault(require("jsonschema"));
 const expressError_1 = require("../helpers/expressError");
 const userUpdate_json_1 = __importDefault(require("../schemas/userUpdate.json"));
+const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 /**
  * GET /api/users/
@@ -45,7 +46,7 @@ router.get("/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, f
 /**
  * PATCH /api/users/:username
  */
-router.patch("/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/:username", auth_1.ensureCorrectUser, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const validator = jsonschema_1.default.validate(req.body, userUpdate_json_1.default);
         if (!validator.valid) {
@@ -62,7 +63,7 @@ router.patch("/:username", (req, res, next) => __awaiter(void 0, void 0, void 0,
 /**
  * DELETE /api/users/:username
  */
-router.delete("/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:username", auth_1.ensureCorrectUser, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield user_1.default.remove(req.params.username);
         return res.json({ message: `User ${req.params.username} removed` });

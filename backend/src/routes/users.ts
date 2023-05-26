@@ -3,6 +3,7 @@ import User from "../models/user";
 import jsonschema from "jsonschema";
 import { BadRequestError } from "../helpers/expressError";
 import userUpdateSchema from "../schemas/userUpdate.json";
+import { ensureCorrectUser } from "../middleware/auth";
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get("/:username", async (req, res, next) => {
 /**
  * PATCH /api/users/:username
  */
-router.patch("/:username", async (req, res, next) => {
+router.patch("/:username", ensureCorrectUser, async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, userUpdateSchema);
     if (!validator.valid) {
@@ -51,7 +52,7 @@ router.patch("/:username", async (req, res, next) => {
 /**
  * DELETE /api/users/:username
  */
-router.delete("/:username", async (req, res, next) => {
+router.delete("/:username", ensureCorrectUser, async (req, res, next) => {
   try {
     await User.remove(req.params.username);
     return res.json({ message: `User ${req.params.username} removed` });
