@@ -1,16 +1,18 @@
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL DEFAULT '',
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
-    location TEXT
+    location TEXT,
+    is_private BOOLEAN NOT NULL DEFAULT FALSE,
+    max_members INTEGER
 );
 
 CREATE TABLE users (
     username VARCHAR(25) PRIMARY KEY,
     password TEXT NOT NULL,
-    bio TEXT,
+    bio TEXT NOT NULL DEFAULT '',
     avatar_url TEXT,
     trivia_score INTEGER
 );

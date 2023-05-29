@@ -1,7 +1,7 @@
 import express from "express";
 import Group from "../models/group";
 import jsonschema from "jsonschema";
-import { BadRequestError } from "../helpers/expressError";
+import { BadRequestError, UnauthorizedError } from "../helpers/expressError";
 import groupCreateSchema from "../schemas/groupCreate.json";
 import groupUpdateSchema from "../schemas/groupUpdate.json";
 import groupFilterSchema from "../schemas/groupFilter.json";
@@ -20,7 +20,7 @@ router.post("/", ensureLoggedIn, async (req, res, next) => {
       throw new BadRequestError(errs.join("-"));
     }
     const group = await Group.create(res.locals.user.username, req.body);
-    return res.json({ group });
+    return res.status(201).json({ group });
   } catch (error) {
     return next(error);
   }
@@ -47,9 +47,20 @@ router.get("/", async (req, res, next) => {
 /**
  * GET /api/groups/:id
  */
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", ensureLoggedIn, async (req, res, next) => {
   try {
     const group = await Group.getById(+req.params.id);
+
+    //Only members of a private group can view its details
+    if (
+      group.isPrivate &&
+      group.members.indexOf(res.locals.user.username) === -1
+    ) {
+      throw new UnauthorizedError(
+        `You are not a member of group with id: ${group.id}`
+      );
+    }
+
     return res.json({ group });
   } catch (error) {
     return next(error);
@@ -81,6 +92,36 @@ router.delete("/:id", ensureIsOwner, async (req, res, next) => {
   try {
     await Group.remove(+req.params.id);
     return res.json({ message: `Group with id: ${req.params.id} removed` });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+/**
+ * POST /api/groups/:id/join
+ */
+router.post("/:id/join", ensureLoggedIn, async (req, res, next) => {
+  try {
+    const username = res.locals.user.username;
+    await Group.join(username, +req.params.id);
+    return res.json({
+      message: `User ${username} joined group with id: ${req.params.id}`,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+/**
+ * POST /api/groups/:id/leave
+ */
+router.post("/:id/leave", ensureLoggedIn, async (req, res, next) => {
+  try {
+    const username = res.locals.user.username;
+    await Group.leave(username, +req.params.id);
+    return res.json({
+      message: `User ${username} left group with id: ${req.params.id}`,
+    });
   } catch (error) {
     return next(error);
   }

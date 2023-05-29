@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sqlForFiltering = exports.sqlForPartialUpdate = void 0;
+exports.sqlForInserting = exports.sqlForFiltering = exports.sqlForPartialUpdate = void 0;
 const expressError_1 = require("./expressError");
 const jsToSql = {
     avatarUrl: "avatar_url",
     triviaScore: "trivia_score",
+    isPrivate: "is_private",
     startTime: "start_time",
     endTime: "end_time",
 };
@@ -22,7 +23,6 @@ function sqlForPartialUpdate(dataToUpdate) {
 exports.sqlForPartialUpdate = sqlForPartialUpdate;
 function sqlForFiltering(filter) {
     const keys = Object.keys(filter);
-    console.log(keys);
     const matchers = [];
     const values = [];
     for (let key of keys) {
@@ -54,8 +54,22 @@ function sqlForFiltering(filter) {
                 break;
         }
     }
-    console.log(matchers);
     return { matchers, values };
 }
 exports.sqlForFiltering = sqlForFiltering;
+function sqlForInserting(data) {
+    const keys = Object.keys(data);
+    const cols = [];
+    const valueIdxs = [];
+    for (let i = 0; i < keys.length; i++) {
+        cols.push(jsToSql[keys[i]] || keys[i]);
+        valueIdxs.push(`$${i + 1}`);
+    }
+    return {
+        colString: `(${cols.join(", ")})`,
+        valString: `(${valueIdxs.join(", ")})`,
+        values: Object.values(data),
+    };
+}
+exports.sqlForInserting = sqlForInserting;
 //# sourceMappingURL=sql.js.map

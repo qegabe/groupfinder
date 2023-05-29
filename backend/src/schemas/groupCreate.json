@@ -19,8 +19,15 @@
     },
     "location": {
       "type": "string"
+    },
+    "isPrivate": {
+      "type": "boolean"
+    },
+    "maxMembers": {
+      "type": "number",
+      "minimum": 1
     }
   },
   "additionalProperties": false,
-  "required": ["title", "description", "startTime", "endTime", "location"]
+  "required": ["title", "startTime", "endTime"]
 }

@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const expressError_1 = require("../helpers/expressError");
 const sql_1 = require("../helpers/sql");
+const expressError_2 = require("../helpers/expressError");
+const expressError_3 = require("../helpers/expressError");
 /** Related functions for groups */
 class Group {
     /**
@@ -23,17 +25,20 @@ class Group {
      * @param {IGroup} data
      * @returns {Promise<IGroup>}
      */
-    static create(username, { title, description, startTime, endTime, location }) {
+    static create(username, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const groupResult = yield db_1.default.query(`INSERT INTO groups (title, description, start_time, end_time, location)
-      VALUES ($1, $2, $3, $4, $5)
+            const { colString, valString, values } = (0, sql_1.sqlForInserting)(data);
+            const groupResult = yield db_1.default.query(`INSERT INTO groups ${colString}
+      VALUES ${valString}
       RETURNING id,
                 title,
                 description,
                 start_time AS "startTime",
                 end_time AS "endTime",
-                location
-      `, [title, description, startTime, endTime, location]);
+                location,
+                is_private AS "isPrivate",
+                max_members AS "maxMembers"
+      `, values);
             const group = groupResult.rows[0];
             yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
       VALUES  ($1, $2, $3)
@@ -51,9 +56,9 @@ class Group {
     static getList(limit = 100, filter = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             const { matchers, values } = (0, sql_1.sqlForFiltering)(filter);
-            let where = "";
+            let where = "WHERE is_private = false";
             if (matchers.length > 0) {
-                where = `WHERE ${matchers.join(" AND ")}`;
+                where = `${where} AND ${matchers.join(" AND ")}`;
             }
             const query = `SELECT id,
                           title,
@@ -63,7 +68,6 @@ class Group {
                     ${where}
                     ORDER BY start_time
                     LIMIT $${values.length + 1}`;
-            console.log(query);
             const result = yield db_1.default.query(query, [...values, limit]);
             return result.rows;
         });
@@ -80,7 +84,9 @@ class Group {
               description,
               start_time AS "startTime",
               end_time AS "endTime",
-              location
+              location,
+              is_private AS "isPrivate",
+              max_members AS "maxMembers"
         FROM groups
         WHERE id = $1
       `, [id]);
@@ -91,8 +97,8 @@ class Group {
       FROM groupsusers
       WHERE group_id = $1
       `, [group.id]);
-            const users = userResult.rows.map((u) => u.username);
-            group.users = users;
+            const members = userResult.rows.map((u) => u.username);
+            group.members = members;
             return group;
         });
     }
@@ -114,7 +120,8 @@ class Group {
                 description,
                 start_time AS "startTime",
                 end_time AS "endTime",
-                location
+                location,
+                is_private AS "isPrivate"
       `, [...values, id]);
             const group = result.rows[0];
             if (!group)
@@ -153,6 +160,48 @@ class Group {
             if (!groupuser)
                 return false;
             return groupuser.is_owner;
+        });
+    }
+    static isMember(id, username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.default.query(`SELECT username
+      FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      `, [id, username]);
+            const groupuser = result.rows[0];
+            return groupuser ? true : false;
+        });
+    }
+    static join(username, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.default.query(`SELECT is_private, max_members, COUNT(*)
+      FROM groups
+      LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+      WHERE id = $1
+      GROUP BY id
+      `, [id]);
+            const group = result.rows[0];
+            if (!group)
+                throw new expressError_1.NotFoundError(`No group with id: ${id}`);
+            if (group.is_private)
+                throw new expressError_3.UnauthorizedError(`You must be invited to join private groups`);
+            if (group.count === group.max_members) {
+                throw new expressError_2.BadRequestError(`Group already full`);
+            }
+            yield db_1.default.query(`INSERT INTO groupsusers (group_id, username)
+        VALUES ($1, $2)
+        `, [id, username]);
+        });
+    }
+    static leave(username, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.default.query(`DELETE FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      RETURNING group_id, username
+      `, [id, username]);
+            const groupuser = result.rows[0];
+            if (!groupuser)
+                throw new expressError_1.NotFoundError(`User ${username} was not in group with id: ${id}`);
         });
     }
 }

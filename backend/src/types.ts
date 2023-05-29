@@ -13,7 +13,9 @@ interface IGroup {
   startTime?: Date;
   endTime?: Date;
   location?: string;
-  users?: string[];
+  isPrivate?: boolean;
+  maxMembers?: number;
+  members?: string[];
 }
 
 interface Filter {

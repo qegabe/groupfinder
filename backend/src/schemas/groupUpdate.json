@@ -19,6 +19,13 @@
     },
     "location": {
       "type": "string"
+    },
+    "isPrivate": {
+      "type": "boolean"
+    },
+    "maxMembers": {
+      "type": "number",
+      "minimum": 1
     }
   },
   "additionalProperties": false,

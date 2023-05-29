@@ -32,7 +32,7 @@ router.post("/", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, vo
             throw new expressError_1.BadRequestError(errs.join("-"));
         }
         const group = yield group_1.default.create(res.locals.user.username, req.body);
-        return res.json({ group });
+        return res.status(201).json({ group });
     }
     catch (error) {
         return next(error);
@@ -58,9 +58,14 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 /**
  * GET /api/groups/:id
  */
-router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const group = yield group_1.default.getById(+req.params.id);
+        //Only members of a private group can view its details
+        if (group.isPrivate &&
+            group.members.indexOf(res.locals.user.username) === -1) {
+            throw new expressError_1.UnauthorizedError(`You are not a member of group with id: ${group.id}`);
+        }
         return res.json({ group });
     }
     catch (error) {
@@ -91,6 +96,36 @@ router.delete("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0
     try {
         yield group_1.default.remove(+req.params.id);
         return res.json({ message: `Group with id: ${req.params.id} removed` });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * POST /api/groups/:id/join
+ */
+router.post("/:id/join", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const username = res.locals.user.username;
+        yield group_1.default.join(username, +req.params.id);
+        return res.json({
+            message: `User ${username} joined group with id: ${req.params.id}`,
+        });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * POST /api/groups/:id/leave
+ */
+router.post("/:id/leave", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const username = res.locals.user.username;
+        yield group_1.default.leave(username, +req.params.id);
+        return res.json({
+            message: `User ${username} left group with id: ${req.params.id}`,
+        });
     }
     catch (error) {
         return next(error);

@@ -4,6 +4,7 @@ import { Filter } from "../types";
 const jsToSql = {
   avatarUrl: "avatar_url",
   triviaScore: "trivia_score",
+  isPrivate: "is_private",
   startTime: "start_time",
   endTime: "end_time",
 };
@@ -26,7 +27,6 @@ function sqlForPartialUpdate(dataToUpdate: object) {
 
 function sqlForFiltering(filter: Filter) {
   const keys = Object.keys(filter);
-  console.log(keys);
 
   const matchers = [];
   const values = [];
@@ -59,9 +59,26 @@ function sqlForFiltering(filter: Filter) {
         break;
     }
   }
-  console.log(matchers);
 
   return { matchers, values };
 }
 
-export { sqlForPartialUpdate, sqlForFiltering };
+function sqlForInserting(data: object) {
+  const keys = Object.keys(data);
+
+  const cols: string[] = [];
+  const valueIdxs: string[] = [];
+
+  for (let i = 0; i < keys.length; i++) {
+    cols.push(jsToSql[keys[i] as keyof object] || keys[i]);
+    valueIdxs.push(`$${i + 1}`);
+  }
+
+  return {
+    colString: `(${cols.join(", ")})`,
+    valString: `(${valueIdxs.join(", ")})`,
+    values: Object.values(data),
+  };
+}
+
+export { sqlForPartialUpdate, sqlForFiltering, sqlForInserting };

@@ -1,12 +1,13 @@
 import { Filter, IGroup } from "../types";
 import db from "../db";
+import { NotFoundError } from "../helpers/expressError";
 import {
-  BadRequestError,
-  ExpressError,
-  NotFoundError,
-  UnauthorizedError,
-} from "../helpers/expressError";
-import { sqlForFiltering, sqlForPartialUpdate } from "../helpers/sql";
+  sqlForFiltering,
+  sqlForInserting,
+  sqlForPartialUpdate,
+} from "../helpers/sql";
+import { BadRequestError } from "../helpers/expressError";
+import { UnauthorizedError } from "../helpers/expressError";
 
 /** Related functions for groups */
 class Group {
@@ -16,21 +17,22 @@ class Group {
    * @param {IGroup} data
    * @returns {Promise<IGroup>}
    */
-  static async create(
-    username: string,
-    { title, description, startTime, endTime, location }: IGroup
-  ): Promise<IGroup> {
+  static async create(username: string, data: IGroup): Promise<IGroup> {
+    const { colString, valString, values } = sqlForInserting(data);
+
     const groupResult = await db.query(
-      `INSERT INTO groups (title, description, start_time, end_time, location)
-      VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO groups ${colString}
+      VALUES ${valString}
       RETURNING id,
                 title,
                 description,
                 start_time AS "startTime",
                 end_time AS "endTime",
-                location
+                location,
+                is_private AS "isPrivate",
+                max_members AS "maxMembers"
       `,
-      [title, description, startTime, endTime, location]
+      values
     );
     const group = groupResult.rows[0];
 
@@ -57,9 +59,9 @@ class Group {
   ): Promise<IGroup[]> {
     const { matchers, values } = sqlForFiltering(filter);
 
-    let where = "";
+    let where = "WHERE is_private = false";
     if (matchers.length > 0) {
-      where = `WHERE ${matchers.join(" AND ")}`;
+      where = `${where} AND ${matchers.join(" AND ")}`;
     }
 
     const query = `SELECT id,
@@ -70,7 +72,6 @@ class Group {
                     ${where}
                     ORDER BY start_time
                     LIMIT $${values.length + 1}`;
-    console.log(query);
 
     const result = await db.query(query, [...values, limit]);
 
@@ -89,13 +90,15 @@ class Group {
               description,
               start_time AS "startTime",
               end_time AS "endTime",
-              location
+              location,
+              is_private AS "isPrivate",
+              max_members AS "maxMembers"
         FROM groups
         WHERE id = $1
       `,
       [id]
     );
-    const group = groupResult.rows[0];
+    const group: IGroup = groupResult.rows[0];
 
     if (!group) throw new NotFoundError(`No group with id: ${id}`);
 
@@ -107,8 +110,8 @@ class Group {
       [group.id]
     );
 
-    const users = userResult.rows.map((u) => u.username);
-    group.users = users;
+    const members = userResult.rows.map((u) => u.username);
+    group.members = members;
     return group;
   }
 
@@ -131,7 +134,8 @@ class Group {
                 description,
                 start_time AS "startTime",
                 end_time AS "endTime",
-                location
+                location,
+                is_private AS "isPrivate"
       `,
       [...values, id]
     );
@@ -179,6 +183,64 @@ class Group {
     if (!groupuser) return false;
 
     return groupuser.is_owner;
+  }
+
+  static async isMember(id: number, username: string): Promise<boolean> {
+    const result = await db.query(
+      `SELECT username
+      FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      `,
+      [id, username]
+    );
+    const groupuser = result.rows[0];
+
+    return groupuser ? true : false;
+  }
+
+  static async join(username: string, id: number): Promise<void> {
+    const result = await db.query(
+      `SELECT is_private, max_members, COUNT(*)
+      FROM groups
+      LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+      WHERE id = $1
+      GROUP BY id
+      `,
+      [id]
+    );
+    const group = result.rows[0];
+    if (!group) throw new NotFoundError(`No group with id: ${id}`);
+
+    if (group.is_private)
+      throw new UnauthorizedError(`You must be invited to join private groups`);
+
+    if (group.count === group.max_members) {
+      throw new BadRequestError(`Group already full`);
+    }
+
+    await db.query(
+      `INSERT INTO groupsusers (group_id, username)
+        VALUES ($1, $2)
+        `,
+      [id, username]
+    );
+  }
+
+  static async leave(username: string, id: number): Promise<void> {
+    const result = await db.query(
+      `DELETE FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      RETURNING group_id, username
+      `,
+      [id, username]
+    );
+
+    const groupuser = result.rows[0];
+
+    if (!groupuser)
+      throw new NotFoundError(
+        `User ${username} was not in group with id: ${id}`
+      );
   }
 }
 
