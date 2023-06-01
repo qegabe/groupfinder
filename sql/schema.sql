@@ -19,7 +19,7 @@ CREATE TABLE users (
 
 CREATE TABLE groupsusers (
     group_id INTEGER REFERENCES groups ON DELETE CASCADE,
-    username VARCHAR(25) REFERENCES users ON DELETE CASCADE,
+    username VARCHAR(25) REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (group_id, username),
     is_owner BOOLEAN NOT NULL DEFAULT FALSE
 );
@@ -31,7 +31,7 @@ CREATE TABLE games (
 );
 
 CREATE TABLE favoritegames (
-    username VARCHAR(25) REFERENCES users ON DELETE CASCADE,
+    username VARCHAR(25) REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE,
     game_id INTEGER REFERENCES games ON DELETE CASCADE,
     PRIMARY KEY (username, game_id)
 );

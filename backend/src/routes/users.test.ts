@@ -67,6 +67,7 @@ describe("GET /api/users/:username", () => {
 describe("PATCH /api/users/:username", () => {
   it("works", async () => {
     const data: IUser = {
+      username: "new",
       bio: "test",
       avatarUrl: "http://www.img.com/test.jpg",
     };
@@ -78,11 +79,20 @@ describe("PATCH /api/users/:username", () => {
 
     expect(resp.body).toEqual({
       user: {
-        username: "u1",
+        username: "new",
         bio: "test",
         avatarUrl: "http://www.img.com/test.jpg",
       },
     });
+  });
+
+  it("bad request if username taken", async () => {
+    const resp = await request(app)
+      .patch(`/api/users/u1`)
+      .send({ username: "u2" })
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(400);
   });
 
   it("bad request with invalid data", async () => {

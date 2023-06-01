@@ -41,7 +41,10 @@ class User {
         throw new BadRequestError(
           `User already exists with username: ${username}`
         );
-      } else throw new ExpressError("Something went wrong", 500);
+      } else {
+        console.error(error);
+        throw new ExpressError("Something went wrong", 500);
+      }
     }
     const user = result.rows[0];
 
@@ -139,16 +142,28 @@ class User {
     const { setCols, values } = sqlForPartialUpdate(data);
     const usernameVarIdx = `$${values.length + 1}`;
 
-    const result = await db.query(
-      `UPDATE users
-      SET ${setCols}
-      WHERE username = ${usernameVarIdx}
-      RETURNING username,
-                bio,
-                avatar_url AS "avatarUrl"
-      `,
-      [...values, username]
-    );
+    let result: QueryResult;
+
+    try {
+      result = await db.query(
+        `UPDATE users
+        SET ${setCols}
+        WHERE username = ${usernameVarIdx}
+        RETURNING username,
+                  bio,
+                  avatar_url AS "avatarUrl"
+        `,
+        [...values, username]
+      );
+    } catch (error) {
+      if (error.code === "23505") {
+        throw new BadRequestError(`Username ${data.username} already taken`);
+      } else {
+        console.error(error);
+        throw new ExpressError("Something went wrong", 500);
+      }
+    }
+
     const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);

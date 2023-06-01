@@ -133,6 +133,7 @@ describe("getByUsername", () => {
 describe("update", () => {
   it("works", async () => {
     const updateData: IUser = {
+      username: "new",
       password: "pass",
       bio: "test",
       avatarUrl: "test.jpg",
@@ -141,7 +142,7 @@ describe("update", () => {
     const user = await User.update("u1", updateData);
 
     expect(user).toEqual({
-      username: "u1",
+      username: "new",
       bio: "test",
       avatarUrl: "test.jpg",
     });
@@ -151,7 +152,7 @@ describe("update", () => {
        FROM users
        WHERE username = $1
       `,
-      ["u1"]
+      ["new"]
     );
     expect(res.rowCount).toBe(1);
     const isValid = await bcrypt.compare("pass", res.rows[0].password);
@@ -167,15 +168,14 @@ describe("update", () => {
     }
   });
 
-  // it("bad request if username taken", async () => {
-  //   try {
-  //     await User.update("u1", { username: "u2" });
-  //     fail();
-  //   } catch (error) {
-  //     console.log(error);
-  //     expect(error instanceof BadRequestError).toBeTruthy();
-  //   }
-  // });
+  it("bad request if username taken", async () => {
+    try {
+      await User.update("u1", { username: "u2" });
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
+  });
 });
 
 /********************************************** remove */
