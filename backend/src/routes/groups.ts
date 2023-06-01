@@ -47,14 +47,15 @@ router.get("/", async (req, res, next) => {
 /**
  * GET /api/groups/:id
  */
-router.get("/:id", ensureLoggedIn, async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const group = await Group.getById(+req.params.id);
 
     //Only members of a private group can view its details
     if (
       group.isPrivate &&
-      group.members.indexOf(res.locals.user.username) === -1
+      (!res.locals.user ||
+        group.members.indexOf(res.locals.user.username) === -1)
     ) {
       throw new UnauthorizedError(
         `You are not a member of group with id: ${group.id}`

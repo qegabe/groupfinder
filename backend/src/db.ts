@@ -1,16 +1,9 @@
 import { Client } from "pg";
+import { getDatabaseUri } from "./config";
 
-let db: Client;
-
-if (process.env.NODE_ENV === "test") {
-  db = new Client({
-    connectionString: "postgresql:///groupfinder_test",
-  });
-} else {
-  db = new Client({
-    connectionString: "postgresql:///groupfinder",
-  });
-}
+let db: Client = new Client({
+  connectionString: getDatabaseUri(),
+});
 
 db.connect();
 

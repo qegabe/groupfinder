@@ -89,10 +89,11 @@ class User {
    */
   static async getList(limit: number = 100): Promise<IUser[]> {
     const result = await db.query(
-      ` SELECT username, avatar_url
-      FROM users
-      ORDER BY username
-      LIMIT $1
+      ` SELECT username,
+               avatar_url AS "avatarUrl"
+       FROM users
+       ORDER BY username
+       LIMIT $1
       `,
       [limit]
     );
@@ -144,7 +145,7 @@ class User {
       WHERE username = ${usernameVarIdx}
       RETURNING username,
                 bio,
-                avatar_url
+                avatar_url AS "avatarUrl"
       `,
       [...values, username]
     );

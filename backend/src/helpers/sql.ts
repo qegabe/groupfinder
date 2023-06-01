@@ -7,8 +7,14 @@ const jsToSql = {
   isPrivate: "is_private",
   startTime: "start_time",
   endTime: "end_time",
+  maxMembers: "max_members",
 };
 
+/**
+ * Creates sql for updating a row
+ * @param dataToUpdate
+ * @returns {object} { setCols, values }
+ */
 function sqlForPartialUpdate(dataToUpdate: object) {
   const keys = Object.keys(dataToUpdate);
   if (keys.length === 0) throw new BadRequestError("No data");
@@ -25,6 +31,11 @@ function sqlForPartialUpdate(dataToUpdate: object) {
   };
 }
 
+/**
+ * Creates sql for filtering a SELECT query
+ * @param filter
+ * @returns {object} { matchers, values }
+ */
 function sqlForFiltering(filter: Filter) {
   const keys = Object.keys(filter);
 
@@ -63,6 +74,11 @@ function sqlForFiltering(filter: Filter) {
   return { matchers, values };
 }
 
+/**
+ * Creates sql for the columns and values of an INSERT query
+ * @param data
+ * @returns {object} { colString, valString, values}
+ */
 function sqlForInserting(data: object) {
   const keys = Object.keys(data);
 

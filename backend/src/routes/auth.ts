@@ -1,6 +1,7 @@
 import express from "express";
 import jsonschema from "jsonschema";
 import userRegisterSchema from "../schemas/userRegister.json";
+import userAuthSchema from "../schemas/userAuth.json";
 import { BadRequestError } from "../helpers/expressError";
 import User from "../models/user";
 import createToken from "../helpers/token";
@@ -33,7 +34,7 @@ router.post("/register", async (req, res, next) => {
  */
 router.post("/login", async (req, res, next) => {
   try {
-    const validator = jsonschema.validate(req.body, userRegisterSchema);
+    const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs.join("-"));

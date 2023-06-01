@@ -2,8 +2,8 @@ CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
+    start_time TIMESTAMPTZ NOT NULL,
+    end_time TIMESTAMPTZ NOT NULL,
     location TEXT,
     is_private BOOLEAN NOT NULL DEFAULT FALSE,
     max_members INTEGER

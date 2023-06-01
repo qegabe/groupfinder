@@ -1,13 +1,15 @@
 import { Filter, IGroup } from "../types";
 import db from "../db";
-import { NotFoundError } from "../helpers/expressError";
+import {
+  NotFoundError,
+  BadRequestError,
+  ExpressError,
+} from "../helpers/expressError";
 import {
   sqlForFiltering,
   sqlForInserting,
   sqlForPartialUpdate,
 } from "../helpers/sql";
-import { BadRequestError } from "../helpers/expressError";
-import { UnauthorizedError } from "../helpers/expressError";
 
 /** Related functions for groups */
 class Group {
@@ -43,7 +45,7 @@ class Group {
       [group.id, username, true]
     );
 
-    group.users = [username];
+    group.members = [username];
     return group;
   }
 
@@ -125,6 +127,28 @@ class Group {
     const { setCols, values } = sqlForPartialUpdate(data);
     const idVarIdx = `$${values.length + 1}`;
 
+    if ("maxMembers" in data) {
+      const res = await db.query(
+        `SELECT COUNT(*)
+         FROM groups
+         LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+         WHERE id = $1
+         GROUP BY id
+        `,
+        [id]
+      );
+
+      if (res.rowCount > 0) {
+        const count = res.rows[0].count;
+        if (+count > data.maxMembers)
+          throw new BadRequestError(
+            "maxMembers cannot be set lower than current member count"
+          );
+      } else {
+        throw new NotFoundError(`No group with id: ${id}`);
+      }
+    }
+
     const result = await db.query(
       `UPDATE groups
       SET ${setCols}
@@ -135,7 +159,8 @@ class Group {
                 start_time AS "startTime",
                 end_time AS "endTime",
                 location,
-                is_private AS "isPrivate"
+                is_private AS "isPrivate",
+                max_members AS "maxMembers"
       `,
       [...values, id]
     );
@@ -172,19 +197,28 @@ class Group {
    */
   static async isOwner(id: number, username: string): Promise<boolean> {
     const result = await db.query(
-      `SELECT is_owner
-      FROM groupsusers
-      WHERE group_id = $1 AND username = $2
+      `SELECT id, username, is_owner 
+       FROM groupsusers 
+       RIGHT JOIN groups ON groupsusers.group_id = groups.id
+       WHERE id = $1
       `,
-      [id, username]
+      [id]
     );
-    const groupuser = result.rows[0];
+    if (result.rowCount < 1) throw new NotFoundError(`No group with id: ${id}`);
 
-    if (!groupuser) return false;
+    const users = result.rows.filter((r) => r.username === username);
 
-    return groupuser.is_owner;
+    if (users.length === 0) return false;
+
+    return users[0].is_owner;
   }
 
+  /**
+   * Checks if a user is a member of a group
+   * @param id group id
+   * @param username
+   * @returns {Promise<boolean>}
+   */
   static async isMember(id: number, username: string): Promise<boolean> {
     const result = await db.query(
       `SELECT username
@@ -198,9 +232,19 @@ class Group {
     return groupuser ? true : false;
   }
 
-  static async join(username: string, id: number): Promise<void> {
+  /**
+   * Adds a user to a group
+   * @param username
+   * @param id
+   * @param setOwner set the user as an owner
+   */
+  static async join(
+    username: string,
+    id: number,
+    setOwner: boolean = false
+  ): Promise<void> {
     const result = await db.query(
-      `SELECT is_private, max_members, COUNT(*)
+      `SELECT max_members, COUNT(*)
       FROM groups
       LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
       WHERE id = $1
@@ -211,21 +255,34 @@ class Group {
     const group = result.rows[0];
     if (!group) throw new NotFoundError(`No group with id: ${id}`);
 
-    if (group.is_private)
-      throw new UnauthorizedError(`You must be invited to join private groups`);
-
-    if (group.count === group.max_members) {
+    if (+group.count === group.max_members) {
       throw new BadRequestError(`Group already full`);
     }
 
-    await db.query(
-      `INSERT INTO groupsusers (group_id, username)
-        VALUES ($1, $2)
-        `,
-      [id, username]
-    );
+    try {
+      await db.query(
+        `INSERT INTO groupsusers (group_id, username, is_owner)
+          VALUES ($1, $2, $3)
+          `,
+        [id, username, setOwner]
+      );
+    } catch (error) {
+      if (error.code === "23503") {
+        throw new NotFoundError(`No user: ${username}`);
+      } else if (error.code === "23505") {
+        throw new BadRequestError(`User ${username} already in group`);
+      } else {
+        console.error(error);
+        throw new ExpressError("Something went wrong", 500);
+      }
+    }
   }
 
+  /**
+   * Removes a user from a group
+   * @param username
+   * @param id
+   */
   static async leave(username: string, id: number): Promise<void> {
     const result = await db.query(
       `DELETE FROM groupsusers
