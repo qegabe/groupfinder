@@ -371,6 +371,14 @@ describe("POST /api/groups/:id/leave", () => {
     });
   });
 
+  it("bad request if owner tries to leave group", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[0]}/leave`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(400);
+  });
+
   it("unauth if no token", async () => {
     const resp = await request(app).post(`/api/groups/${groupIds[0]}/leave`);
 

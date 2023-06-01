@@ -337,6 +337,15 @@ describe("leave", () => {
     expect(result.rowCount).toEqual(0);
   });
 
+  it("bad request if owner tries to leave group", async () => {
+    try {
+      await Group.leave("u1", groupIds[0]);
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
+  });
+
   it("not found if no group", async () => {
     try {
       await Group.leave("u2", 0);

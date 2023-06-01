@@ -284,20 +284,30 @@ class Group {
    * @param id
    */
   static async leave(username: string, id: number): Promise<void> {
-    const result = await db.query(
-      `DELETE FROM groupsusers
-      WHERE group_id = $1 AND username = $2
-      RETURNING group_id, username
+    const userResult = await db.query(
+      `SELECT group_id, username, is_owner
+       FROM groupsusers
+       WHERE group_id = $1 AND username = $2
       `,
       [id, username]
     );
 
-    const groupuser = result.rows[0];
+    const groupuser = userResult.rows[0];
 
     if (!groupuser)
       throw new NotFoundError(
         `User ${username} was not in group with id: ${id}`
       );
+
+    if (groupuser.is_owner)
+      throw new BadRequestError(`Owners can't leave groups`);
+
+    await db.query(
+      `DELETE FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      `,
+      [id, username]
+    );
   }
 }
 
