@@ -128,4 +128,34 @@ router.post("/:id/leave", ensureLoggedIn, async (req, res, next) => {
   }
 });
 
+/**
+ * POST /api/groups/:id/add/:username
+ */
+router.post("/:id/add/:username", ensureIsOwner, async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    await Group.join(username, +req.params.id);
+    return res.json({
+      message: `User ${username} was added to group with id: ${req.params.id}`,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+/**
+ * POST /api/groups/:id/remove/:username
+ */
+router.post("/:id/remove/:username", ensureIsOwner, async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    await Group.leave(username, +req.params.id);
+    return res.json({
+      message: `User ${username} was removed from group with id: ${req.params.id}`,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 export default router;

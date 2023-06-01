@@ -401,3 +401,99 @@ describe("POST /api/groups/:id/leave", () => {
     expect(resp.statusCode).toEqual(404);
   });
 });
+
+/****************************************** POST /api/groups/:id/add/:username */
+describe("POST /api/groups/:id/add/:username", () => {
+  it("works", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[1]}/add/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.body).toEqual({
+      message: `User u2 was added to group with id: ${groupIds[1]}`,
+    });
+  });
+
+  it("unauth if no token", async () => {
+    const resp = await request(app).post(`/api/groups/${groupIds[1]}/add/u2`);
+
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  it("unauth if not owner", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[1]}/add/u2`)
+      .set("authorization", `Bearer ${token2}`);
+
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  it("bad request if already member", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[0]}/add/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(400);
+  });
+
+  it("bad request if full", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[2]}/add/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(400);
+  });
+
+  it("not found if no group", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/0/add/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(404);
+  });
+});
+
+/****************************************** POST /api/groups/:id/remove/:username */
+describe("POST /api/groups/:id/remove/:username", () => {
+  it("works", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[0]}/remove/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.body).toEqual({
+      message: `User u2 was removed from group with id: ${groupIds[0]}`,
+    });
+  });
+
+  it("unauth if no token", async () => {
+    const resp = await request(app).post(
+      `/api/groups/${groupIds[0]}/remove/u2`
+    );
+
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  it("unauth if not owner", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[0]}/remove/u1`)
+      .set("authorization", `Bearer ${token2}`);
+
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  it("bad request if remove owner", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/${groupIds[0]}/remove/u1`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(400);
+  });
+
+  it("not found if no group", async () => {
+    const resp = await request(app)
+      .post(`/api/groups/0/remove/u2`)
+      .set("authorization", `Bearer ${token1}`);
+
+    expect(resp.statusCode).toEqual(404);
+  });
+});
