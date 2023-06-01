@@ -54,10 +54,18 @@ describe("POST /api/groups", () => {
       .send({
         title: 5,
         startTime: true,
-        endTime: new Date(),
+        endTime: "not a time",
+        notAProperty: "",
       })
       .set("authorization", `Bearer ${token1}`);
     expect(resp.statusCode).toEqual(400);
+    const errs = JSON.parse(resp.body.error.message);
+    expect(errs).toEqual([
+      "instance.title is not of a type(s) string",
+      "instance.startTime is not of a type(s) string",
+      'instance.endTime does not conform to the "date-time" format',
+      'instance is not allowed to have the additional property "notAProperty"',
+    ]);
   });
 
   it("bad request with missing data", async () => {
@@ -123,11 +131,18 @@ describe("GET /api/groups", () => {
 
   it("bad request invalid data", async () => {
     const resp = await request(app).get("/api/groups").query({
-      startTime: "not a time",
+      startTimeAfter: "not a time",
       maxSize: "a",
+      notAProperty: "",
     });
 
     expect(resp.statusCode).toEqual(400);
+    const errs = JSON.parse(resp.body.error.message);
+    expect(errs).toEqual([
+      'instance.startTimeAfter does not conform to the "date-time" format',
+      'instance.maxSize does not match pattern "^[1-9][0-9]*$"',
+      'instance is not allowed to have the additional property "notAProperty"',
+    ]);
   });
 });
 
@@ -237,12 +252,20 @@ describe("PATCH /api/groups/:id", () => {
       .patch(`/api/groups/${groupIds[0]}`)
       .send({
         title: true,
-        description: 5,
+        description: {},
         startTime: "not a time",
+        notAProperty: "",
       })
       .set("authorization", `Bearer ${token1}`);
 
     expect(resp.statusCode).toEqual(400);
+    const errs = JSON.parse(resp.body.error.message);
+    expect(errs).toEqual([
+      "instance.title is not of a type(s) string",
+      "instance.description is not of a type(s) string",
+      'instance.startTime does not conform to the "date-time" format',
+      'instance is not allowed to have the additional property "notAProperty"',
+    ]);
   });
 
   it("bad request with missing data", async () => {

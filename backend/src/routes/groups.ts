@@ -17,7 +17,7 @@ router.post("/", ensureLoggedIn, async (req, res, next) => {
     const validator = jsonschema.validate(req.body, groupCreateSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
     const group = await Group.create(res.locals.user.username, req.body);
     return res.status(201).json({ group });
@@ -34,7 +34,7 @@ router.get("/", async (req, res, next) => {
     const validator = jsonschema.validate(req.query, groupFilterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
 
     const groups = await Group.getList(100, req.query);
@@ -76,7 +76,7 @@ router.patch("/:id", ensureIsOwner, async (req, res, next) => {
     const validator = jsonschema.validate(req.body, groupUpdateSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
 
     const group = await Group.update(+req.params.id, req.body);

@@ -98,10 +98,24 @@ describe("PATCH /api/users/:username", () => {
   it("bad request with invalid data", async () => {
     const resp = await request(app)
       .patch(`/api/users/u1`)
-      .send({ avatarUrl: "not a url" })
+      .send({
+        username: "",
+        password: 5,
+        bio: [],
+        avatarUrl: "not a url",
+        notAProperty: "",
+      })
       .set("authorization", `Bearer ${token1}`);
 
     expect(resp.statusCode).toEqual(400);
+    const errs = JSON.parse(resp.body.error.message);
+    expect(errs).toEqual([
+      "instance.username does not meet minimum length of 1",
+      "instance.password is not of a type(s) string",
+      "instance.bio is not of a type(s) string",
+      'instance.avatarUrl does not conform to the "uri" format',
+      'instance is not allowed to have the additional property "notAProperty"',
+    ]);
   });
 
   it("bad request with missing data", async () => {

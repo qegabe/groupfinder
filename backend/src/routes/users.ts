@@ -39,7 +39,7 @@ router.patch("/:username", ensureCorrectUser, async (req, res, next) => {
     const validator = jsonschema.validate(req.body, userUpdateSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
 
     const user = await User.update(req.params.username, req.body);

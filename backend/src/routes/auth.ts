@@ -16,7 +16,7 @@ router.post("/register", async (req, res, next) => {
     const validator = jsonschema.validate(req.body, userRegisterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
 
     const { username, password }: { username: string; password: string } =
@@ -37,7 +37,7 @@ router.post("/login", async (req, res, next) => {
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
-      throw new BadRequestError(errs.join("-"));
+      throw new BadRequestError(JSON.stringify(errs));
     }
 
     const { username, password }: { username: string; password: string } =
