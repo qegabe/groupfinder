@@ -8,10 +8,10 @@ const PORT = +process.env.PORT || 5000;
 exports.PORT = PORT;
 function getDatabaseUri() {
     if (process.env.NODE_ENV === "test") {
-        return "groupfinder_test";
+        return "postgresql:///groupfinder_test";
     }
     else {
-        return process.env.DATABASE_URL || "groupfinder";
+        return process.env.DATABASE_URL || "postgresql:///groupfinder";
     }
 }
 exports.getDatabaseUri = getDatabaseUri;

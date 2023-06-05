@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const expressError_1 = require("../helpers/expressError");
 const sql_1 = require("../helpers/sql");
-const expressError_2 = require("../helpers/expressError");
-const expressError_3 = require("../helpers/expressError");
 /** Related functions for groups */
 class Group {
     /**
@@ -43,7 +41,7 @@ class Group {
             yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
       VALUES  ($1, $2, $3)
       `, [group.id, username, true]);
-            group.users = [username];
+            group.members = [username];
             return group;
         });
     }
@@ -112,6 +110,22 @@ class Group {
         return __awaiter(this, void 0, void 0, function* () {
             const { setCols, values } = (0, sql_1.sqlForPartialUpdate)(data);
             const idVarIdx = `$${values.length + 1}`;
+            if ("maxMembers" in data) {
+                const res = yield db_1.default.query(`SELECT COUNT(*)
+         FROM groups
+         LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
+         WHERE id = $1
+         GROUP BY id
+        `, [id]);
+                if (res.rowCount > 0) {
+                    const count = res.rows[0].count;
+                    if (+count > data.maxMembers)
+                        throw new expressError_1.BadRequestError("maxMembers cannot be set lower than current member count");
+                }
+                else {
+                    throw new expressError_1.NotFoundError(`No group with id: ${id}`);
+                }
+            }
             const result = yield db_1.default.query(`UPDATE groups
       SET ${setCols}
       WHERE id = ${idVarIdx}
@@ -121,7 +135,8 @@ class Group {
                 start_time AS "startTime",
                 end_time AS "endTime",
                 location,
-                is_private AS "isPrivate"
+                is_private AS "isPrivate",
+                max_members AS "maxMembers"
       `, [...values, id]);
             const group = result.rows[0];
             if (!group)
@@ -152,16 +167,25 @@ class Group {
      */
     static isOwner(id, username) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(`SELECT is_owner
-      FROM groupsusers
-      WHERE group_id = $1 AND username = $2
-      `, [id, username]);
-            const groupuser = result.rows[0];
-            if (!groupuser)
+            const result = yield db_1.default.query(`SELECT id, username, is_owner 
+       FROM groupsusers 
+       RIGHT JOIN groups ON groupsusers.group_id = groups.id
+       WHERE id = $1
+      `, [id]);
+            if (result.rowCount < 1)
+                throw new expressError_1.NotFoundError(`No group with id: ${id}`);
+            const users = result.rows.filter((r) => r.username === username);
+            if (users.length === 0)
                 return false;
-            return groupuser.is_owner;
+            return users[0].is_owner;
         });
     }
+    /**
+     * Checks if a user is a member of a group
+     * @param id group id
+     * @param username
+     * @returns {Promise<boolean>}
+     */
     static isMember(id, username) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query(`SELECT username
@@ -172,9 +196,15 @@ class Group {
             return groupuser ? true : false;
         });
     }
-    static join(username, id) {
+    /**
+     * Adds a user to a group
+     * @param username
+     * @param id
+     * @param setOwner set the user as an owner
+     */
+    static join(username, id, setOwner = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(`SELECT is_private, max_members, COUNT(*)
+            const result = yield db_1.default.query(`SELECT max_members, COUNT(*)
       FROM groups
       LEFT JOIN groupsusers ON groupsusers.group_id = groups.id
       WHERE id = $1
@@ -183,25 +213,47 @@ class Group {
             const group = result.rows[0];
             if (!group)
                 throw new expressError_1.NotFoundError(`No group with id: ${id}`);
-            if (group.is_private)
-                throw new expressError_3.UnauthorizedError(`You must be invited to join private groups`);
-            if (group.count === group.max_members) {
-                throw new expressError_2.BadRequestError(`Group already full`);
+            if (+group.count === group.max_members) {
+                throw new expressError_1.BadRequestError(`Group already full`);
             }
-            yield db_1.default.query(`INSERT INTO groupsusers (group_id, username)
-        VALUES ($1, $2)
-        `, [id, username]);
+            try {
+                yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
+          VALUES ($1, $2, $3)
+          `, [id, username, setOwner]);
+            }
+            catch (error) {
+                if (error.code === "23503") {
+                    throw new expressError_1.NotFoundError(`No user: ${username}`);
+                }
+                else if (error.code === "23505") {
+                    throw new expressError_1.BadRequestError(`User ${username} already in group`);
+                }
+                else {
+                    console.error(error);
+                    throw new expressError_1.ExpressError("Something went wrong", 500);
+                }
+            }
         });
     }
+    /**
+     * Removes a user from a group
+     * @param username
+     * @param id
+     */
     static leave(username, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(`DELETE FROM groupsusers
-      WHERE group_id = $1 AND username = $2
-      RETURNING group_id, username
+            const userResult = yield db_1.default.query(`SELECT group_id, username, is_owner
+       FROM groupsusers
+       WHERE group_id = $1 AND username = $2
       `, [id, username]);
-            const groupuser = result.rows[0];
+            const groupuser = userResult.rows[0];
             if (!groupuser)
                 throw new expressError_1.NotFoundError(`User ${username} was not in group with id: ${id}`);
+            if (groupuser.is_owner)
+                throw new expressError_1.BadRequestError(`Owners can't leave groups`);
+            yield db_1.default.query(`DELETE FROM groupsusers
+      WHERE group_id = $1 AND username = $2
+      `, [id, username]);
         });
     }
 }

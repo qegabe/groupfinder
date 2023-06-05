@@ -43,8 +43,10 @@ class User {
                 if (error.code === "23505") {
                     throw new expressError_1.BadRequestError(`User already exists with username: ${username}`);
                 }
-                else
+                else {
+                    console.error(error);
                     throw new expressError_1.ExpressError("Something went wrong", 500);
+                }
             }
             const user = result.rows[0];
             delete user.password;
@@ -85,10 +87,11 @@ class User {
      */
     static getList(limit = 100) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(` SELECT username, avatar_url
-      FROM users
-      ORDER BY username
-      LIMIT $1
+            const result = yield db_1.default.query(` SELECT username,
+               avatar_url AS "avatarUrl"
+       FROM users
+       ORDER BY username
+       LIMIT $1
       `, [limit]);
             return result.rows;
         });
@@ -126,13 +129,25 @@ class User {
             }
             const { setCols, values } = (0, sql_1.sqlForPartialUpdate)(data);
             const usernameVarIdx = `$${values.length + 1}`;
-            const result = yield db_1.default.query(`UPDATE users
-      SET ${setCols}
-      WHERE username = ${usernameVarIdx}
-      RETURNING username,
-                bio,
-                avatar_url
-      `, [...values, username]);
+            let result;
+            try {
+                result = yield db_1.default.query(`UPDATE users
+        SET ${setCols}
+        WHERE username = ${usernameVarIdx}
+        RETURNING username,
+                  bio,
+                  avatar_url AS "avatarUrl"
+        `, [...values, username]);
+            }
+            catch (error) {
+                if (error.code === "23505") {
+                    throw new expressError_1.BadRequestError(`Username ${data.username} already taken`);
+                }
+                else {
+                    console.error(error);
+                    throw new expressError_1.ExpressError("Something went wrong", 500);
+                }
+            }
             const user = result.rows[0];
             if (!user)
                 throw new expressError_1.NotFoundError(`No user: ${username}`);

@@ -8,7 +8,13 @@ const jsToSql = {
     isPrivate: "is_private",
     startTime: "start_time",
     endTime: "end_time",
+    maxMembers: "max_members",
 };
+/**
+ * Creates sql for updating a row
+ * @param dataToUpdate
+ * @returns {object} { setCols, values }
+ */
 function sqlForPartialUpdate(dataToUpdate) {
     const keys = Object.keys(dataToUpdate);
     if (keys.length === 0)
@@ -21,6 +27,11 @@ function sqlForPartialUpdate(dataToUpdate) {
     };
 }
 exports.sqlForPartialUpdate = sqlForPartialUpdate;
+/**
+ * Creates sql for filtering a SELECT query
+ * @param filter
+ * @returns {object} { matchers, values }
+ */
 function sqlForFiltering(filter) {
     const keys = Object.keys(filter);
     const matchers = [];
@@ -57,6 +68,11 @@ function sqlForFiltering(filter) {
     return { matchers, values };
 }
 exports.sqlForFiltering = sqlForFiltering;
+/**
+ * Creates sql for the columns and values of an INSERT query
+ * @param data
+ * @returns {object} { colString, valString, values}
+ */
 function sqlForInserting(data) {
     const keys = Object.keys(data);
     const cols = [];

@@ -51,7 +51,7 @@ router.patch("/:username", auth_1.ensureCorrectUser, (req, res, next) => __await
         const validator = jsonschema_1.default.validate(req.body, userUpdate_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
         const user = yield user_1.default.update(req.params.username, req.body);
         return res.json({ user });

@@ -49,7 +49,11 @@ router.get("/", async (req, res, next) => {
  */
 router.get("/:id", async (req, res, next) => {
   try {
-    const group = await Group.getById(+req.params.id);
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
+    const group = await Group.getById(id);
 
     //Only members of a private group can view its details
     if (
@@ -78,6 +82,9 @@ router.patch("/:id", ensureIsOwner, async (req, res, next) => {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(JSON.stringify(errs));
     }
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
 
     const group = await Group.update(+req.params.id, req.body);
     return res.json({ group });
@@ -91,6 +98,10 @@ router.patch("/:id", ensureIsOwner, async (req, res, next) => {
  */
 router.delete("/:id", ensureIsOwner, async (req, res, next) => {
   try {
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
     await Group.remove(+req.params.id);
     return res.json({ message: `Group with id: ${req.params.id} removed` });
   } catch (error) {
@@ -103,6 +114,10 @@ router.delete("/:id", ensureIsOwner, async (req, res, next) => {
  */
 router.post("/:id/join", ensureLoggedIn, async (req, res, next) => {
   try {
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
     const username = res.locals.user.username;
     await Group.join(username, +req.params.id);
     return res.json({
@@ -118,6 +133,10 @@ router.post("/:id/join", ensureLoggedIn, async (req, res, next) => {
  */
 router.post("/:id/leave", ensureLoggedIn, async (req, res, next) => {
   try {
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
     const username = res.locals.user.username;
     await Group.leave(username, +req.params.id);
     return res.json({
@@ -133,6 +152,10 @@ router.post("/:id/leave", ensureLoggedIn, async (req, res, next) => {
  */
 router.post("/:id/add/:username", ensureIsOwner, async (req, res, next) => {
   try {
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
     const username = req.params.username;
     await Group.join(username, +req.params.id);
     return res.json({
@@ -148,6 +171,10 @@ router.post("/:id/add/:username", ensureIsOwner, async (req, res, next) => {
  */
 router.post("/:id/remove/:username", ensureIsOwner, async (req, res, next) => {
   try {
+    const id = +req.params.id;
+    if (isNaN(id))
+      throw new BadRequestError(`'${req.params.id}' is not a valid group id`);
+
     const username = req.params.username;
     await Group.leave(username, +req.params.id);
     return res.json({

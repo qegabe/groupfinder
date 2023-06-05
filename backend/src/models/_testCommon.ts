@@ -7,7 +7,10 @@ let groupIds: number[];
 async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   await db.query("DELETE FROM groups");
+  await db.query("DELETE FROM games");
   await db.query("DELETE FROM groupsusers");
+  await db.query("DELETE FROM favoritegames");
+  await db.query("DELETE FROM groupsgames");
 
   await db.query(
     `INSERT INTO users (username, password)
@@ -30,6 +33,26 @@ async function commonBeforeAll() {
   );
 
   groupIds = res.rows.map((r) => r.id);
+
+  await db.query(
+    `INSERT INTO games (id, title, cover_url)
+     VALUES (1, 'game1', ''),
+            (2, 'game2', '')
+    `
+  );
+
+  await db.query(
+    `INSERT INTO favoritegames (username, game_id)
+     VALUES ('u1', 1)
+    `
+  );
+
+  await db.query(
+    `INSERT INTO groupsgames (group_id, game_id)
+     VALUES ($1, 1)
+    `,
+    [groupIds[0]]
+  );
 
   await db.query(
     `INSERT INTO groupsusers (group_id, username, is_owner)

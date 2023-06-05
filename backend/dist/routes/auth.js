@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const jsonschema_1 = __importDefault(require("jsonschema"));
 const userRegister_json_1 = __importDefault(require("../schemas/userRegister.json"));
+const userAuth_json_1 = __importDefault(require("../schemas/userAuth.json"));
 const expressError_1 = require("../helpers/expressError");
 const user_1 = __importDefault(require("../models/user"));
 const token_1 = __importDefault(require("../helpers/token"));
@@ -27,7 +28,7 @@ router.post("/register", (req, res, next) => __awaiter(void 0, void 0, void 0, f
         const validator = jsonschema_1.default.validate(req.body, userRegister_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
         const { username, password } = req.body;
         const user = yield user_1.default.register(username, password);
@@ -43,10 +44,10 @@ router.post("/register", (req, res, next) => __awaiter(void 0, void 0, void 0, f
  */
 router.post("/login", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const validator = jsonschema_1.default.validate(req.body, userRegister_json_1.default);
+        const validator = jsonschema_1.default.validate(req.body, userAuth_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
         const { username, password } = req.body;
         const user = yield user_1.default.authenticate(username, password);

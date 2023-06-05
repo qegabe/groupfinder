@@ -29,7 +29,7 @@ router.post("/", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, vo
         const validator = jsonschema_1.default.validate(req.body, groupCreate_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
         const group = yield group_1.default.create(res.locals.user.username, req.body);
         return res.status(201).json({ group });
@@ -46,7 +46,7 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const validator = jsonschema_1.default.validate(req.query, groupFilter_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
         const groups = yield group_1.default.getList(100, req.query);
         return res.json({ groups });
@@ -58,12 +58,16 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 /**
  * GET /api/groups/:id
  */
-router.get("/:id", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const group = yield group_1.default.getById(+req.params.id);
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
+        const group = yield group_1.default.getById(id);
         //Only members of a private group can view its details
         if (group.isPrivate &&
-            group.members.indexOf(res.locals.user.username) === -1) {
+            (!res.locals.user ||
+                group.members.indexOf(res.locals.user.username) === -1)) {
             throw new expressError_1.UnauthorizedError(`You are not a member of group with id: ${group.id}`);
         }
         return res.json({ group });
@@ -80,8 +84,11 @@ router.patch("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0,
         const validator = jsonschema_1.default.validate(req.body, groupUpdate_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
-            throw new expressError_1.BadRequestError(errs.join("-"));
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
         const group = yield group_1.default.update(+req.params.id, req.body);
         return res.json({ group });
     }
@@ -94,6 +101,9 @@ router.patch("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0,
  */
 router.delete("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
         yield group_1.default.remove(+req.params.id);
         return res.json({ message: `Group with id: ${req.params.id} removed` });
     }
@@ -106,6 +116,9 @@ router.delete("/:id", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0
  */
 router.post("/:id/join", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
         const username = res.locals.user.username;
         yield group_1.default.join(username, +req.params.id);
         return res.json({
@@ -121,10 +134,49 @@ router.post("/:id/join", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(vo
  */
 router.post("/:id/leave", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
         const username = res.locals.user.username;
         yield group_1.default.leave(username, +req.params.id);
         return res.json({
             message: `User ${username} left group with id: ${req.params.id}`,
+        });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * POST /api/groups/:id/add/:username
+ */
+router.post("/:id/add/:username", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
+        const username = req.params.username;
+        yield group_1.default.join(username, +req.params.id);
+        return res.json({
+            message: `User ${username} was added to group with id: ${req.params.id}`,
+        });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
+ * POST /api/groups/:id/remove/:username
+ */
+router.post("/:id/remove/:username", auth_1.ensureIsOwner, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = +req.params.id;
+        if (isNaN(id))
+            throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
+        const username = req.params.username;
+        yield group_1.default.leave(username, +req.params.id);
+        return res.json({
+            message: `User ${username} was removed from group with id: ${req.params.id}`,
         });
     }
     catch (error) {

@@ -5,6 +5,7 @@ import { ExpressError, NotFoundError } from "./helpers/expressError";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import groupRoutes from "./routes/groups";
+import gameRoutes from "./routes/games";
 import { authenticateJWT } from "./middleware/auth";
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(authenticateJWT);
 app.use("/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
+app.use("/api/games", gameRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use((req, res, next) => {

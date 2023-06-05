@@ -18,6 +18,12 @@ interface IGroup {
   members?: string[];
 }
 
+interface IGame {
+  id?: number;
+  title?: string;
+  coverUrl?: string;
+}
+
 interface Filter {
   title?: string;
   startTimeAfter?: string;
@@ -25,4 +31,4 @@ interface Filter {
   maxSize?: number;
 }
 
-export { IUser, IGroup, Filter };
+export { IUser, IGroup, Filter, IGame };
