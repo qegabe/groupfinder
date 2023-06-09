@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000";
 
@@ -38,9 +39,24 @@ class GroupFinderApi {
     return res.token;
   }
 
+  static async getGroup(id: number) {
+    const res = await this.request(`api/groups/${id}`);
+
+    const group = res.group;
+
+    group.startTime = dayjs(group.startTime);
+    group.endTime = dayjs(group.endTime);
+    return group;
+  }
+
   static async getGroups(filter = {}) {
     const res = await this.request("api/groups", filter);
-    return res.groups;
+    const groups = res.groups.map((g: any) => ({
+      ...g,
+      startTime: dayjs(g.startTime),
+      endTime: dayjs(g.endTime),
+    }));
+    return groups;
   }
 
   static async createGroup(data: IGroup) {
@@ -51,10 +67,10 @@ class GroupFinderApi {
       delete newData.maxMembers;
     }
 
-    if (data.startTime) {
+    if (data.startTime && typeof data.startTime !== "string") {
       newData.startTime = data.startTime.toISOString();
     }
-    if (data.endTime) {
+    if (data.endTime && typeof data.endTime !== "string") {
       newData.endTime = data.endTime.toISOString();
     }
 

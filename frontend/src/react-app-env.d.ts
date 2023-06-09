@@ -1,11 +1,11 @@
 /// <reference types="react-scripts" />
 
 interface IGroup {
-  id?: number;
-  title?: string;
+  id: number;
+  title: string;
   description?: string;
-  startTime?: import("dayjs").Dayjs;
-  endTime?: import("dayjs").Dayjs;
+  startTime: import("dayjs").Dayjs;
+  endTime: import("dayjs").Dayjs;
   location?: string;
   isPrivate?: boolean;
   maxMembers?: number;
@@ -19,13 +19,6 @@ interface IUser {
   triviaScore?: number | null;
 }
 
-interface IGroupList {
-  id: number;
-  title: string;
-  startTime: string;
-  endTime: string;
-}
-
 interface GroupFilter {
   title?: string;
   startTimeAfter?: string;
@@ -34,13 +27,13 @@ interface GroupFilter {
 }
 
 interface GroupListProps {
-  groupsData: IGroupList[];
+  groupsData: IGroup[];
 }
 
 interface GroupCardProps {
   id: number;
   title: string;
-  startTime: string;
+  startTime: import("dayjs").Dayjs;
 }
 
 interface GroupFilterProps {

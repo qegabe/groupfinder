@@ -1,12 +1,8 @@
 import { AnyAction, ThunkAction, configureStore } from "@reduxjs/toolkit";
-import groupReducer from "./reducers/groupReducers";
-import userReducer from "./reducers/userReducer";
 import authReducer from "./reducers/authReducer";
 
 export const store = configureStore({
   reducer: {
-    groups: groupReducer,
-    users: userReducer,
     auth: authReducer,
   },
 });

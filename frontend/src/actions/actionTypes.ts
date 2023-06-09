@@ -1,6 +1,3 @@
-const LOAD_GROUPS = "LOAD_GROUPS";
-const ADD_GROUP = "ADD_GROUP";
-
 const SET_TOKEN = "SET_TOKEN";
 
-export { LOAD_GROUPS, ADD_GROUP, SET_TOKEN };
+export { SET_TOKEN };

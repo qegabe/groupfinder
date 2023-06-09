@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import GroupFilter from "./GroupFilter";
 import GroupFinderApi from "../../api";
 import { Dayjs } from "dayjs";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 interface FilterData {
   startTimeAfter: Dayjs | null;
@@ -19,12 +20,14 @@ function Groups() {
     startTimeBefore: null,
     maxSize: 10,
   });
-  const [groupsData, setGroupsData] = useState<IGroupList[]>([]);
+  const [groupsData, setGroupsData] = useState<IGroup[]>([]);
   const [searchData, setSearchData] = useState<GroupFilter>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadGroups() {
       setGroupsData(await GroupFinderApi.getGroups(searchData));
+      setLoading(false);
     }
     loadGroups();
   }, [searchData]);
@@ -42,6 +45,7 @@ function Groups() {
       data.startTimeBefore = formData.startTimeBefore.toISOString();
     }
     setSearchData(data);
+    setLoading(true);
   }
 
   return (
@@ -56,7 +60,7 @@ function Groups() {
 
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <GroupList groupsData={groupsData} />
+          {loading ? <LoadingSpinner /> : <GroupList groupsData={groupsData} />}
         </Grid>
         <Grid item xs={4}>
           <GroupFilter formData={formData} setFormData={setFormData} />

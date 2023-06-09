@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { ADD_GROUP, LOAD_GROUPS, SET_TOKEN } from "./actionTypes";
+import { SET_TOKEN } from "./actionTypes";
 import GroupFinderApi from "../api";
 import decode from "jwt-decode";
 import { AppThunk } from "../store";
@@ -30,37 +30,4 @@ function gotToken(token: string, user: IUser) {
   };
 }
 
-function loadGroups(): AppThunk {
-  return async function (dispatch: Dispatch) {
-    const groups = await GroupFinderApi.getGroups();
-    dispatch(gotGroups(groups));
-  };
-}
-
-function gotGroups(data: any) {
-  return {
-    type: LOAD_GROUPS,
-    payload: data,
-  };
-}
-
-function addGroup(data: IGroup) {
-  return async function (dispatch: Dispatch) {
-    const group = await GroupFinderApi.createGroup(data);
-    dispatch(addedGroup(group));
-  };
-}
-
-function addedGroup(group: IGroup) {
-  return {
-    type: ADD_GROUP,
-    payload: {
-      id: group.id,
-      title: group.title,
-      startTime: group.startTime,
-      endTime: group.endTime,
-    },
-  };
-}
-
-export { loadGroups, register, login, addGroup };
+export { register, login };

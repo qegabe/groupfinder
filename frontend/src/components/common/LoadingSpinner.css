@@ -1,0 +1,27 @@
+.LoadingSpinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 30vh;
+  width: 100%;
+}
+
+.LoadingSpinner:after {
+  content: "";
+  display: block;
+  width: 13rem;
+  height: 13rem;
+  margin: 1rem;
+  border-radius: 50%;
+  border: 14px dotted;
+  border-color: blue transparent transparent transparent;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

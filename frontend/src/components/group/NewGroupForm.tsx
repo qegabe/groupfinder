@@ -11,8 +11,7 @@ import useFormData from "../../hooks/useFormData";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/redux";
-import { addGroup } from "../../actions/actionCreators";
+import GroupFinderApi from "../../api";
 
 interface NewGroup {
   title: string;
@@ -34,7 +33,6 @@ const INITIAL_STATE: NewGroup = {
 
 function NewGroupForm() {
   const [formData, handleChange, setFormData] = useFormData(INITIAL_STATE);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   function setTimeData(value: Dayjs | null, prop: string) {
@@ -44,9 +42,9 @@ function NewGroupForm() {
     }));
   }
 
-  function handleSubmit(evt: React.FormEvent) {
+  async function handleSubmit(evt: React.FormEvent) {
     evt.preventDefault();
-    dispatch(addGroup(formData as IGroup));
+    await GroupFinderApi.createGroup(formData as IGroup);
     setFormData(INITIAL_STATE);
     navigate("/groups");
   }
