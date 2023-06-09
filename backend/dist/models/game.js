@@ -13,13 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const axios_1 = __importDefault(require("axios"));
+const igdb_1 = require("../helpers/igdb");
 const expressError_1 = require("../helpers/expressError");
-const IGDB_URL = "https://api.igdb.com/v4";
 class Game {
+    /**
+     * Tries to find a game in the database if it can't find it
+     * search IGDB and add it to the database
+     * @param id game id
+     * @returns {Promise<IGame>}
+     */
     static findOrAdd(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const dbQuery = yield db_1.default.query(`SELECT id
+            const dbQuery = yield db_1.default.query(`SELECT id,
+              title,
+              cover_url AS "coverUrl"
        FROM games
        WHERE id = $1
       `, [id]);
@@ -35,9 +42,14 @@ class Game {
             return game;
         });
     }
+    /**
+     * Search IGDB for games with titles that match the term
+     * @param term search term
+     * @returns {Promise<IGame[]>}
+     */
     static search(term) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield requestIGDB("search", `fields game; search "${term}"; limit 20;`);
+            const data = yield (0, igdb_1.requestIGDB)("search", `fields game; search "${term}"; limit 20;`);
             if (data.length === 0)
                 return [];
             const gameIds = data.reduce((acc, g) => {
@@ -49,6 +61,12 @@ class Game {
             return getGameData(gameIds);
         });
     }
+    /**
+     * Adds a game to the users favorites
+     * adds game to db if it isn't already
+     * @param username
+     * @param id game id
+     */
     static addFavorite(username, id) {
         return __awaiter(this, void 0, void 0, function* () {
             //add to db if it isn't there
@@ -72,6 +90,11 @@ class Game {
             }
         });
     }
+    /**
+     * Removes a game from a users favorites
+     * @param username
+     * @param id game id
+     */
     static removeFavorite(username, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query(`DELETE FROM favoritegames
@@ -82,6 +105,11 @@ class Game {
                 throw new expressError_1.NotFoundError(`Game with id ${id} not in favorites`);
         });
     }
+    /**
+     * Adds a game to group's games
+     * @param groupId
+     * @param gameId
+     */
     static addToGroup(groupId, gameId) {
         return __awaiter(this, void 0, void 0, function* () {
             //add to db if it isn't there
@@ -105,6 +133,11 @@ class Game {
             }
         });
     }
+    /**
+     * Removes a game from group's games
+     * @param groupId
+     * @param gameId
+     */
     static removeFromGroup(groupId, gameId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query(`DELETE FROM groupsgames
@@ -116,30 +149,15 @@ class Game {
         });
     }
 }
-function requestIGDB(endpoint, data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const resp = yield (0, axios_1.default)({
-                url: `${IGDB_URL}/${endpoint}`,
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
-                    "Client-ID": process.env.TWITCH_CLIENT_ID,
-                },
-                data,
-            });
-            return resp.data;
-        }
-        catch (error) {
-            //console.error(error);
-            console.error(error.code);
-        }
-    });
-}
+/**
+ * Gets game data from an array of game ids
+ * @param ids game ids
+ * @returns {Promise<IGame[]>}
+ */
 function getGameData(ids) {
     return __awaiter(this, void 0, void 0, function* () {
         let gameData = [];
-        const data = yield requestIGDB("games", `fields name,cover; where id = (${ids.join(",")});`);
+        const data = yield (0, igdb_1.requestIGDB)("games", `fields name,cover; where id = (${ids.join(",")});`);
         if (data.length > 0) {
             const coverIds = data.reduce((acc, g) => {
                 if (g.cover) {
@@ -149,7 +167,7 @@ function getGameData(ids) {
             }, []);
             let coverData = [];
             if (coverIds.length > 0) {
-                coverData = yield requestIGDB("covers", `fields url; where id = (${coverIds.join(",")});`);
+                coverData = yield (0, igdb_1.requestIGDB)("covers", `fields url; where id = (${coverIds.join(",")});`);
             }
             for (let g of data) {
                 let coverUrl = "";

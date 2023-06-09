@@ -22,7 +22,10 @@ function commonBeforeAll() {
     return __awaiter(this, void 0, void 0, function* () {
         yield db_1.default.query("DELETE FROM users");
         yield db_1.default.query("DELETE FROM groups");
+        yield db_1.default.query("DELETE FROM games");
         yield db_1.default.query("DELETE FROM groupsusers");
+        yield db_1.default.query("DELETE FROM favoritegames");
+        yield db_1.default.query("DELETE FROM groupsgames");
         yield db_1.default.query(`INSERT INTO users (username, password)
      VALUES ('u1', $1),
             ('u2', $2),
@@ -37,6 +40,16 @@ function commonBeforeAll() {
             ('g3', '2023-05-30T12:00:00.000Z', '2023-05-30T13:00:00.000Z')
      RETURNING id`);
         exports.groupIds = groupIds = res.rows.map((r) => r.id);
+        yield db_1.default.query(`INSERT INTO games (id, title, cover_url)
+     VALUES (1, 'game1', ''),
+            (2, 'game2', '')
+    `);
+        yield db_1.default.query(`INSERT INTO favoritegames (username, game_id)
+     VALUES ('u1', 1)
+    `);
+        yield db_1.default.query(`INSERT INTO groupsgames (group_id, game_id)
+     VALUES ($1, 1)
+    `, [groupIds[0]]);
         yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
      VALUES ($1, 'u1', true),
             ($1, 'u2', false)`, [groupIds[0]]);

@@ -23,7 +23,10 @@ function commonBeforeAll() {
     return __awaiter(this, void 0, void 0, function* () {
         yield db_1.default.query("DELETE FROM users");
         yield db_1.default.query("DELETE FROM groups");
+        yield db_1.default.query("DELETE FROM games");
         yield db_1.default.query("DELETE FROM groupsusers");
+        yield db_1.default.query("DELETE FROM favoritegames");
+        yield db_1.default.query("DELETE FROM groupsgames");
         yield user_1.default.register("u1", "12345");
         yield user_1.default.register("u2", "12345");
         yield user_1.default.register("u3", "12345");
@@ -45,6 +48,16 @@ function commonBeforeAll() {
             maxMembers: 1,
         });
         exports.groupIds = groupIds = [g1.id, g2.id, g3.id];
+        yield db_1.default.query(`INSERT INTO games (id, title, cover_url)
+     VALUES (1, 'game1', ''),
+            (2, 'game2', '')
+    `);
+        yield db_1.default.query(`INSERT INTO favoritegames (username, game_id)
+     VALUES ('u1', 1)
+    `);
+        yield db_1.default.query(`INSERT INTO groupsgames (group_id, game_id)
+     VALUES ($1, 1)
+    `, [groupIds[0]]);
         yield group_1.default.join("u2", g1.id);
     });
 }

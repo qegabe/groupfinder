@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler } from "express";
 import morgan from "morgan";
+import cors from "cors";
 import { ExpressError, NotFoundError } from "./helpers/expressError";
 
 import authRoutes from "./routes/auth";
@@ -10,6 +11,7 @@ import { authenticateJWT } from "./middleware/auth";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);

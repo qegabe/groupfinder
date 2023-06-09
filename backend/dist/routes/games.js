@@ -112,7 +112,7 @@ router.post("/:gameId/remove/:id", auth_1.ensureIsOwner, (req, res, next) => __a
             throw new expressError_1.BadRequestError(`'${req.params.id}' is not a valid group id`);
         yield game_1.default.removeFromGroup(groupId, gameId);
         return res.json({
-            message: `Game: ${gameId} remove from group: ${groupId}`,
+            message: `Game: ${gameId} removed from group: ${groupId}`,
         });
     }
     catch (error) {
