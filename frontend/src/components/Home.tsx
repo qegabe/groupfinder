@@ -1,5 +1,4 @@
 import React from "react";
-import GroupList from "./group/GroupList";
 import { Box, Typography } from "@mui/material";
 
 function Home() {

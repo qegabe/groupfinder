@@ -18,14 +18,14 @@ function NavBar() {
             to="/"
             sx={{
               mr: 2,
-              display: { xs: "none", md: "flex" },
+              display: "flex",
               fontWeight: 700,
               color: "inherit",
               textDecoration: "none",
             }}>
             GroupFinder
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: "flex" }}>
             <Button
               variant="outlined"
               component={Link}
@@ -54,7 +54,7 @@ function NavBar() {
               <Typography
                 noWrap
                 sx={{
-                  display: { xs: "none", md: "flex" },
+                  display: "flex",
                   fontWeight: 500,
                   color: "inherit",
                   textDecoration: "none",

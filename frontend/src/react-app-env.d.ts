@@ -19,10 +19,33 @@ interface IUser {
   triviaScore?: number | null;
 }
 
+interface IGroupList {
+  id: number;
+  title: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface GroupFilter {
+  title?: string;
+  startTimeAfter?: string;
+  startTimeBefore?: string;
+  maxSize?: number;
+}
+
+interface GroupListProps {
+  groupsData: IGroupList[];
+}
+
 interface GroupCardProps {
   id: number;
   title: string;
   startTime: string;
+}
+
+interface GroupFilterProps {
+  formData: any;
+  setFormData: (value: any) => void;
 }
 
 interface SearchBarProps {
