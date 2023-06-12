@@ -1,19 +1,24 @@
 import React from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import useFormData from "../../hooks/useFormData";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { register } from "../../actions/actionCreators";
-import { useNavigate } from "react-router-dom";
+import parseFormErrors from "../../helpers/parseFormErrors";
 
 function Register() {
   const [formData, handleChange] = useFormData({ username: "", password: "" });
+  const authError = useAppSelector((s) => s.auth.error);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   function handleSubmit(evt: any) {
     evt.preventDefault();
     dispatch(register(formData.username, formData.password));
-    navigate("/");
+  }
+
+  let formErrors: any = {};
+  if (authError) {
+    formErrors = parseFormErrors(authError);
+    console.log(formErrors);
   }
 
   return (
@@ -32,6 +37,7 @@ function Register() {
           sx={{ my: 1 }}
           value={formData.username}
           onChange={handleChange}
+          {...formErrors.username}
         />
         <TextField
           fullWidth
@@ -42,6 +48,7 @@ function Register() {
           sx={{ my: 1 }}
           value={formData.password}
           onChange={handleChange}
+          {...formErrors.password}
         />
         <Button variant="contained" type="submit">
           Submit

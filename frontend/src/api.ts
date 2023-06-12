@@ -74,7 +74,7 @@ class GroupFinderApi {
       newData.endTime = data.endTime.toISOString();
     }
 
-    const res = await this.request("api/groups", data, "POST");
+    const res = await this.request("api/groups", newData, "POST");
     return res.group;
   }
 

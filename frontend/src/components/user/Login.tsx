@@ -1,24 +1,42 @@
 import React from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import useFormData from "../../hooks/useFormData";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { login } from "../../actions/actionCreators";
-import { useNavigate } from "react-router-dom";
+import parseFormErrors from "../../helpers/parseFormErrors";
 
 function Login() {
   const [formData, handleChange] = useFormData({ username: "", password: "" });
+  const authError = useAppSelector((s) => s.auth.error);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   function handleSubmit(evt: any) {
     evt.preventDefault();
     dispatch(login(formData.username, formData.password));
-    navigate("/");
+  }
+
+  let formErrors: any = {};
+  if (authError) {
+    formErrors = parseFormErrors(authError);
   }
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3">Login</Typography>
+      {formErrors.message ? (
+        <Typography
+          sx={{
+            color: "rgb(200,0,0)",
+            p: 2,
+            my: 2,
+            border: 1,
+            borderRadius: "5px",
+            borderColor: "rgb(255,0,0,0.5)",
+            backgroundColor: "rgb(255,0,0,0.25)",
+          }}>
+          {formErrors.message}
+        </Typography>
+      ) : null}
       <Box
         component="form"
         autoComplete="off"

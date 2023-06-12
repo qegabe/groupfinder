@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
 import GroupFinderApi from "../../api";
+import parseFormErrors from "../../helpers/parseFormErrors";
 
 interface NewGroup {
   title: string;
@@ -33,6 +34,7 @@ const INITIAL_STATE: NewGroup = {
 
 function NewGroupForm() {
   const [formData, handleChange, setFormData] = useFormData(INITIAL_STATE);
+  const [formErrors, setFormErrors] = useState<any>({});
   const navigate = useNavigate();
 
   function setTimeData(value: Dayjs | null, prop: string) {
@@ -44,9 +46,15 @@ function NewGroupForm() {
 
   async function handleSubmit(evt: React.FormEvent) {
     evt.preventDefault();
-    await GroupFinderApi.createGroup(formData as IGroup);
-    setFormData(INITIAL_STATE);
-    navigate("/groups");
+    try {
+      await GroupFinderApi.createGroup(formData as IGroup);
+      setFormData(INITIAL_STATE);
+      navigate("/groups");
+    } catch (error: any) {
+      if (typeof error === "string") {
+        setFormErrors(parseFormErrors(error));
+      } else console.error(error);
+    }
   }
 
   return (
@@ -64,6 +72,7 @@ function NewGroupForm() {
           sx={{ my: 1 }}
           value={formData.title}
           onChange={handleChange}
+          {...formErrors.title}
         />
         <TextField
           fullWidth
@@ -74,6 +83,7 @@ function NewGroupForm() {
           sx={{ my: 1 }}
           value={formData.description}
           onChange={handleChange}
+          {...formErrors.description}
         />
         <DateTimePicker
           sx={{ width: "50%" }}
@@ -81,6 +91,7 @@ function NewGroupForm() {
           disablePast
           value={formData.startTime}
           onChange={(value) => setTimeData(value, "startTime")}
+          slotProps={{ textField: { ...formErrors.startTime } }}
         />
         <DateTimePicker
           sx={{ width: "50%" }}
@@ -88,6 +99,7 @@ function NewGroupForm() {
           disablePast
           value={formData.endTime}
           onChange={(value) => setTimeData(value, "endTime")}
+          slotProps={{ textField: { ...formErrors.endTime } }}
         />
         <Box
           sx={{
@@ -116,6 +128,7 @@ function NewGroupForm() {
             type="number"
             value={formData.maxMembers}
             onChange={handleChange}
+            {...formErrors.maxMembers}
           />
         </Box>
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
