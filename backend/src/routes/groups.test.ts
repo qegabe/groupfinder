@@ -161,7 +161,7 @@ describe("GET /api/groups/:id", () => {
         location: null,
         isPrivate: false,
         maxMembers: null,
-        members: ["u1", "u2"],
+        members: { u1: true, u2: false },
       },
     });
   });
@@ -181,7 +181,7 @@ describe("GET /api/groups/:id", () => {
         location: null,
         isPrivate: true,
         maxMembers: null,
-        members: ["u1"],
+        members: { u1: true },
       },
     });
   });

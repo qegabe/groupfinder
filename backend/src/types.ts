@@ -15,7 +15,7 @@ interface IGroup {
   location?: string;
   isPrivate?: boolean;
   maxMembers?: number;
-  members?: string[];
+  members?: object;
 }
 
 interface IGame {

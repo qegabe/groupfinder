@@ -59,7 +59,7 @@ router.get("/:id", async (req, res, next) => {
     if (
       group.isPrivate &&
       (!res.locals.user ||
-        group.members.indexOf(res.locals.user.username) === -1)
+        !group.members.hasOwnProperty(res.locals.user.username))
     ) {
       throw new UnauthorizedError(
         `You are not a member of group with id: ${group.id}`

@@ -8,13 +8,11 @@ const server = app.listen(PORT, () => {
 });
 
 if (process.env.NODE_ENV !== "test" && !validateToken()) {
-  console.log(`Failed to validate twitch token, closing server...`);
-  server.close();
+  console.log(`Failed to validate twitch token.`);
 }
 
 setInterval(() => {
   if (!validateToken()) {
-    console.log(`Failed to validate twitch token, closing server...`);
-    server.close();
+    console.log(`Failed to validate twitch token.`);
   }
 }, 3600000);

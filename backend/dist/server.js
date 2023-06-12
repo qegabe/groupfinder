@@ -11,13 +11,11 @@ const server = app_1.default.listen(config_1.PORT, () => {
     console.log(`Started on http://localhost:${config_1.PORT}`);
 });
 if (process.env.NODE_ENV !== "test" && !(0, igdb_1.validateToken)()) {
-    console.log(`Failed to validate twitch token, closing server...`);
-    server.close();
+    console.log(`Failed to validate twitch token.`);
 }
 setInterval(() => {
     if (!(0, igdb_1.validateToken)()) {
-        console.log(`Failed to validate twitch token, closing server...`);
-        server.close();
+        console.log(`Failed to validate twitch token.`);
     }
 }, 3600000);
 //# sourceMappingURL=server.js.map

@@ -67,7 +67,7 @@ router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         //Only members of a private group can view its details
         if (group.isPrivate &&
             (!res.locals.user ||
-                group.members.indexOf(res.locals.user.username) === -1)) {
+                !group.members.hasOwnProperty(res.locals.user.username))) {
             throw new expressError_1.UnauthorizedError(`You are not a member of group with id: ${group.id}`);
         }
         return res.json({ group });

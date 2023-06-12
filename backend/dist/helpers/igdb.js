@@ -20,23 +20,24 @@ const IGDB_URL = "https://api.igdb.com/v4";
  * @returns {boolean}
  */
 function validateToken() {
-    (0, axios_1.default)({
-        method: "GET",
-        url: `https://id.twitch.tv/oauth2/validate`,
-        headers: {
-            Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
-        },
-    })
-        .then((res) => {
-        console.log(`Twitch validated with ${res.status}`);
-        if (res.status === 401) {
+    if (process.env.TWITCH_TOKEN) {
+        (0, axios_1.default)({
+            method: "GET",
+            url: `https://id.twitch.tv/oauth2/validate`,
+            headers: {
+                Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
+            },
+        })
+            .then((res) => {
+            console.log(`Twitch validated with ${res.status}`);
+            return true;
+        })
+            .catch((e) => {
+            console.error(e);
             return false;
-        }
-    })
-        .catch((e) => {
-        console.error(e);
-    });
-    return true;
+        });
+    }
+    return false;
 }
 exports.validateToken = validateToken;
 /**
@@ -62,7 +63,7 @@ function requestIGDB(endpoint, data) {
         }
         catch (error) {
             //console.error(error);
-            console.error(error.code);
+            console.error(`IGDB Request failed with: ${error.code}`);
         }
     });
 }
