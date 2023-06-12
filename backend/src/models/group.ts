@@ -105,14 +105,19 @@ class Group {
     if (!group) throw new NotFoundError(`No group with id: ${id}`);
 
     const userResult = await db.query(
-      `SELECT username
+      `SELECT username, is_owner
       FROM groupsusers
       WHERE group_id = $1
       `,
       [group.id]
     );
 
-    const members = userResult.rows.map((u) => u.username);
+    //const members = userResult.rows.map((u) => u.username);
+    let members: any = {};
+    for (let m of userResult.rows) {
+      members[m.username] = m.is_owner;
+    }
+
     group.members = members;
     return group;
   }

@@ -91,11 +91,15 @@ class Group {
             const group = groupResult.rows[0];
             if (!group)
                 throw new expressError_1.NotFoundError(`No group with id: ${id}`);
-            const userResult = yield db_1.default.query(`SELECT username
+            const userResult = yield db_1.default.query(`SELECT username, is_owner
       FROM groupsusers
       WHERE group_id = $1
       `, [group.id]);
-            const members = userResult.rows.map((u) => u.username);
+            //const members = userResult.rows.map((u) => u.username);
+            let members = {};
+            for (let m of userResult.rows) {
+                members[m.username] = m.is_owner;
+            }
             group.members = members;
             return group;
         });

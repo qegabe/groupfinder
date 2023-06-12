@@ -78,6 +78,25 @@ class GroupFinderApi {
     return res.group;
   }
 
+  static async editGroup(id: number, data: IGroup) {
+    const newData: any = { ...data };
+
+    if (data.maxMembers) newData.maxMembers = +data.maxMembers;
+    if (isNaN(newData.maxMembers)) {
+      delete newData.maxMembers;
+    }
+
+    if (data.startTime && typeof data.startTime !== "string") {
+      newData.startTime = data.startTime.toISOString();
+    }
+    if (data.endTime && typeof data.endTime !== "string") {
+      newData.endTime = data.endTime.toISOString();
+    }
+
+    const res = await this.request(`api/groups/${id}`, newData, "PATCH");
+    return res.group;
+  }
+
   static async getUser(username: string) {
     const res = await this.request(`api/users/${username}`);
     return res.user;
