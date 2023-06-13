@@ -101,6 +101,15 @@ class GroupFinderApi {
     const res = await this.request(`api/users/${username}`);
     return res.user;
   }
+
+  static async searchGame(term: string) {
+    const res = await this.request("api/games", { search: term });
+    return res.games;
+  }
+
+  static async addGame(groupId: number, gameId: number) {
+    await this.request(`api/games/${gameId}/add/${groupId}`, {}, "POST");
+  }
 }
 
 export default GroupFinderApi;

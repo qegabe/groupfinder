@@ -14,6 +14,8 @@ import { Link, useParams } from "react-router-dom";
 import GroupFinderApi from "../../api";
 import parseFormErrors from "../../helpers/parseFormErrors";
 import LoadingSpinner from "../common/LoadingSpinner";
+import AddGame from "../game/AddGame";
+import Alert from "../common/Alert";
 
 interface NewGroup {
   title: string;
@@ -37,6 +39,7 @@ function EditGroupForm() {
   const { id } = useParams();
   const [formData, handleChange, setFormData] = useFormData(INITIAL_STATE);
   const [formErrors, setFormErrors] = useState<any>({});
+  const [alerts, setAlerts] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadGroup() {
@@ -71,11 +74,19 @@ function EditGroupForm() {
     }
   }
 
+  async function addGame(game: Game) {
+    await GroupFinderApi.addGame(+(id as string), game.id);
+    setAlerts([{ type: "success", text: `${game.title} added!` }]);
+  }
+
+  const alertcomps = alerts.map((a) => <Alert key={a.text} {...a} />);
+
   if (formData.title === "") return <LoadingSpinner />;
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3">Edit Group</Typography>
+      {alertcomps}
       <Box
         component="form"
         autoComplete="off"
@@ -147,17 +158,18 @@ function EditGroupForm() {
         </Box>
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <Button type="submit" variant="contained">
-            Create
+            Save
           </Button>
           <Button
             component={Link}
             to="/groups"
             variant="contained"
             color="secondary">
-            Cancel
+            Back
           </Button>
         </Box>
       </Box>
+      <AddGame addGame={addGame} />
     </Box>
   );
 }

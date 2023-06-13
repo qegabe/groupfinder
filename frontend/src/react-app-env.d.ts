@@ -19,6 +19,12 @@ interface IUser {
   triviaScore?: number | null;
 }
 
+interface Game {
+  id: number;
+  title: string;
+  coverUrl: string;
+}
+
 interface GroupFilter {
   title?: string;
   startTimeAfter?: string;
@@ -43,4 +49,14 @@ interface GroupFilterProps {
 
 interface SearchBarProps {
   submitSearch: (term: string) => void;
+  label?: string;
+}
+
+interface AddGameProps {
+  addGame: (game: Game) => void;
+}
+
+interface AlertProps {
+  type: "success" | "danger";
+  text: string;
 }

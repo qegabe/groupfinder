@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, TextField } from "@mui/material";
 import useFormData from "../../hooks/useFormData";
 
-function SearchBar({ submitSearch }: SearchBarProps) {
+function SearchBar({ submitSearch, label }: SearchBarProps) {
   const [formData, handleChange] = useFormData({ term: "" });
 
   function handleSubmit(evt: React.FormEvent) {
@@ -14,10 +14,11 @@ function SearchBar({ submitSearch }: SearchBarProps) {
     <Box
       component="form"
       autoComplete="off"
-      sx={{ display: "flex", width: "50%" }}
+      sx={{ display: "flex" }}
       onSubmit={handleSubmit}>
       <TextField
         fullWidth
+        label={label}
         id="term"
         sx={{ my: 2 }}
         value={formData.term}

@@ -4,6 +4,7 @@ import useFormData from "../../hooks/useFormData";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { login } from "../../actions/actionCreators";
 import parseFormErrors from "../../helpers/parseFormErrors";
+import Alert from "../common/Alert";
 
 function Login() {
   const [formData, handleChange] = useFormData({ username: "", password: "" });
@@ -24,18 +25,7 @@ function Login() {
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3">Login</Typography>
       {formErrors.message ? (
-        <Typography
-          sx={{
-            color: "rgb(200,0,0)",
-            p: 2,
-            my: 2,
-            border: 1,
-            borderRadius: "5px",
-            borderColor: "rgb(255,0,0,0.5)",
-            backgroundColor: "rgb(255,0,0,0.25)",
-          }}>
-          {formErrors.message}
-        </Typography>
+        <Alert type="danger" text={formErrors.message} />
       ) : null}
       <Box
         component="form"
