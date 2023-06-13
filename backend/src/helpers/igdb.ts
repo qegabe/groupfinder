@@ -4,25 +4,25 @@ const IGDB_URL = "https://api.igdb.com/v4";
 
 /**
  * Checks if the twitch token is valid
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-function validateToken(): boolean {
+async function validateToken(): Promise<boolean> {
   if (process.env.TWITCH_TOKEN !== undefined) {
-    axios({
-      method: "GET",
-      url: `https://id.twitch.tv/oauth2/validate`,
-      headers: {
-        Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
-      },
-    })
-      .then((res) => {
-        console.log(`Twitch validated with ${res.status}`);
-        return true;
-      })
-      .catch((e) => {
-        console.error(e);
-        return false;
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `https://id.twitch.tv/oauth2/validate`,
+        headers: {
+          Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
+        },
       });
+
+      console.log(`Twitch validated with ${res.status}`);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   return false;

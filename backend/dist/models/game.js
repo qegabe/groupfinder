@@ -156,6 +156,10 @@ class Game {
  */
 function getGameData(ids) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (ids.length === 0)
+            return new Promise((resolve, reject) => {
+                resolve([]);
+            });
         let gameData = [];
         const data = yield (0, igdb_1.requestIGDB)("games", `fields name,cover; where id = (${ids.join(",")});`);
         if (data.length > 0) {

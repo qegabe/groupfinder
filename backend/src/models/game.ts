@@ -161,6 +161,10 @@ class Game {
  * @returns {Promise<IGame[]>}
  */
 async function getGameData(ids: number[]): Promise<IGame[]> {
+  if (ids.length === 0)
+    return new Promise<IGame[]>((resolve, reject) => {
+      resolve([]);
+    });
   let gameData: IGame[] = [];
   const data = await requestIGDB(
     "games",

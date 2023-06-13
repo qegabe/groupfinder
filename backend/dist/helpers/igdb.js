@@ -17,27 +17,29 @@ const axios_1 = __importDefault(require("axios"));
 const IGDB_URL = "https://api.igdb.com/v4";
 /**
  * Checks if the twitch token is valid
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
 function validateToken() {
-    if (process.env.TWITCH_TOKEN !== undefined) {
-        (0, axios_1.default)({
-            method: "GET",
-            url: `https://id.twitch.tv/oauth2/validate`,
-            headers: {
-                Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
-            },
-        })
-            .then((res) => {
-            console.log(`Twitch validated with ${res.status}`);
-            return true;
-        })
-            .catch((e) => {
-            console.error(e);
-            return false;
-        });
-    }
-    return false;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (process.env.TWITCH_TOKEN !== undefined) {
+            try {
+                const res = yield (0, axios_1.default)({
+                    method: "GET",
+                    url: `https://id.twitch.tv/oauth2/validate`,
+                    headers: {
+                        Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
+                    },
+                });
+                console.log(`Twitch validated with ${res.status}`);
+                return true;
+            }
+            catch (error) {
+                console.error(error);
+                return false;
+            }
+        }
+        return false;
+    });
 }
 exports.validateToken = validateToken;
 /**
