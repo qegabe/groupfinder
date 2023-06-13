@@ -10,12 +10,11 @@ const app_1 = __importDefault(require("./app"));
 const server = app_1.default.listen(config_1.PORT, () => {
     console.log(`Started on http://localhost:${config_1.PORT}`);
 });
-if (process.env.NODE_ENV !== "test" && !(0, igdb_1.validateToken)()) {
-    console.log(`Failed to validate twitch token.`);
+if (process.env.NODE_ENV !== "test") {
+    setInterval(() => {
+        if (!(0, igdb_1.validateToken)()) {
+            console.log(`Failed to validate twitch token. Hourly check`);
+        }
+    }, 3600000);
 }
-setInterval(() => {
-    if (!(0, igdb_1.validateToken)()) {
-        console.log(`Failed to validate twitch token.`);
-    }
-}, 3600000);
 //# sourceMappingURL=server.js.map

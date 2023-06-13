@@ -7,12 +7,10 @@ const server = app.listen(PORT, () => {
   console.log(`Started on http://localhost:${PORT}`);
 });
 
-if (process.env.NODE_ENV !== "test" && !validateToken()) {
-  console.log(`Failed to validate twitch token.`);
+if (process.env.NODE_ENV !== "test") {
+  setInterval(() => {
+    if (!validateToken()) {
+      console.log(`Failed to validate twitch token. Hourly check`);
+    }
+  }, 3600000);
 }
-
-setInterval(() => {
-  if (!validateToken()) {
-    console.log(`Failed to validate twitch token.`);
-  }
-}, 3600000);

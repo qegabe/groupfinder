@@ -7,7 +7,7 @@ const IGDB_URL = "https://api.igdb.com/v4";
  * @returns {boolean}
  */
 function validateToken(): boolean {
-  if (process.env.TWITCH_TOKEN) {
+  if (process.env.TWITCH_TOKEN !== undefined) {
     axios({
       method: "GET",
       url: `https://id.twitch.tv/oauth2/validate`,
