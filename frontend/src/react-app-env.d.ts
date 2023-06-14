@@ -32,6 +32,15 @@ interface GroupFilter {
   maxSize?: number;
 }
 
+interface GroupFormData {
+  title: string;
+  description: string;
+  startTime: Dayjs | null;
+  endTime: Dayjs | null;
+  isPrivate: boolean;
+  maxMembers: number | undefined;
+}
+
 interface GroupListProps {
   groupsData: IGroup[];
 }

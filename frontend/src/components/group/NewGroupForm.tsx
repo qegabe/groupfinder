@@ -14,16 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GroupFinderApi from "../../api";
 import parseFormErrors from "../../helpers/parseFormErrors";
 
-interface NewGroup {
-  title: string;
-  description: string;
-  startTime: Dayjs | null;
-  endTime: Dayjs | null;
-  isPrivate: boolean;
-  maxMembers: number | undefined;
-}
-
-const INITIAL_STATE: NewGroup = {
+const INITIAL_STATE: GroupFormData = {
   title: "",
   description: "",
   startTime: null,
@@ -38,7 +29,7 @@ function NewGroupForm() {
   const navigate = useNavigate();
 
   function setTimeData(value: Dayjs | null, prop: string) {
-    setFormData((fd: NewGroup) => ({
+    setFormData((fd: GroupFormData) => ({
       ...fd,
       [prop]: value,
     }));
@@ -113,7 +104,7 @@ function NewGroupForm() {
                 id="isPrivate"
                 checked={formData.isPrivate}
                 onChange={(e) =>
-                  setFormData((fd: NewGroup) => ({
+                  setFormData((fd: GroupFormData) => ({
                     ...fd,
                     isPrivate: e.target.checked,
                   }))

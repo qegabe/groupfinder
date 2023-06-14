@@ -1,10 +1,9 @@
 import React from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import useFormData from "../../hooks/useFormData";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { login } from "../../actions/actionCreators";
 import parseFormErrors from "../../helpers/parseFormErrors";
-import Alert from "../common/Alert";
 
 function Login() {
   const [formData, handleChange] = useFormData({ username: "", password: "" });
@@ -25,12 +24,12 @@ function Login() {
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3">Login</Typography>
       {formErrors.message ? (
-        <Alert type="danger" text={formErrors.message} />
+        <Alert severity="error">{formErrors.message}</Alert>
       ) : null}
       <Box
         component="form"
         autoComplete="off"
-        sx={{ display: "block", my: 3, width: "60%" }}
+        sx={{ display: "grid", my: 3, width: "40%", justifyItems: "center" }}
         onSubmit={handleSubmit}>
         <TextField
           fullWidth
@@ -51,7 +50,7 @@ function Login() {
           value={formData.password}
           onChange={handleChange}
         />
-        <Button variant="contained" type="submit">
+        <Button sx={{ my: 2 }} variant="contained" type="submit">
           Submit
         </Button>
       </Box>

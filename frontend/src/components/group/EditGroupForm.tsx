@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Box,
   Button,
   FormControlLabel,
@@ -15,18 +16,8 @@ import GroupFinderApi from "../../api";
 import parseFormErrors from "../../helpers/parseFormErrors";
 import LoadingSpinner from "../common/LoadingSpinner";
 import AddGame from "../game/AddGame";
-import Alert from "../common/Alert";
 
-interface NewGroup {
-  title: string;
-  description: string;
-  startTime: Dayjs | null;
-  endTime: Dayjs | null;
-  isPrivate: boolean;
-  maxMembers: number | undefined;
-}
-
-const INITIAL_STATE: NewGroup = {
+const INITIAL_STATE: GroupFormData = {
   title: "",
   description: "",
   startTime: null,
@@ -39,7 +30,7 @@ function EditGroupForm() {
   const { id } = useParams();
   const [formData, handleChange, setFormData] = useFormData(INITIAL_STATE);
   const [formErrors, setFormErrors] = useState<any>({});
-  const [alerts, setAlerts] = useState<any[]>([]);
+  const [alertData, setAlertData] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadGroup() {
@@ -57,7 +48,7 @@ function EditGroupForm() {
   }, [id, setFormData]);
 
   function setTimeData(value: Dayjs | null, prop: string) {
-    setFormData((fd: NewGroup) => ({
+    setFormData((fd: GroupFormData) => ({
       ...fd,
       [prop]: value,
     }));
@@ -76,17 +67,21 @@ function EditGroupForm() {
 
   async function addGame(game: Game) {
     await GroupFinderApi.addGame(+(id as string), game.id);
-    setAlerts([{ type: "success", text: `${game.title} added!` }]);
+    setAlertData([{ severity: "success", text: `${game.title} added!` }]);
   }
 
-  const alertcomps = alerts.map((a) => <Alert key={a.text} {...a} />);
+  const alerts = alertData.map((a) => (
+    <Alert key={a.text} severity={a.severity}>
+      {a.text}
+    </Alert>
+  ));
 
   if (formData.title === "") return <LoadingSpinner />;
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3">Edit Group</Typography>
-      {alertcomps}
+      {alerts}
       <Box
         component="form"
         autoComplete="off"
@@ -138,7 +133,7 @@ function EditGroupForm() {
                 id="isPrivate"
                 checked={formData.isPrivate}
                 onChange={(e) =>
-                  setFormData((fd: NewGroup) => ({
+                  setFormData((fd: GroupFormData) => ({
                     ...fd,
                     isPrivate: e.target.checked,
                   }))
