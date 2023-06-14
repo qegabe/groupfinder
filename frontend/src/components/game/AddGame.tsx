@@ -66,7 +66,7 @@ function AddGame({ addGame }: AddGameProps) {
                   <img
                     style={{ width: "40px" }}
                     src={game.coverUrl}
-                    alt={game.title.toLowerCase()}
+                    alt={"cover"}
                   />
                 </Grid>
                 <Grid item sx={{ width: "calc(100% - 44px)" }}>

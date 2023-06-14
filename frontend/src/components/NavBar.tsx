@@ -2,10 +2,12 @@ import React from "react";
 import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../hooks/redux";
+import { useAppSelector, useAppDispatch } from "../hooks/redux";
+import { logout } from "../actions/actionCreators";
 
 function NavBar() {
   const user = useAppSelector((s) => s.auth.user);
+  const dispatch = useAppDispatch();
 
   return (
     <AppBar position="static">
@@ -54,13 +56,20 @@ function NavBar() {
               <Typography
                 noWrap
                 sx={{
-                  display: "flex",
+                  display: "inline-flex",
                   fontWeight: 500,
                   color: "inherit",
                   textDecoration: "none",
                 }}>
                 {user.username}
               </Typography>
+              <Button
+                sx={{ my: 2, ml: 2, color: "white" }}
+                onClick={(e) => {
+                  dispatch(logout());
+                }}>
+                Logout
+              </Button>
             </Box>
           )}
         </Toolbar>
