@@ -16,10 +16,10 @@ const mockrequest = jest
   .mockImplementation(async (endpoint, data) => {
     switch (endpoint) {
       case "games":
-        if (data === "fields name,cover; where id = (0);") {
+        if (data === "fields name,cover,category; where id = (0);") {
           return [];
         }
-        return [{ id: 3, name: "game3", cover: 3 }];
+        return [{ id: 3, name: "game3", cover: 3, category: 0 }];
       case "covers":
         return [{ id: 3, url: "//www.img.com/test.png" }];
       case "search":

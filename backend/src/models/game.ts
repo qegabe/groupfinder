@@ -168,11 +168,11 @@ async function getGameData(ids: number[]): Promise<IGame[]> {
   let gameData: IGame[] = [];
   const data = await requestIGDB(
     "games",
-    `fields name,cover; where id = (${ids.join(",")});`
+    `fields name,cover,category; where id = (${ids.join(",")});`
   );
   if (data.length > 0) {
     const coverIds = data.reduce((acc: number[], g: any) => {
-      if (g.cover) {
+      if (g.cover && g.category === 0) {
         acc.push(g.cover);
       }
       return acc;
@@ -192,11 +192,13 @@ async function getGameData(ids: number[]): Promise<IGame[]> {
           break;
         }
       }
-      gameData.push({
-        id: g.id,
-        title: g.name,
-        coverUrl,
-      });
+      if (g.category === 0) {
+        gameData.push({
+          id: g.id,
+          title: g.name,
+          coverUrl,
+        });
+      }
     }
   }
   return gameData;
