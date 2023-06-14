@@ -59,7 +59,7 @@ class GroupFinderApi {
     return groups;
   }
 
-  static async createGroup(data: IGroup) {
+  static async createGroup(data: GroupFormData) {
     const newData: any = { ...data };
 
     if (data.maxMembers) newData.maxMembers = +data.maxMembers;
@@ -78,7 +78,7 @@ class GroupFinderApi {
     return res.group;
   }
 
-  static async editGroup(id: number, data: IGroup) {
+  static async editGroup(id: number, data: GroupFormData) {
     const newData: any = { ...data };
 
     if (data.maxMembers) newData.maxMembers = +data.maxMembers;
@@ -109,6 +109,10 @@ class GroupFinderApi {
 
   static async addGame(groupId: number, gameId: number) {
     await this.request(`api/games/${gameId}/add/${groupId}`, {}, "POST");
+  }
+
+  static async removeGame(groupId: number, gameId: number) {
+    await this.request(`api/games/${gameId}/remove/${groupId}`, {}, "POST");
   }
 }
 

@@ -7,12 +7,13 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useAppSelector } from "../../hooks/redux";
+import GameList from "../game/GameList";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 function GroupDetail() {
   const { id } = useParams();
-  const [group, setGroup] = useState<IGroup>();
+  const [group, setGroup] = useState<Group>();
   const user = useAppSelector((s) => s.auth.user);
 
   useEffect(() => {
@@ -50,6 +51,11 @@ function GroupDetail() {
       <Typography>
         Lasts {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
       </Typography>
+      <Box sx={{ my: 3 }}>
+        <Typography>Games</Typography>
+        <GameList gameData={group.games} />
+      </Box>
+
       {edit}
     </Box>
   );

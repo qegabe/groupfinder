@@ -4,10 +4,10 @@ import Home from "./Home";
 import Register from "./user/Register";
 import Login from "./user/Login";
 import Groups from "./group/Groups";
-import NewGroupForm from "./group/NewGroupForm";
+import NewGroup from "./group/NewGroup";
 import GroupDetail from "./group/GroupDetail";
 import { useAppSelector } from "../hooks/redux";
-import EditGroupForm from "./group/EditGroupForm";
+import EditGroup from "./group/EditGroup";
 
 function GroupfinderRoutes() {
   const user = useAppSelector((s) => s.auth.user);
@@ -19,9 +19,9 @@ function GroupfinderRoutes() {
       <Route path="/groups" element={<Groups />} />
       {user.username ? (
         <>
-          <Route path="/groups/new" element={<NewGroupForm />} />
+          <Route path="/groups/new" element={<NewGroup />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
-          <Route path="/groups/:id/edit" element={<EditGroupForm />} />
+          <Route path="/groups/:id/edit" element={<EditGroup />} />
         </>
       ) : (
         <>

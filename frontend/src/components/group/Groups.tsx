@@ -20,7 +20,7 @@ function Groups() {
     startTimeBefore: null,
     maxSize: 10,
   });
-  const [groupsData, setGroupsData] = useState<IGroup[]>([]);
+  const [groupsData, setGroupsData] = useState<ListGroup[]>([]);
   const [searchData, setSearchData] = useState<GroupFilter>({});
   const [loading, setLoading] = useState(true);
 

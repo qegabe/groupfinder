@@ -1,16 +1,22 @@
 /// <reference types="react-scripts" />
 
-interface IGroup {
+interface Group {
   id: number;
   title: string;
-  description?: string;
+  description: string;
   startTime: import("dayjs").Dayjs;
   endTime: import("dayjs").Dayjs;
-  location?: string;
-  isPrivate?: boolean;
-  maxMembers?: number;
-  members?: object;
+  location: string;
+  isPrivate: boolean;
+  maxMembers: number;
+  members: object;
+  games: Game[];
 }
+
+type ListGroup = Omit<
+  Group,
+  "description" | "location" | "isPrivate" | "maxMembers" | "members" | "games"
+>;
 
 interface IUser {
   username?: string;
@@ -41,6 +47,16 @@ interface GroupFormData {
   maxMembers: number | undefined;
 }
 
+interface GroupFormProps {
+  initialState: GroupFormData;
+  formData: GroupFormData;
+  setFormData: (value: any) => void;
+  submit: () => Promise<void>;
+  returnPath: string;
+  shouldReturn: boolean;
+  buttons: { submit: string; cancel: string };
+}
+
 interface GroupListProps {
   groupsData: IGroup[];
 }
@@ -65,7 +81,11 @@ interface AddGameProps {
   addGame: (game: Game) => void;
 }
 
-interface AlertProps {
-  type: "success" | "danger";
-  text: string;
+interface GameListProps {
+  removeGame?: (game: Game) => Promise<void>;
+  gameData: Game[];
+}
+
+interface GameCardProps extends Game {
+  removeGame?: (game: Game) => Promise<void>;
 }
