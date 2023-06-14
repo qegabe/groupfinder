@@ -43,7 +43,6 @@ describe("POST /api/groups", () => {
         location: null,
         isPrivate: false,
         maxMembers: null,
-        members: ["u1"],
       },
     });
   });
@@ -161,7 +160,11 @@ describe("GET /api/groups/:id", () => {
         location: null,
         isPrivate: false,
         maxMembers: null,
-        members: { u1: true, u2: false },
+        members: {
+          u1: { isOwner: true, avatarUrl: null },
+          u2: { isOwner: false, avatarUrl: null },
+        },
+        games: [{ id: 1, title: "game1", coverUrl: "" }],
       },
     });
   });
@@ -181,7 +184,8 @@ describe("GET /api/groups/:id", () => {
         location: null,
         isPrivate: true,
         maxMembers: null,
-        members: { u1: true },
+        members: { u1: { isOwner: true, avatarUrl: null } },
+        games: [],
       },
     });
   });

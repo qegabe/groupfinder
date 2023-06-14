@@ -45,7 +45,6 @@ class Group {
       [group.id, username, true]
     );
 
-    group.members = [username];
     return group;
   }
 
@@ -105,20 +104,31 @@ class Group {
     if (!group) throw new NotFoundError(`No group with id: ${id}`);
 
     const userResult = await db.query(
-      `SELECT username, is_owner
-      FROM groupsusers
-      WHERE group_id = $1
+      `SELECT users.username, is_owner, avatar_url
+       FROM groupsusers
+       LEFT JOIN users ON groupsusers.username = users.username
+       WHERE group_id = $1
       `,
       [group.id]
     );
 
-    //const members = userResult.rows.map((u) => u.username);
     let members: any = {};
     for (let m of userResult.rows) {
-      members[m.username] = m.is_owner;
+      members[m.username] = { isOwner: m.is_owner, avatarUrl: m.avatar_url };
     }
-
     group.members = members;
+
+    const gameResult = await db.query(
+      `SELECT games.id, title, cover_url AS "coverUrl"
+       FROM groupsgames
+       LEFT JOIN games ON games.id = groupsgames.game_id
+       WHERE group_id = $1
+      `,
+      [group.id]
+    );
+
+    group.games = gameResult.rows;
+
     return group;
   }
 

@@ -41,7 +41,6 @@ class Group {
             yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
       VALUES  ($1, $2, $3)
       `, [group.id, username, true]);
-            group.members = [username];
             return group;
         });
     }
@@ -91,16 +90,22 @@ class Group {
             const group = groupResult.rows[0];
             if (!group)
                 throw new expressError_1.NotFoundError(`No group with id: ${id}`);
-            const userResult = yield db_1.default.query(`SELECT username, is_owner
-      FROM groupsusers
-      WHERE group_id = $1
+            const userResult = yield db_1.default.query(`SELECT users.username, is_owner, avatar_url
+       FROM groupsusers
+       LEFT JOIN users ON groupsusers.username = users.username
+       WHERE group_id = $1
       `, [group.id]);
-            //const members = userResult.rows.map((u) => u.username);
             let members = {};
             for (let m of userResult.rows) {
-                members[m.username] = m.is_owner;
+                members[m.username] = { isOwner: m.is_owner, avatarUrl: m.avatar_url };
             }
             group.members = members;
+            const gameResult = yield db_1.default.query(`SELECT games.id, title, cover_url AS "coverUrl"
+       FROM groupsgames
+       LEFT JOIN games ON games.id = groupsgames.game_id
+       WHERE group_id = $1
+      `, [group.id]);
+            group.games = gameResult.rows;
             return group;
         });
     }

@@ -33,7 +33,6 @@ describe("create", () => {
       location: null,
       isPrivate: false,
       maxMembers: null,
-      members: ["u1"],
     });
   });
 
@@ -57,7 +56,6 @@ describe("create", () => {
       location: "place",
       isPrivate: true,
       maxMembers: 10,
-      members: ["u1"],
     });
   });
 });
@@ -123,7 +121,11 @@ describe("getById", () => {
       location: null,
       isPrivate: false,
       maxMembers: null,
-      members: { u1: true, u2: false },
+      members: {
+        u1: { isOwner: true, avatarUrl: null },
+        u2: { isOwner: false, avatarUrl: null },
+      },
+      games: [{ id: 1, title: "game1", coverUrl: "" }],
     });
   });
 

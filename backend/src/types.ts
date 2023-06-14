@@ -16,6 +16,7 @@ interface IGroup {
   isPrivate?: boolean;
   maxMembers?: number;
   members?: object;
+  games?: IGame[];
 }
 
 interface IGame {
