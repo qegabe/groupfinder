@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
+import AddGame from "../game/AddGame";
+import GameList from "../game/GameList";
 
 function GroupFilter({ formData, setFormData }: GroupFilterProps) {
+  const [games, setGames] = useState<Game[]>([]);
+
   function handleSliderChange(evt: Event, value: number | number[]) {
     setFormData((fd: any) => ({
       ...fd,
@@ -24,6 +28,23 @@ function GroupFilter({ formData, setFormData }: GroupFilterProps) {
       startTimeBefore: null,
       maxSize: 10,
     });
+    setGames([]);
+  }
+
+  function addGame(game: Game) {
+    setFormData((fd: any) => ({
+      ...fd,
+      hasGames: [...fd.hasGames, game.id],
+    }));
+    setGames((g: Game[]) => [...g, game]);
+  }
+
+  function removeGame(game: Game) {
+    setFormData((fd: any) => ({
+      ...fd,
+      hasGames: fd.hasGames.filter((id: number) => id !== game.id),
+    }));
+    setGames((gam: Game[]) => gam.filter((g) => g.id !== game.id));
   }
 
   return (
@@ -41,6 +62,9 @@ function GroupFilter({ formData, setFormData }: GroupFilterProps) {
         <Typography variant="h6" sx={{ my: 2 }}>
           Filter Groups
         </Typography>
+        <Button variant="outlined" onClick={reset} sx={{ my: 2 }}>
+          Reset
+        </Button>
         <DateTimePicker
           label="Starting Before"
           sx={{ my: 1 }}
@@ -67,9 +91,12 @@ function GroupFilter({ formData, setFormData }: GroupFilterProps) {
             onChange={handleSliderChange}
           />
         </Box>
-        <Button variant="outlined" onClick={reset} sx={{ my: 2 }}>
-          Reset
-        </Button>
+      </Box>
+      <Box sx={{ padding: "0 10%" }}>
+        <AddGame addGame={addGame} />
+        <Box sx={{ my: 2 }}>
+          <GameList gameData={games} removeGame={removeGame} />
+        </Box>
       </Box>
     </Stack>
   );

@@ -42,6 +42,7 @@ interface GroupFilter {
   startTimeAfter?: string;
   startTimeBefore?: string;
   maxSize?: number;
+  hasGames?: number[];
 }
 
 interface GroupFormData {
@@ -88,7 +89,7 @@ interface AddUserProps {
 }
 
 interface UserListProps {
-  removeUser?: (user: User) => Promise<void>;
+  removeUser?: (user: User) => void;
   userData: {
     [username: string]: {
       avatarUrl: string | null;
@@ -98,7 +99,7 @@ interface UserListProps {
 }
 
 interface UserCardProps {
-  removeUser?: (user: User) => Promise<void>;
+  removeUser?: (user: User) => void;
   username: string;
   avatarUrl: string | null;
   isOwner: boolean;
@@ -109,10 +110,10 @@ interface AddGameProps {
 }
 
 interface GameListProps {
-  removeGame?: (game: Game) => Promise<void>;
+  removeGame?: (game: Game) => void;
   gameData: Game[];
 }
 
 interface GameCardProps extends Game {
-  removeGame?: (game: Game) => Promise<void>;
+  removeGame?: (game: Game) => void;
 }

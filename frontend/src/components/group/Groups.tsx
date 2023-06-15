@@ -12,6 +12,7 @@ interface FilterData {
   startTimeAfter: Dayjs | null;
   startTimeBefore: Dayjs | null;
   maxSize: number;
+  hasGames: number[];
 }
 
 function Groups() {
@@ -19,6 +20,7 @@ function Groups() {
     startTimeAfter: null,
     startTimeBefore: null,
     maxSize: 10,
+    hasGames: [],
   });
   const [groupsData, setGroupsData] = useState<ListGroup[]>([]);
   const [searchData, setSearchData] = useState<GroupFilter>({});
@@ -37,6 +39,10 @@ function Groups() {
       title: term,
       maxSize: formData.maxSize,
     };
+
+    if (formData.hasGames.length > 0) {
+      data.hasGames = formData.hasGames;
+    }
 
     if (formData.startTimeAfter) {
       data.startTimeAfter = formData.startTimeAfter.toISOString();
