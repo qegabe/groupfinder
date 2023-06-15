@@ -30,7 +30,8 @@ interface Filter {
   title?: string;
   startTimeAfter?: string;
   startTimeBefore?: string;
-  maxSize?: number;
+  maxSize?: string;
+  hasGames?: string[] | string;
 }
 
 export { IUser, IGroup, Filter, IGame };

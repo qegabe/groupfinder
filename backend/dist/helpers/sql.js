@@ -65,6 +65,17 @@ function sqlForFiltering(filter) {
                 matchers.push(m);
                 values.push(filter.maxSize);
                 break;
+            case "hasGames":
+                if (typeof filter.hasGames === "string") {
+                    filter.hasGames = [filter.hasGames];
+                }
+                const params = filter.hasGames.map((g, idx) => `$${i + idx}`);
+                const subquery = `id IN (SELECT group_id
+                                 FROM groupsgames
+                                 WHERE game_id IN (${params.join(",")}))`;
+                matchers.push(subquery);
+                values.push(...filter.hasGames);
+                break;
             default:
                 break;
         }

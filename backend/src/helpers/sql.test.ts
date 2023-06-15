@@ -7,7 +7,7 @@ describe("sql helpers", () => {
       title: "test",
       startTimeAfter: "test2",
       startTimeBefore: "test3",
-      maxSize: 5,
+      maxSize: "5",
     };
 
     const { matchers, values } = sqlForFiltering(filter);
