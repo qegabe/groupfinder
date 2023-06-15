@@ -36,7 +36,7 @@ function NavBar() {
               Groups
             </Button>
           </Box>
-          {user.username === undefined ? (
+          {!user ? (
             <Box sx={{ flexGrow: 0 }}>
               <Button
                 component={Link}

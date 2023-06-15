@@ -39,6 +39,32 @@ describe("GET /api/users", () => {
       ],
     });
   });
+
+  it("works filtered", async () => {
+    const resp = await request(app).get("/api/users").query({ username: "2" });
+
+    expect(resp.body).toEqual({
+      users: [
+        {
+          username: "u2",
+          avatarUrl: null,
+        },
+      ],
+    });
+  });
+
+  it("bad request invalid data", async () => {
+    const resp = await request(app).get("/api/users").query({
+      username: "1",
+      notAProperty: "",
+    });
+
+    expect(resp.statusCode).toEqual(400);
+    const errs = JSON.parse(resp.body.error.message);
+    expect(errs).toEqual([
+      'instance is not allowed to have the additional property "notAProperty"',
+    ]);
+  });
 });
 
 /****************************************** GET /api/users/:username */

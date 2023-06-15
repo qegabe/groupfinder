@@ -85,14 +85,20 @@ class User {
      * @param {number} [limit=100] how many users to get
      * @returns {Promise<IUser[]>} [{ username, avatarUrl }]
      */
-    static getList(limit = 100) {
+    static getList(filter = {}, limit = 100) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(` SELECT username,
-               avatar_url AS "avatarUrl"
-       FROM users
-       ORDER BY username
-       LIMIT $1
-      `, [limit]);
+            const { matchers, values } = (0, sql_1.sqlForFiltering)(filter);
+            let where = "";
+            if (matchers.length > 0) {
+                where = `WHERE ${matchers.join(" AND ")}`;
+            }
+            const query = `SELECT username,
+                           avatar_url AS "avatarUrl"
+                   FROM users
+                   ${where}
+                   ORDER BY username
+                   LIMIT $${values.length + 1}`;
+            const result = yield db_1.default.query(query, [...values, limit]);
             return result.rows;
         });
     }

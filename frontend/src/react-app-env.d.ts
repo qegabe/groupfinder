@@ -9,7 +9,12 @@ interface Group {
   location: string;
   isPrivate: boolean;
   maxMembers: number;
-  members: object;
+  members: {
+    [username: string]: {
+      avatarUrl: string | null;
+      isOwner: boolean;
+    };
+  };
   games: Game[];
 }
 
@@ -18,11 +23,12 @@ type ListGroup = Omit<
   "description" | "location" | "isPrivate" | "maxMembers" | "members" | "games"
 >;
 
-interface IUser {
-  username?: string;
+interface User {
+  username: string;
   bio?: string;
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
   triviaScore?: number | null;
+  isOwner?: boolean;
 }
 
 interface Game {
@@ -75,6 +81,27 @@ interface GroupFilterProps {
 interface SearchBarProps {
   submitSearch: (term: string) => void;
   label?: string;
+}
+
+interface AddUserProps {
+  addUser: (user: User) => void;
+}
+
+interface UserListProps {
+  removeUser?: (user: User) => Promise<void>;
+  userData: {
+    [username: string]: {
+      avatarUrl: string | null;
+      isOwner: boolean;
+    };
+  };
+}
+
+interface UserCardProps {
+  removeUser?: (user: User) => Promise<void>;
+  username: string;
+  avatarUrl: string | null;
+  isOwner: boolean;
 }
 
 interface AddGameProps {

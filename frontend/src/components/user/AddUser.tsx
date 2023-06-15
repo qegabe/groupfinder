@@ -10,65 +10,65 @@ import {
 } from "@mui/material";
 import GroupFinderApi from "../../api";
 
-function AddGame({ addGame }: AddGameProps) {
+function AddUser({ addUser }: AddUserProps) {
   const [inputValue, setInputValue] = useState("");
-  const [game, setGame] = useState<Game | null>(null);
-  const [games, setGames] = useState<Game[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
   const search = useMemo(
     () =>
-      debounce(async (term: string) => {
-        const options = await GroupFinderApi.searchGame(term);
-        setGames(options);
-      }, 1000),
+      debounce(async (username: string) => {
+        const options = await GroupFinderApi.getUsers(username);
+        setUsers(options);
+      }, 400),
     []
   );
 
   useEffect(() => {
     if (inputValue === "") {
-      setGames([]);
-    } else if (!game) {
+      setUsers([]);
+    } else if (!user) {
       search(inputValue);
     }
-  }, [inputValue, search, game]);
+  }, [inputValue, search, user]);
 
   return (
     <Box component="form" sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
         sx={{ width: 300 }}
         getOptionLabel={(option) =>
-          typeof option === "string" ? option : option.title
+          typeof option === "string" ? option : option.username
         }
         filterOptions={(x) => x}
-        options={games}
+        options={users}
         autoComplete
         includeInputInList
         filterSelectedOptions
-        value={game}
-        noOptionsText="No games"
-        onChange={(e: any, newValue: Game | null) => {
-          setGames(newValue ? [newValue, ...games] : games);
-          setGame(newValue);
+        value={user}
+        noOptionsText="No users"
+        onChange={(e: any, newValue: User | null) => {
+          setUsers(newValue ? [newValue, ...users] : users);
+          setUser(newValue);
         }}
         onInputChange={(e: any, newInputValue) => {
           setInputValue(newInputValue);
         }}
         renderInput={(params) => (
-          <TextField {...params} label="Add a game" fullWidth />
+          <TextField {...params} label="Add a user" fullWidth />
         )}
-        renderOption={(props, game) => {
+        renderOption={(props, u) => {
           return (
             <li {...props}>
               <Grid container alignItems="center">
                 <Grid item sx={{ display: "flex", width: 44 }}>
                   <img
                     style={{ width: "40px" }}
-                    src={game.coverUrl}
-                    alt={"cover"}
+                    src={u.avatarUrl || undefined}
+                    alt={"avatar"}
                   />
                 </Grid>
                 <Grid item sx={{ width: "calc(100% - 44px)" }}>
-                  <Typography>{game.title}</Typography>
+                  <Typography>{u.username}</Typography>
                 </Grid>
               </Grid>
             </li>
@@ -78,7 +78,7 @@ function AddGame({ addGame }: AddGameProps) {
       <Button
         variant="contained"
         onClick={() => {
-          addGame(game as Game);
+          addUser(user as User);
         }}>
         Add
       </Button>
@@ -86,4 +86,4 @@ function AddGame({ addGame }: AddGameProps) {
   );
 }
 
-export default AddGame;
+export default AddUser;

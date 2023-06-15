@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Box, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
 import LoadingSpinner from "../common/LoadingSpinner";
 import AddGame from "../game/AddGame";
 import GameList from "../game/GameList";
+import AddUser from "../user/AddUser";
+import UserList from "../user/UserList";
 
 const INITIAL_STATE: GroupFormData = {
   title: "",
@@ -18,22 +20,22 @@ const INITIAL_STATE: GroupFormData = {
 
 function EditGroup() {
   const { id } = useParams();
+  const groupId = +(id as string);
   const [groupData, setGroupData] = useState<Group>(INITIAL_STATE as Group);
   const [alertData, setAlertData] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadGroup() {
-      const group = await GroupFinderApi.getGroup(+(id as string));
+      const group = await GroupFinderApi.getGroup(groupId);
       setGroupData({
         ...group,
         maxMembers: group.maxMembers || undefined,
       });
     }
     loadGroup();
-  }, [id, setGroupData]);
+  }, [groupId, setGroupData]);
 
   async function submit() {
-    const groupId = +(id as string);
     await GroupFinderApi.editGroup(groupId, {
       title: groupData.title,
       description: groupData.description,
@@ -44,9 +46,48 @@ function EditGroup() {
     });
   }
 
+  async function addUser(user: User) {
+    try {
+      await GroupFinderApi.addUser(groupId, user.username);
+      setGroupData((gd: Group) => ({
+        ...gd,
+        members: {
+          ...gd.members,
+          [user.username as keyof object]: {
+            avatarUrl: user.avatarUrl,
+            isOwner: false,
+          },
+        },
+      }));
+      setAlertData([{ severity: "success", text: `${user.username} added!` }]);
+    } catch (error) {
+      setAlertData([{ severity: "error", text: `Couldn't add user!` }]);
+    }
+  }
+
+  async function removeUser(user: User) {
+    try {
+      await GroupFinderApi.removeUser(groupId, user.username);
+      setGroupData((gd: Group) => {
+        const members = { ...gd.members };
+        delete members[user.username as keyof object];
+
+        return {
+          ...gd,
+          members,
+        };
+      });
+      setAlertData([
+        { severity: "success", text: `${user.username} removed!` },
+      ]);
+    } catch (error) {
+      setAlertData([{ severity: "error", text: `Couldn't remove user!` }]);
+    }
+  }
+
   async function addGame(game: Game) {
     try {
-      await GroupFinderApi.addGame(+(id as string), game.id);
+      await GroupFinderApi.addGame(groupId, game.id);
       setGroupData((gd: Group) => ({
         ...gd,
         games: [...(gd.games as Game[]), game],
@@ -59,7 +100,7 @@ function EditGroup() {
 
   async function removeGame(game: Game) {
     try {
-      await GroupFinderApi.removeGame(+(id as string), game.id);
+      await GroupFinderApi.removeGame(groupId, game.id);
       setGroupData((gd: Group) => ({
         ...gd,
         games: (gd.games as Game[]).filter((g) => g.id !== game.id),
@@ -93,11 +134,22 @@ function EditGroup() {
         shouldReturn={false}
         buttons={{ submit: "Save", cancel: "Cancel" }}
       />
-      <AddGame addGame={addGame} />
-      <Box sx={{ my: 2 }}>
-        <Typography>Games</Typography>
-        <GameList gameData={groupData.games} removeGame={removeGame} />
-      </Box>
+      <Grid container spacing={2}>
+        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
+          <AddUser addUser={addUser} />
+          <Box sx={{ my: 2 }}>
+            <Typography>Users</Typography>
+            <UserList userData={groupData.members} removeUser={removeUser} />
+          </Box>
+        </Grid>
+        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
+          <AddGame addGame={addGame} />
+          <Box sx={{ my: 2 }}>
+            <Typography>Games</Typography>
+            <GameList gameData={groupData.games} removeGame={removeGame} />
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

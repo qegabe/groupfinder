@@ -44,6 +44,10 @@ function sqlForFiltering(filter: Filter) {
   for (let key of keys) {
     const i = values.length + 1;
     switch (key) {
+      case "username":
+        matchers.push(`username ILIKE $${i}`);
+        values.push(`%${filter.username}%`);
+        break;
       case "title":
         matchers.push(`title ILIKE $${i}`);
         values.push(`%${filter.title}%`);

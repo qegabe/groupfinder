@@ -3,11 +3,11 @@ import { LOGOUT, SET_ERROR, SET_TOKEN } from "../actions/actionTypes";
 
 const INITIAL_STATE: {
   token: string | null;
-  user: IUser;
+  user: User | null;
   error: string | null;
 } = {
   token: null,
-  user: {},
+  user: null,
   error: null,
 };
 

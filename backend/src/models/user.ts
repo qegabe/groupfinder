@@ -8,8 +8,8 @@ import {
   UnauthorizedError,
 } from "../helpers/expressError";
 import { QueryResult } from "pg";
-import { IUser } from "../types";
-import { sqlForPartialUpdate } from "../helpers/sql";
+import { Filter, IUser } from "../types";
+import { sqlForPartialUpdate, sqlForFiltering } from "../helpers/sql";
 
 /** Related functions for users */
 class User {
@@ -90,16 +90,25 @@ class User {
    * @param {number} [limit=100] how many users to get
    * @returns {Promise<IUser[]>} [{ username, avatarUrl }]
    */
-  static async getList(limit: number = 100): Promise<IUser[]> {
-    const result = await db.query(
-      ` SELECT username,
-               avatar_url AS "avatarUrl"
-       FROM users
-       ORDER BY username
-       LIMIT $1
-      `,
-      [limit]
-    );
+  static async getList(
+    filter: Filter = {},
+    limit: number = 100
+  ): Promise<IUser[]> {
+    const { matchers, values } = sqlForFiltering(filter);
+
+    let where = "";
+    if (matchers.length > 0) {
+      where = `WHERE ${matchers.join(" AND ")}`;
+    }
+
+    const query = `SELECT username,
+                           avatar_url AS "avatarUrl"
+                   FROM users
+                   ${where}
+                   ORDER BY username
+                   LIMIT $${values.length + 1}`;
+
+    const result = await db.query(query, [...values, limit]);
 
     return result.rows;
   }

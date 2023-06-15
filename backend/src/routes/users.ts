@@ -3,6 +3,7 @@ import User from "../models/user";
 import jsonschema from "jsonschema";
 import { BadRequestError } from "../helpers/expressError";
 import userUpdateSchema from "../schemas/userUpdate.json";
+import userFilterSchema from "../schemas/userFilter.json";
 import { ensureCorrectUser } from "../middleware/auth";
 
 const router = express.Router();
@@ -12,7 +13,13 @@ const router = express.Router();
  */
 router.get("/", async (req, res, next) => {
   try {
-    const users = await User.getList();
+    const validator = jsonschema.validate(req.query, userFilterSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map((e) => e.stack);
+      throw new BadRequestError(JSON.stringify(errs));
+    }
+
+    const users = await User.getList(req.query);
     return res.json({ users });
   } catch (error) {
     return next(error);

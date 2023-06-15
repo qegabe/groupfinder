@@ -26,6 +26,7 @@ interface IGame {
 }
 
 interface Filter {
+  username?: string;
   title?: string;
   startTimeAfter?: string;
   startTimeBefore?: string;

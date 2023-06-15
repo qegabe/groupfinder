@@ -104,6 +104,17 @@ describe("getList", () => {
       },
     ]);
   });
+
+  it("works filtered", async () => {
+    const users = await User.getList({ username: "2" });
+
+    expect(users).toEqual([
+      {
+        username: "u2",
+        avatarUrl: null,
+      },
+    ]);
+  });
 });
 
 /********************************************** getByUsername */

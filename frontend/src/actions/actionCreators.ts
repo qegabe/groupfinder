@@ -62,7 +62,7 @@ function gotError(error: string) {
   };
 }
 
-function gotToken(token: string, user: IUser) {
+function gotToken(token: string, user: User) {
   GroupFinderApi.token = token;
   localStorage.setItem("groupfinder-token", token);
   return {

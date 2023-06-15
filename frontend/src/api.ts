@@ -102,6 +102,24 @@ class GroupFinderApi {
     return res.user;
   }
 
+  static async getUsers(username?: string) {
+    const query: { username?: string } = {};
+    if (username) {
+      query.username = username;
+    }
+
+    const res = await this.request(`api/users`, query);
+    return res.users;
+  }
+
+  static async addUser(groupId: number, username: string) {
+    await this.request(`api/groups/${groupId}/add/${username}`, {}, "POST");
+  }
+
+  static async removeUser(groupId: number, username: string) {
+    await this.request(`api/groups/${groupId}/remove/${username}`, {}, "POST");
+  }
+
   static async searchGame(term: string) {
     const res = await this.request("api/games", { search: term });
     return res.games;

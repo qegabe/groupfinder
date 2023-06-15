@@ -17,7 +17,7 @@ function GroupfinderRoutes() {
       <Route path="/" element={<Home />} />
 
       <Route path="/groups" element={<Groups />} />
-      {user.username ? (
+      {user ? (
         <>
           <Route path="/groups/new" element={<NewGroup />} />
           <Route path="/groups/:id" element={<GroupDetail />} />

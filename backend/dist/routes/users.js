@@ -17,6 +17,7 @@ const user_1 = __importDefault(require("../models/user"));
 const jsonschema_1 = __importDefault(require("jsonschema"));
 const expressError_1 = require("../helpers/expressError");
 const userUpdate_json_1 = __importDefault(require("../schemas/userUpdate.json"));
+const userFilter_json_1 = __importDefault(require("../schemas/userFilter.json"));
 const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 /**
@@ -24,7 +25,12 @@ const router = express_1.default.Router();
  */
 router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield user_1.default.getList();
+        const validator = jsonschema_1.default.validate(req.query, userFilter_json_1.default);
+        if (!validator.valid) {
+            const errs = validator.errors.map((e) => e.stack);
+            throw new expressError_1.BadRequestError(JSON.stringify(errs));
+        }
+        const users = yield user_1.default.getList(req.query);
         return res.json({ users });
     }
     catch (error) {
