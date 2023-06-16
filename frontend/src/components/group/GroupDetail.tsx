@@ -28,7 +28,7 @@ function GroupDetail() {
 
   let edit = null;
   if (group.members) {
-    if (group.members[user.username as keyof object]) {
+    if (group.members[user?.username as keyof object]) {
       edit = (
         <Button variant="contained" component={Link} to={`/groups/${id}/edit`}>
           Edit

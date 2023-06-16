@@ -1,17 +1,19 @@
 import { AnyAction } from "@reduxjs/toolkit";
 import { LOGOUT, SET_ERROR, SET_TOKEN } from "../actions/actionTypes";
 
-const INITIAL_STATE: {
+interface AuthState {
   token: string | null;
   user: User | null;
   error: string | null;
-} = {
+}
+
+const INITIAL_STATE: AuthState = {
   token: null,
   user: null,
   error: null,
 };
 
-function authReducer(state = INITIAL_STATE, action: AnyAction) {
+function authReducer(state = INITIAL_STATE, action: AnyAction): AuthState {
   switch (action.type) {
     case SET_TOKEN:
       return { ...action.payload };

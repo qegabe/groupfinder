@@ -8,6 +8,7 @@ import NewGroup from "./group/NewGroup";
 import GroupDetail from "./group/GroupDetail";
 import { useAppSelector } from "../hooks/redux";
 import EditGroup from "./group/EditGroup";
+import UserGroups from "./group/UserGroups";
 
 function GroupfinderRoutes() {
   const user = useAppSelector((s) => s.auth.user);
@@ -22,6 +23,7 @@ function GroupfinderRoutes() {
           <Route path="/groups/new" element={<NewGroup />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
           <Route path="/groups/:id/edit" element={<EditGroup />} />
+          <Route path="/user/groups" element={<UserGroups />} />
         </>
       ) : (
         <>

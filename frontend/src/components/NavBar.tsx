@@ -1,13 +1,64 @@
-import React from "react";
-import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
+import React, { useState, MouseEvent } from "react";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { logout } from "../actions/actionCreators";
 
 function NavBar() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const user = useAppSelector((s) => s.auth.user);
   const dispatch = useAppDispatch();
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  function handleMenuOpen(evt: MouseEvent<HTMLElement>) {
+    setAnchorEl(evt.currentTarget);
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+  }
+
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}>
+      <MenuItem component={Link} to="/user/groups">
+        My Groups
+      </MenuItem>
+      <MenuItem component={Link} to="/user/edit">
+        Edit Account
+      </MenuItem>
+      <MenuItem
+        onClick={(e) => {
+          handleMenuClose();
+          dispatch(logout());
+        }}>
+        Logout
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <AppBar position="static">
@@ -36,7 +87,18 @@ function NavBar() {
               Groups
             </Button>
           </Box>
-          {!user ? (
+          {user ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton
+                onClick={handleMenuOpen}
+                size="small"
+                aria-controls={isMenuOpen ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={isMenuOpen ? "true" : undefined}>
+                <Avatar src={user.avatarUrl || undefined} />
+              </IconButton>
+            </Box>
+          ) : (
             <Box sx={{ flexGrow: 0 }}>
               <Button
                 component={Link}
@@ -51,29 +113,10 @@ function NavBar() {
                 Login
               </Button>
             </Box>
-          ) : (
-            <Box sx={{ flexGrow: 0 }}>
-              <Typography
-                noWrap
-                sx={{
-                  display: "inline-flex",
-                  fontWeight: 500,
-                  color: "inherit",
-                  textDecoration: "none",
-                }}>
-                {user.username}
-              </Typography>
-              <Button
-                sx={{ my: 2, ml: 2, color: "white" }}
-                onClick={(e) => {
-                  dispatch(logout());
-                }}>
-                Logout
-              </Button>
-            </Box>
           )}
         </Toolbar>
       </Container>
+      {renderMenu}
     </AppBar>
   );
 }
