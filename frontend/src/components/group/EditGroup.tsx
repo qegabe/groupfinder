@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Box, Grid, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import {
+  Alert,
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Modal,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useParams, useNavigate } from "react-router-dom";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -23,6 +33,8 @@ function EditGroup() {
   const groupId = +(id as string);
   const [groupData, setGroupData] = useState<Group>(INITIAL_STATE as Group);
   const [alertData, setAlertData] = useState<any[]>([]);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadGroup() {
@@ -45,6 +57,44 @@ function EditGroup() {
       maxMembers: groupData.maxMembers,
     });
   }
+
+  async function deleteGroup() {
+    await GroupFinderApi.deleteGroup(groupId);
+    navigate("/");
+  }
+
+  const confirmModal = (
+    <Modal
+      open={confirmOpen}
+      onClose={() => {
+        setConfirmOpen(false);
+      }}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "white",
+          p: 5,
+        }}>
+        <Typography variant="h6">
+          Are you sure you want to delete this group?
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Button onClick={deleteGroup} variant="contained" color="error">
+            Delete
+          </Button>
+          <Button
+            onClick={() => {
+              setConfirmOpen(false);
+            }}>
+            Cancel
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 
   async function addUser(user: User) {
     try {
@@ -123,7 +173,19 @@ function EditGroup() {
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3">Edit Group</Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Typography variant="h3">Edit Group</Typography>
+        <Tooltip title="Delete Group">
+          <IconButton
+            color="error"
+            onClick={() => {
+              setConfirmOpen(true);
+            }}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
       {alerts}
       <GroupForm
         initialState={INITIAL_STATE}
@@ -150,6 +212,7 @@ function EditGroup() {
           </Box>
         </Grid>
       </Grid>
+      {confirmModal}
     </Box>
   );
 }

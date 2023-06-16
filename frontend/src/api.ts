@@ -97,6 +97,18 @@ class GroupFinderApi {
     return res.group;
   }
 
+  static async deleteGroup(groupId: number) {
+    await this.request(`api/groups/${groupId}`, {}, "DELETE");
+  }
+
+  static async joinGroup(groupId: number) {
+    await this.request(`api/groups/${groupId}/join`, {}, "POST");
+  }
+
+  static async leaveGroup(groupId: number) {
+    await this.request(`api/groups/${groupId}/leave`, {}, "POST");
+  }
+
   static async getUser(username: string) {
     const res = await this.request(`api/users/${username}`);
     return res.user;
@@ -122,14 +134,6 @@ class GroupFinderApi {
 
     const res = await this.request(`api/users/${username}`, data, "PATCH");
     return res.user;
-  }
-
-  static async joinGroup(groupId: number) {
-    await this.request(`api/groups/${groupId}/join`, {}, "POST");
-  }
-
-  static async leaveGroup(groupId: number) {
-    await this.request(`api/groups/${groupId}/leave`, {}, "POST");
   }
 
   static async addUser(groupId: number, username: string) {
