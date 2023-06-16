@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import {
   Autocomplete,
+  Avatar,
   Box,
   Button,
   Grid,
@@ -61,10 +62,9 @@ function AddUser({ addUser }: AddUserProps) {
             <li {...props}>
               <Grid container alignItems="center">
                 <Grid item sx={{ display: "flex", width: 44 }}>
-                  <img
-                    style={{ width: "40px" }}
+                  <Avatar
+                    sx={{ width: 30, height: 30, mr: 1 }}
                     src={u.avatarUrl || undefined}
-                    alt={"avatar"}
                   />
                 </Grid>
                 <Grid item sx={{ width: "calc(100% - 44px)" }}>

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import {
   Autocomplete,
+  Avatar,
   Box,
   Button,
   Grid,
@@ -61,10 +62,14 @@ function AddGame({ addGame }: AddGameProps) {
             <li {...props}>
               <Grid container alignItems="center">
                 <Grid item sx={{ display: "flex", width: 44 }}>
-                  <img
-                    style={{ width: "40px" }}
-                    src={game.coverUrl}
-                    alt={"cover"}
+                  <Avatar
+                    variant="square"
+                    sx={{ width: 30, height: 30, mr: 1 }}
+                    src={
+                      game.coverUrl !== ""
+                        ? game.coverUrl
+                        : "/game-controller.png"
+                    }
                   />
                 </Grid>
                 <Grid item sx={{ width: "calc(100% - 44px)" }}>

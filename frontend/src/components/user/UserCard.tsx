@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   Typography,
+  Avatar,
 } from "@mui/material";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
@@ -20,10 +21,9 @@ function UserCard({ username, avatarUrl, isOwner, removeUser }: UserCardProps) {
   return (
     <Card sx={{ display: "flex", justifyContent: "space-between" }}>
       <CardContent sx={{ display: "flex" }}>
-        <img
-          style={{ width: "12%", marginRight: 30 }}
+        <Avatar
+          sx={{ width: 30, height: 30, mr: 1 }}
           src={avatarUrl || undefined}
-          alt="avatar"
         />
         <Typography variant="h6">{username}</Typography>
       </CardContent>

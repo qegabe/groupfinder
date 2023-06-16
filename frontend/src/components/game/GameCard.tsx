@@ -1,5 +1,6 @@
 import React, { MouseEvent } from "react";
 import {
+  Avatar,
   IconButton,
   Card,
   CardActions,
@@ -18,10 +19,10 @@ function GameCard({ id, title, coverUrl, removeGame }: GameCardProps) {
   return (
     <Card sx={{ display: "flex", justifyContent: "space-between" }}>
       <CardContent sx={{ display: "flex" }}>
-        <img
-          style={{ width: "12%", marginRight: 5 }}
-          src={coverUrl}
-          alt="cover art"
+        <Avatar
+          variant="square"
+          sx={{ width: 30, height: 30, mr: 1 }}
+          src={coverUrl !== "" ? coverUrl : "/game-controller.png"}
         />
         <Typography variant="h6">{title}</Typography>
       </CardContent>
