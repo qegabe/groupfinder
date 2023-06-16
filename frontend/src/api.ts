@@ -112,6 +112,18 @@ class GroupFinderApi {
     return res.users;
   }
 
+  static async updateProfile(
+    username: string,
+    data: { avatarUrl?: string | null; bio?: string }
+  ) {
+    if (data.avatarUrl === "") {
+      data.avatarUrl = null;
+    }
+
+    const res = await this.request(`api/users/${username}`, data, "PATCH");
+    return res.user;
+  }
+
   static async addUser(groupId: number, username: string) {
     await this.request(`api/groups/${groupId}/add/${username}`, {}, "POST");
   }

@@ -11,13 +11,14 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { logout } from "../actions/actionCreators";
 
 function NavBar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const user = useAppSelector((s) => s.auth.user);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const isMenuOpen = Boolean(anchorEl);
@@ -44,11 +45,19 @@ function NavBar() {
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}>
-      <MenuItem component={Link} to="/user/groups">
+      <MenuItem
+        onClick={(e) => {
+          handleMenuClose();
+          navigate("/user/groups");
+        }}>
         My Groups
       </MenuItem>
-      <MenuItem component={Link} to="/user/edit">
-        Edit Account
+      <MenuItem
+        onClick={(e) => {
+          handleMenuClose();
+          navigate(`/users/${user?.username}`);
+        }}>
+        Profile
       </MenuItem>
       <MenuItem
         onClick={(e) => {

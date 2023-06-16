@@ -2,5 +2,6 @@ const SET_ERROR = "SET_ERROR";
 const SET_TOKEN = "SET_TOKEN";
 
 const LOGOUT = "LOGOUT";
+const SET_AVATAR = "SET_AVATAR";
 
-export { SET_TOKEN, SET_ERROR, LOGOUT };
+export { SET_TOKEN, SET_ERROR, LOGOUT, SET_AVATAR };

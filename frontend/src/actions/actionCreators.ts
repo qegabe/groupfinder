@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { LOGOUT, SET_ERROR, SET_TOKEN } from "./actionTypes";
+import { LOGOUT, SET_AVATAR, SET_ERROR, SET_TOKEN } from "./actionTypes";
 import GroupFinderApi from "../api";
 import decode from "jwt-decode";
 import { AppThunk } from "../store";
@@ -71,4 +71,11 @@ function gotToken(token: string, user: User) {
   };
 }
 
-export { register, login, getUser, logout };
+function setAvatar(url: string) {
+  return {
+    type: SET_AVATAR,
+    payload: url,
+  };
+}
+
+export { register, login, getUser, logout, setAvatar };

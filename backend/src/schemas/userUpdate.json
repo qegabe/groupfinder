@@ -19,8 +19,12 @@
       "maxLength": 300
     },
     "avatarUrl": {
-      "type": "string",
-      "format": "uri"
+      "anyOf": [
+        { "type": "string", "format": "uri" },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "additionalProperties": false,
