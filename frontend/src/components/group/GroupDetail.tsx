@@ -24,14 +24,69 @@ function GroupDetail() {
     loadGroup();
   }, [id]);
 
+  async function joinGroup() {
+    try {
+      await GroupFinderApi.joinGroup(+(id as string));
+      if (group && user) {
+        setGroup(
+          (g) =>
+            ({
+              ...g,
+              members: {
+                ...g?.members,
+                [user.username]: { avatarUrl: user.avatarUrl, isOwner: false },
+              },
+            } as Group)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function leaveGroup() {
+    try {
+      await GroupFinderApi.leaveGroup(+(id as string));
+      if (group && user) {
+        setGroup((g) => {
+          const members = g?.members;
+          if (members) {
+            delete members[user.username];
+          }
+          return {
+            ...g,
+            members,
+          } as Group;
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   if (!group) return <LoadingSpinner />;
 
-  let edit = null;
-  if (group.members) {
-    if (group.members[user?.username as keyof object]) {
-      edit = (
+  let buttons = null;
+  if (group.members && user) {
+    if (group.members[user.username as keyof object]?.isOwner) {
+      buttons = (
         <Button variant="contained" component={Link} to={`/groups/${id}/edit`}>
           Edit
+        </Button>
+      );
+    } else if (
+      group.members[user.username as keyof object] &&
+      !group.members[user.username as keyof object]?.isOwner
+    ) {
+      buttons = (
+        <Button variant="contained" onClick={leaveGroup}>
+          Leave
+        </Button>
+      );
+    } else {
+      buttons = (
+        <Button variant="contained" onClick={joinGroup}>
+          Join
         </Button>
       );
     }
@@ -67,7 +122,7 @@ function GroupDetail() {
         </Grid>
       </Grid>
 
-      {edit}
+      {buttons}
     </Box>
   );
 }

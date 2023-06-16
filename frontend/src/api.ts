@@ -124,6 +124,14 @@ class GroupFinderApi {
     return res.user;
   }
 
+  static async joinGroup(groupId: number) {
+    await this.request(`api/groups/${groupId}/join`, {}, "POST");
+  }
+
+  static async leaveGroup(groupId: number) {
+    await this.request(`api/groups/${groupId}/leave`, {}, "POST");
+  }
+
   static async addUser(groupId: number, username: string) {
     await this.request(`api/groups/${groupId}/add/${username}`, {}, "POST");
   }
