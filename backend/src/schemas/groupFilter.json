@@ -32,6 +32,21 @@
           "pattern": "^[0-9]+$"
         }
       ]
+    },
+    "hasUsers": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 25
+          }
+        },
+        {
+          "type": "string",
+          "maxLength": 25
+        }
+      ]
     }
   },
   "additionalProperties": false,

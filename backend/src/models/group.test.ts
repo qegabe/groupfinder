@@ -88,7 +88,7 @@ describe("getList", () => {
   });
 
   it("works: filtered", async () => {
-    const groups = await Group.getList(100, { title: "g", maxSize: "1" });
+    const groups = await Group.getList({ title: "g", maxSize: "1" });
 
     expect(groups).toEqual([
       {

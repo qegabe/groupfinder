@@ -50,10 +50,13 @@ class Group {
      * @param {object} filter
      * @returns {Promise<IGroup>} { id, title, startTime, endTime }
      */
-    static getList(limit = 100, filter = {}) {
+    static getList(filter = {}, username, limit = 100) {
         return __awaiter(this, void 0, void 0, function* () {
             const { matchers, values } = (0, sql_1.sqlForFiltering)(filter);
             let where = "WHERE is_private = false";
+            if (username !== undefined) {
+                where = `WHERE (is_private = false OR id IN (SELECT group_id FROM groupsusers WHERE username = $${values.length + 2}))`;
+            }
             if (matchers.length > 0) {
                 where = `${where} AND ${matchers.join(" AND ")}`;
             }
@@ -65,7 +68,11 @@ class Group {
                     ${where}
                     ORDER BY start_time
                     LIMIT $${values.length + 1}`;
-            const result = yield db_1.default.query(query, [...values, limit]);
+            const params = [...values, limit];
+            if (username !== undefined) {
+                params.push(username);
+            }
+            const result = yield db_1.default.query(query, params);
             return result.rows;
         });
     }

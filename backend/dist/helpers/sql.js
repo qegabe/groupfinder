@@ -69,12 +69,23 @@ function sqlForFiltering(filter) {
                 if (typeof filter.hasGames === "string") {
                     filter.hasGames = [filter.hasGames];
                 }
-                const params = filter.hasGames.map((g, idx) => `$${i + idx}`);
-                const subquery = `id IN (SELECT group_id
+                const gameParams = filter.hasGames.map((g, idx) => `$${i + idx}`);
+                const gameSubquery = `id IN (SELECT group_id
                                  FROM groupsgames
-                                 WHERE game_id IN (${params.join(",")}))`;
-                matchers.push(subquery);
+                                 WHERE game_id IN (${gameParams.join(",")}))`;
+                matchers.push(gameSubquery);
                 values.push(...filter.hasGames);
+                break;
+            case "hasUsers":
+                if (typeof filter.hasUsers === "string") {
+                    filter.hasUsers = [filter.hasUsers];
+                }
+                const userParams = filter.hasUsers.map((u, idx) => `$${i + idx}`);
+                const userSubquery = `id IN (SELECT group_id
+                                 FROM groupsusers
+                                 WHERE username IN (${userParams.join(",")}))`;
+                matchers.push(userSubquery);
+                values.push(...filter.hasUsers);
                 break;
             default:
                 break;

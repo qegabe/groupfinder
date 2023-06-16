@@ -37,7 +37,7 @@ router.get("/", async (req, res, next) => {
       throw new BadRequestError(JSON.stringify(errs));
     }
 
-    const groups = await Group.getList(100, req.query);
+    const groups = await Group.getList(req.query, res.locals.user?.username);
     return res.json({ groups });
   } catch (error) {
     return next(error);

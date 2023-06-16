@@ -23,7 +23,7 @@ describe("sql helpers", () => {
                 HAVING COUNT(*) <= $4
               )`,
     ]);
-    expect(values).toEqual(["%test%", "test2", "test3", 5]);
+    expect(values).toEqual(["%test%", "test2", "test3", "5"]);
   });
 
   it("sqlForInserting", () => {

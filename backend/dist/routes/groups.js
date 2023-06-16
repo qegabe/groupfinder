@@ -42,13 +42,14 @@ router.post("/", auth_1.ensureLoggedIn, (req, res, next) => __awaiter(void 0, vo
  * GET /api/groups/
  */
 router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const validator = jsonschema_1.default.validate(req.query, groupFilter_json_1.default);
         if (!validator.valid) {
             const errs = validator.errors.map((e) => e.stack);
             throw new expressError_1.BadRequestError(JSON.stringify(errs));
         }
-        const groups = yield group_1.default.getList(100, req.query);
+        const groups = yield group_1.default.getList(req.query, (_a = res.locals.user) === null || _a === void 0 ? void 0 : _a.username);
         return res.json({ groups });
     }
     catch (error) {

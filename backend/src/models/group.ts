@@ -55,12 +55,18 @@ class Group {
    * @returns {Promise<IGroup>} { id, title, startTime, endTime }
    */
   static async getList(
-    limit: number = 100,
-    filter: Filter = {}
+    filter: Filter = {},
+    username?: string,
+    limit: number = 100
   ): Promise<IGroup[]> {
     const { matchers, values } = sqlForFiltering(filter);
 
     let where = "WHERE is_private = false";
+    if (username !== undefined) {
+      where = `WHERE (is_private = false OR id IN (SELECT group_id FROM groupsusers WHERE username = $${
+        values.length + 2
+      }))`;
+    }
     if (matchers.length > 0) {
       where = `${where} AND ${matchers.join(" AND ")}`;
     }
@@ -74,7 +80,12 @@ class Group {
                     ORDER BY start_time
                     LIMIT $${values.length + 1}`;
 
-    const result = await db.query(query, [...values, limit]);
+    const params = [...values, limit];
+    if (username !== undefined) {
+      params.push(username);
+    }
+
+    const result = await db.query(query, params);
 
     return result.rows;
   }
