@@ -19,19 +19,11 @@ import GameList from "../game/GameList";
 import AddUser from "../user/AddUser";
 import UserList from "../user/UserList";
 
-const INITIAL_STATE: GroupFormData = {
-  title: "",
-  description: "",
-  startTime: null,
-  endTime: null,
-  isPrivate: false,
-  maxMembers: undefined,
-};
-
 function EditGroup() {
   const { id } = useParams();
   const groupId = +(id as string);
-  const [groupData, setGroupData] = useState<Group>(INITIAL_STATE as Group);
+  const [groupData, setGroupData] = useState<Group>();
+  const [formData, setFormData] = useState<GroupFormData>();
   const [alertData, setAlertData] = useState<any[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate();
@@ -39,23 +31,26 @@ function EditGroup() {
   useEffect(() => {
     async function loadGroup() {
       const group = await GroupFinderApi.getGroup(groupId);
-      setGroupData({
-        ...group,
-        maxMembers: group.maxMembers || undefined,
+      setGroupData(group);
+      setFormData({
+        title: group.title,
+        description: group.description,
+        startTime: group.startTime,
+        endTime: group.endTime,
+        address: group.address || "",
+        cityData: group.cityId ? { city: group.city, id: group.cityId } : null,
+        isPrivate: group.isPrivate,
+        maxMembers: group.maxMembers,
       });
     }
     loadGroup();
   }, [groupId, setGroupData]);
 
   async function submit() {
-    await GroupFinderApi.editGroup(groupId, {
-      title: groupData.title,
-      description: groupData.description,
-      startTime: groupData.startTime,
-      endTime: groupData.endTime,
-      isPrivate: groupData.isPrivate,
-      maxMembers: groupData.maxMembers,
-    });
+    if (formData) {
+      await GroupFinderApi.editGroup(groupId, formData);
+      setAlertData([{ severity: "success", text: `Saved` }]);
+    }
   }
 
   async function deleteGroup() {
@@ -99,16 +94,19 @@ function EditGroup() {
   async function addUser(user: User) {
     try {
       await GroupFinderApi.addUser(groupId, user.username);
-      setGroupData((gd: Group) => ({
-        ...gd,
-        members: {
-          ...gd.members,
-          [user.username as keyof object]: {
-            avatarUrl: user.avatarUrl,
-            isOwner: false,
-          },
-        },
-      }));
+      setGroupData((gd) => {
+        if (gd)
+          return {
+            ...gd,
+            members: {
+              ...gd.members,
+              [user.username as keyof object]: {
+                avatarUrl: user.avatarUrl,
+                isOwner: false,
+              },
+            },
+          };
+      });
       setAlertData([{ severity: "success", text: `${user.username} added!` }]);
     } catch (error) {
       setAlertData([{ severity: "error", text: `Couldn't add user!` }]);
@@ -118,14 +116,14 @@ function EditGroup() {
   async function removeUser(user: User) {
     try {
       await GroupFinderApi.removeUser(groupId, user.username);
-      setGroupData((gd: Group) => {
-        const members = { ...gd.members };
+      setGroupData((gd) => {
+        const members = { ...gd?.members };
         delete members[user.username as keyof object];
-
-        return {
-          ...gd,
-          members,
-        };
+        if (gd)
+          return {
+            ...gd,
+            members,
+          };
       });
       setAlertData([
         { severity: "success", text: `${user.username} removed!` },
@@ -138,10 +136,13 @@ function EditGroup() {
   async function addGame(game: Game) {
     try {
       await GroupFinderApi.addGame(groupId, game.id);
-      setGroupData((gd: Group) => ({
-        ...gd,
-        games: [...(gd.games as Game[]), game],
-      }));
+      setGroupData((gd) => {
+        if (gd)
+          return {
+            ...gd,
+            games: [...(gd.games as Game[]), game],
+          };
+      });
       setAlertData([{ severity: "success", text: `${game.title} added!` }]);
     } catch (error) {
       setAlertData([{ severity: "error", text: `Couldn't add game!` }]);
@@ -151,10 +152,13 @@ function EditGroup() {
   async function removeGame(game: Game) {
     try {
       await GroupFinderApi.removeGame(groupId, game.id);
-      setGroupData((gd: Group) => ({
-        ...gd,
-        games: (gd.games as Game[]).filter((g) => g.id !== game.id),
-      }));
+      setGroupData((gd) => {
+        if (gd)
+          return {
+            ...gd,
+            games: (gd.games as Game[]).filter((g) => g.id !== game.id),
+          };
+      });
       setAlertData([{ severity: "success", text: `${game.title} removed!` }]);
     } catch (error) {
       setAlertData([{ severity: "error", text: `Couldn't remove game!` }]);
@@ -169,7 +173,7 @@ function EditGroup() {
   ));
 
   //Loading spinner if group not loaded
-  if (groupData.title === "") return <LoadingSpinner />;
+  if (!groupData) return <LoadingSpinner />;
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
@@ -188,9 +192,8 @@ function EditGroup() {
 
       {alerts}
       <GroupForm
-        initialState={INITIAL_STATE}
-        formData={groupData as GroupFormData}
-        setFormData={setGroupData}
+        formData={formData as GroupFormData}
+        setFormData={setFormData}
         submit={submit}
         returnPath="/groups"
         shouldReturn={false}

@@ -102,11 +102,15 @@ function GroupDetail() {
           {group.description}
         </Typography>
       </Box>
-
       <Typography>Starting at: {group.startTime.format("LLL")}</Typography>
       <Typography>
         Lasts {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
       </Typography>
+      {group.cityId ? (
+        <Typography>
+          Location: {group.address}, {group.city}
+        </Typography>
+      ) : null}
       <Grid container spacing={2}>
         <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
           <Box sx={{ my: 2 }}>

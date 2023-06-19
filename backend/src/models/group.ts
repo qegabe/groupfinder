@@ -10,6 +10,7 @@ import {
   sqlForInserting,
   sqlForPartialUpdate,
 } from "../helpers/sql";
+import { QueryResult } from "pg";
 
 /** Related functions for groups */
 class Group {
@@ -22,20 +23,31 @@ class Group {
   static async create(username: string, data: IGroup): Promise<IGroup> {
     const { colString, valString, values } = sqlForInserting(data);
 
-    const groupResult = await db.query(
-      `INSERT INTO groups ${colString}
-      VALUES ${valString}
-      RETURNING id,
-                title,
-                description,
-                start_time AS "startTime",
-                end_time AS "endTime",
-                location,
-                is_private AS "isPrivate",
-                max_members AS "maxMembers"
-      `,
-      values
-    );
+    let groupResult: QueryResult;
+    try {
+      groupResult = await db.query(
+        `INSERT INTO groups ${colString}
+        VALUES ${valString}
+        RETURNING id,
+                  title,
+                  description,
+                  start_time AS "startTime",
+                  end_time AS "endTime",
+                  address,
+                  city_id AS "cityId",
+                  is_private AS "isPrivate",
+                  max_members AS "maxMembers"
+        `,
+        values
+      );
+    } catch (error) {
+      if (
+        error.code === "23503" &&
+        error.constraint === "groups_city_id_fkey"
+      ) {
+        throw new BadRequestError("Invalid city id");
+      } else throw error;
+    }
     const group = groupResult.rows[0];
 
     await db.query(
@@ -97,16 +109,19 @@ class Group {
    */
   static async getById(id: number): Promise<IGroup> {
     const groupResult = await db.query(
-      `SELECT id,
+      `SELECT groups.id,
               title,
               description,
               start_time AS "startTime",
               end_time AS "endTime",
-              location,
+              address,
+              city_id AS "cityId",
+              city,
               is_private AS "isPrivate",
               max_members AS "maxMembers"
         FROM groups
-        WHERE id = $1
+        LEFT JOIN cities ON groups.city_id = cities.id
+        WHERE groups.id = $1
       `,
       [id]
     );
@@ -175,21 +190,32 @@ class Group {
       }
     }
 
-    const result = await db.query(
-      `UPDATE groups
-      SET ${setCols}
-      WHERE id = ${idVarIdx}
-      RETURNING id,
-                title,
-                description,
-                start_time AS "startTime",
-                end_time AS "endTime",
-                location,
-                is_private AS "isPrivate",
-                max_members AS "maxMembers"
-      `,
-      [...values, id]
-    );
+    let result: QueryResult;
+    try {
+      result = await db.query(
+        `UPDATE groups
+        SET ${setCols}
+        WHERE id = ${idVarIdx}
+        RETURNING id,
+                  title,
+                  description,
+                  start_time AS "startTime",
+                  end_time AS "endTime",
+                  address,
+                  city_id AS "cityId",
+                  is_private AS "isPrivate",
+                  max_members AS "maxMembers"
+        `,
+        [...values, id]
+      );
+    } catch (error) {
+      if (
+        error.code === "23503" &&
+        error.constraint === "groups_city_id_fkey"
+      ) {
+        throw new BadRequestError("Invalid city id");
+      } else throw error;
+    }
 
     const group = result.rows[0];
 
@@ -213,6 +239,27 @@ class Group {
     const group = result.rows[0];
 
     if (!group) throw new NotFoundError(`No group with id: ${id}`);
+  }
+
+  /**
+   * Gets a list of cities matching search
+   * @param search
+   * @returns {Promise<{city: string, id: number}[]>}
+   */
+  static async getCities(
+    search: string
+  ): Promise<{ city: string; id: number }[]> {
+    const result = await db.query(
+      `SELECT city, id
+       FROM cities
+       WHERE city ILIKE $1
+       ORDER BY city
+       LIMIT 50
+      `,
+      [`%${search}%`]
+    );
+
+    return result.rows;
   }
 
   /**

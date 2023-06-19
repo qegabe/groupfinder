@@ -57,6 +57,21 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 /**
+ * GET /api/groups/cities
+ */
+router.get("/cities", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!req.query.name) {
+            req.query.name = "";
+        }
+        const cities = yield group_1.default.getCities(req.query.name);
+        return res.json({ cities });
+    }
+    catch (error) {
+        return next(error);
+    }
+}));
+/**
  * GET /api/groups/:id
  */
 router.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

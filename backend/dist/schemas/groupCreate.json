@@ -19,8 +19,11 @@
             "type": "string",
             "format": "date-time"
         },
-        "location": {
+        "address": {
             "type": "string"
+        },
+        "cityId": {
+            "type": "number"
         },
         "isPrivate": {
             "type": "boolean"

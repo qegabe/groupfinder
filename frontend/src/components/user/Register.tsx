@@ -18,7 +18,6 @@ function Register() {
   let formErrors: any = {};
   if (authError) {
     formErrors = parseFormErrors(authError);
-    console.log(formErrors);
   }
 
   return (

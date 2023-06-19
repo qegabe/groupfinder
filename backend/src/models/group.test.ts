@@ -30,7 +30,8 @@ describe("create", () => {
       description: "",
       startTime: expect.any(Date),
       endTime: expect.any(Date),
-      location: null,
+      address: null,
+      cityId: null,
       isPrivate: false,
       maxMembers: null,
     });
@@ -42,7 +43,8 @@ describe("create", () => {
       description: "desc",
       startTime: new Date(),
       endTime: new Date(),
-      location: "place",
+      address: "123 place street",
+      cityId: 1840034016,
       isPrivate: true,
       maxMembers: 10,
     });
@@ -53,10 +55,25 @@ describe("create", () => {
       description: "desc",
       startTime: expect.any(Date),
       endTime: expect.any(Date),
-      location: "place",
+      address: "123 place street",
+      cityId: 1840034016,
       isPrivate: true,
       maxMembers: 10,
     });
+  });
+
+  it("bad request if invalid city id", async () => {
+    try {
+      await Group.create("u1", {
+        title: "test",
+        startTime: new Date(),
+        endTime: new Date(),
+        cityId: 0,
+      });
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
 
@@ -118,7 +135,9 @@ describe("getById", () => {
       description: "",
       startTime: expect.any(Date),
       endTime: expect.any(Date),
-      location: null,
+      address: null,
+      city: "New York",
+      cityId: 1840034016,
       isPrivate: false,
       maxMembers: null,
       members: {
@@ -148,7 +167,8 @@ describe("update", () => {
       description: "test",
       startTime: date,
       endTime: date,
-      location: "place",
+      address: "123 place street",
+      cityId: 1826645935,
       isPrivate: true,
       maxMembers: 10,
     };
@@ -161,7 +181,8 @@ describe("update", () => {
       description: "test",
       startTime: date,
       endTime: date,
-      location: "place",
+      address: "123 place street",
+      cityId: 1826645935,
       isPrivate: true,
       maxMembers: 10,
     });
@@ -170,6 +191,15 @@ describe("update", () => {
   it("bad request if setting max members below current member count", async () => {
     try {
       await Group.update(groupIds[0], { maxMembers: 1 });
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
+  });
+
+  it("bad request if city id invalid", async () => {
+    try {
+      await Group.update(groupIds[0], { cityId: 0 });
       fail();
     } catch (error) {
       expect(error instanceof BadRequestError).toBeTruthy();

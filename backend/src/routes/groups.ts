@@ -45,6 +45,22 @@ router.get("/", async (req, res, next) => {
 });
 
 /**
+ * GET /api/groups/cities
+ */
+router.get("/cities", async (req, res, next) => {
+  try {
+    if (!req.query.name) {
+      req.query.name = "";
+    }
+
+    const cities = await Group.getCities(req.query.name as string);
+    return res.json({ cities });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+/**
  * GET /api/groups/:id
  */
 router.get("/:id", async (req, res, next) => {

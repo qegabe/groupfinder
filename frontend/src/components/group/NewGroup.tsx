@@ -8,15 +8,17 @@ const INITIAL_STATE: GroupFormData = {
   description: "",
   startTime: null,
   endTime: null,
+  address: "",
+  cityData: null,
   isPrivate: false,
-  maxMembers: undefined,
+  maxMembers: 10,
 };
 
 function NewGroup() {
   const [formData, setFormData] = useState<GroupFormData>(INITIAL_STATE);
 
   async function submit() {
-    await GroupFinderApi.createGroup(formData as Group);
+    await GroupFinderApi.createGroup(formData);
   }
 
   return (
@@ -28,7 +30,7 @@ function NewGroup() {
         setFormData={setFormData}
         submit={submit}
         returnPath="/groups"
-        shouldReturn={false}
+        shouldReturn={true}
         buttons={{ submit: "Create", cancel: "Cancel" }}
       />
     </Box>

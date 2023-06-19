@@ -1,15 +1,24 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, useMemo, ChangeEvent } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControlLabel,
   Switch,
   TextField,
+  Typography,
+  debounce,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
 import parseFormErrors from "../../helpers/parseFormErrors";
+import GroupFinderApi from "../../api";
+
+interface City {
+  city: string;
+  id: number;
+}
 
 function GroupForm({
   initialState,
@@ -20,8 +29,39 @@ function GroupForm({
   shouldReturn,
   buttons,
 }: GroupFormProps) {
+  const [isOnline, setIsOnline] = useState(formData.address ? false : true);
+  const [cities, setCities] = useState<City[]>([]);
+  const [searchValue, setSearchValue] = useState("");
   const [formErrors, setFormErrors] = useState<any>({});
   const navigate = useNavigate();
+
+  const search = useMemo(
+    () =>
+      debounce(async (term: string) => {
+        const options = await GroupFinderApi.searchCities(term);
+        setCities(options);
+      }, 400),
+    []
+  );
+
+  useEffect(() => {
+    if (searchValue === "") {
+      setCities([]);
+    } else if (!formData.cityData) {
+      search(searchValue);
+    }
+  }, [searchValue, search, formData.cityData]);
+
+  function onlineToggle(evt: ChangeEvent<HTMLInputElement>) {
+    setIsOnline(evt.target.checked);
+    if (evt.target.checked) {
+      setFormData((fd: GroupFormData) => ({
+        ...fd,
+        address: "",
+        cityData: null,
+      }));
+    }
+  }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setFormData((fd: GroupFormData) => ({
@@ -41,7 +81,9 @@ function GroupForm({
     evt.preventDefault();
     try {
       await submit();
-      setFormData(initialState);
+      if (initialState) {
+        setFormData(initialState);
+      }
       if (shouldReturn) {
         navigate(returnPath);
       }
@@ -60,6 +102,7 @@ function GroupForm({
       onSubmit={handleSubmit}>
       <TextField
         fullWidth
+        required
         id="title"
         label="Title"
         sx={{ my: 1 }}
@@ -92,6 +135,83 @@ function GroupForm({
         onChange={(value) => setTimeData(value, "endTime")}
         slotProps={{ textField: { ...formErrors.endTime } }}
       />
+      {isOnline ? (
+        <Box sx={{ my: 1, display: "flex", justifyContent: "center" }}>
+          <FormControlLabel
+            control={
+              <Switch
+                id="isOnline"
+                checked={isOnline}
+                onChange={onlineToggle}
+              />
+            }
+            label="Online"
+          />
+        </Box>
+      ) : (
+        <Box sx={{ display: "flex" }}>
+          <FormControlLabel
+            control={
+              <Switch
+                id="isOnline"
+                checked={isOnline}
+                onChange={onlineToggle}
+              />
+            }
+            label="Online"
+          />
+          <TextField
+            fullWidth
+            required
+            id="address"
+            label="Address"
+            sx={{ my: 1, width: "50%" }}
+            value={formData.address}
+            onChange={handleChange}
+            {...formErrors.address}
+          />
+          <Autocomplete
+            sx={{ my: 1, width: "50%" }}
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.city
+            }
+            filterOptions={(x) => x}
+            options={cities}
+            autoComplete
+            includeInputInList
+            filterSelectedOptions
+            value={formData.cityData}
+            noOptionsText="No cities..."
+            onChange={(e: any, newValue: City | null) => {
+              setCities(newValue ? [newValue, ...cities] : cities);
+              setFormData((fd: GroupFormData) => ({
+                ...fd,
+                cityData: newValue,
+              }));
+            }}
+            onInputChange={(e: any, newInputValue) => {
+              setSearchValue(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="City"
+                placeholder="Leave blank if online"
+                fullWidth
+                required
+              />
+            )}
+            renderOption={(props, city) => {
+              return (
+                <li {...props} key={city.id}>
+                  <Typography>{city.city}</Typography>
+                </li>
+              );
+            }}
+          />
+        </Box>
+      )}
+
       <Box
         sx={{
           my: 1,
@@ -117,6 +237,7 @@ function GroupForm({
           id="maxMembers"
           label="Maximum Members"
           type="number"
+          inputProps={{ min: 0 }}
           value={formData.maxMembers}
           onChange={handleChange}
           {...formErrors.maxMembers}

@@ -21,6 +21,7 @@ async function commonBeforeAll() {
     title: "g1",
     startTime: new Date("2023-05-31T08:00:00.000-04:00"),
     endTime: new Date("2023-05-31T09:00:00.000-04:00"),
+    cityId: 1840034016,
   });
   const g2 = await Group.create("u1", {
     title: "g2",

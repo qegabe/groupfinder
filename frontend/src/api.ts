@@ -61,8 +61,8 @@ class GroupFinderApi {
 
   static async createGroup(data: GroupFormData) {
     const newData: any = { ...data };
-
-    if (data.maxMembers) newData.maxMembers = +data.maxMembers;
+    delete newData.cityData;
+    newData.maxMembers = +data.maxMembers;
     if (isNaN(newData.maxMembers)) {
       delete newData.maxMembers;
     }
@@ -72,6 +72,12 @@ class GroupFinderApi {
     }
     if (data.endTime && typeof data.endTime !== "string") {
       newData.endTime = data.endTime.toISOString();
+    }
+
+    if (data.address === "") delete newData.address;
+
+    if (data.cityData) {
+      newData.cityId = data.cityData.id;
     }
 
     const res = await this.request("api/groups", newData, "POST");
@@ -80,8 +86,8 @@ class GroupFinderApi {
 
   static async editGroup(id: number, data: GroupFormData) {
     const newData: any = { ...data };
-
-    if (data.maxMembers) newData.maxMembers = +data.maxMembers;
+    delete newData.cityData;
+    newData.maxMembers = +data.maxMembers;
     if (isNaN(newData.maxMembers)) {
       delete newData.maxMembers;
     }
@@ -91,6 +97,12 @@ class GroupFinderApi {
     }
     if (data.endTime && typeof data.endTime !== "string") {
       newData.endTime = data.endTime.toISOString();
+    }
+
+    if (data.cityData) {
+      newData.cityId = data.cityData.id;
+    } else {
+      newData.cityId = null;
     }
 
     const res = await this.request(`api/groups/${id}`, newData, "PATCH");
@@ -155,6 +167,11 @@ class GroupFinderApi {
 
   static async removeGame(groupId: number, gameId: number) {
     await this.request(`api/games/${gameId}/remove/${groupId}`, {}, "POST");
+  }
+
+  static async searchCities(term: string) {
+    const res = await this.request("api/groups/cities", { name: term });
+    return res.cities;
   }
 }
 

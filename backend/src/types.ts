@@ -12,7 +12,9 @@ interface IGroup {
   description?: string;
   startTime?: Date;
   endTime?: Date;
-  location?: string;
+  address?: string;
+  cityId?: number;
+  city?: string;
   isPrivate?: boolean;
   maxMembers?: number;
   members?: object;
@@ -33,6 +35,7 @@ interface Filter {
   maxSize?: string;
   hasGames?: string[] | string;
   hasUsers?: string[] | string;
+  city?: string;
 }
 
 export { IUser, IGroup, Filter, IGame };

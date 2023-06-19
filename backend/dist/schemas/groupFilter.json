@@ -47,6 +47,10 @@
                     "maxLength": 25
                 }
             ]
+        },
+        "city": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
         }
     },
     "additionalProperties": false,

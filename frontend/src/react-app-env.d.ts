@@ -6,7 +6,9 @@ interface Group {
   description: string;
   startTime: import("dayjs").Dayjs;
   endTime: import("dayjs").Dayjs;
-  location: string;
+  address: string;
+  city: string;
+  cityId: number;
   isPrivate: boolean;
   maxMembers: number;
   members: {
@@ -50,12 +52,14 @@ interface GroupFormData {
   description: string;
   startTime: Dayjs | null;
   endTime: Dayjs | null;
+  address: string;
+  cityData: { city: string; id: number } | null;
   isPrivate: boolean;
-  maxMembers: number | undefined;
+  maxMembers: number;
 }
 
 interface GroupFormProps {
-  initialState: GroupFormData;
+  initialState?: GroupFormData;
   formData: GroupFormData;
   setFormData: (value: any) => void;
   submit: () => Promise<void>;

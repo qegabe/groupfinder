@@ -26,17 +26,29 @@ class Group {
     static create(username, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const { colString, valString, values } = (0, sql_1.sqlForInserting)(data);
-            const groupResult = yield db_1.default.query(`INSERT INTO groups ${colString}
-      VALUES ${valString}
-      RETURNING id,
-                title,
-                description,
-                start_time AS "startTime",
-                end_time AS "endTime",
-                location,
-                is_private AS "isPrivate",
-                max_members AS "maxMembers"
-      `, values);
+            let groupResult;
+            try {
+                groupResult = yield db_1.default.query(`INSERT INTO groups ${colString}
+        VALUES ${valString}
+        RETURNING id,
+                  title,
+                  description,
+                  start_time AS "startTime",
+                  end_time AS "endTime",
+                  address,
+                  city_id AS "cityId",
+                  is_private AS "isPrivate",
+                  max_members AS "maxMembers"
+        `, values);
+            }
+            catch (error) {
+                if (error.code === "23503" &&
+                    error.constraint === "groups_city_id_fkey") {
+                    throw new expressError_1.BadRequestError("Invalid city id");
+                }
+                else
+                    throw error;
+            }
             const group = groupResult.rows[0];
             yield db_1.default.query(`INSERT INTO groupsusers (group_id, username, is_owner)
       VALUES  ($1, $2, $3)
@@ -83,16 +95,19 @@ class Group {
      */
     static getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const groupResult = yield db_1.default.query(`SELECT id,
+            const groupResult = yield db_1.default.query(`SELECT groups.id,
               title,
               description,
               start_time AS "startTime",
               end_time AS "endTime",
-              location,
+              address,
+              city_id AS "cityId",
+              city,
               is_private AS "isPrivate",
               max_members AS "maxMembers"
         FROM groups
-        WHERE id = $1
+        LEFT JOIN cities ON groups.city_id = cities.id
+        WHERE groups.id = $1
       `, [id]);
             const group = groupResult.rows[0];
             if (!group)
@@ -142,18 +157,30 @@ class Group {
                     throw new expressError_1.NotFoundError(`No group with id: ${id}`);
                 }
             }
-            const result = yield db_1.default.query(`UPDATE groups
-      SET ${setCols}
-      WHERE id = ${idVarIdx}
-      RETURNING id,
-                title,
-                description,
-                start_time AS "startTime",
-                end_time AS "endTime",
-                location,
-                is_private AS "isPrivate",
-                max_members AS "maxMembers"
-      `, [...values, id]);
+            let result;
+            try {
+                result = yield db_1.default.query(`UPDATE groups
+        SET ${setCols}
+        WHERE id = ${idVarIdx}
+        RETURNING id,
+                  title,
+                  description,
+                  start_time AS "startTime",
+                  end_time AS "endTime",
+                  address,
+                  city_id AS "cityId",
+                  is_private AS "isPrivate",
+                  max_members AS "maxMembers"
+        `, [...values, id]);
+            }
+            catch (error) {
+                if (error.code === "23503" &&
+                    error.constraint === "groups_city_id_fkey") {
+                    throw new expressError_1.BadRequestError("Invalid city id");
+                }
+                else
+                    throw error;
+            }
             const group = result.rows[0];
             if (!group)
                 throw new expressError_1.NotFoundError(`No group with id: ${id}`);
@@ -173,6 +200,22 @@ class Group {
             const group = result.rows[0];
             if (!group)
                 throw new expressError_1.NotFoundError(`No group with id: ${id}`);
+        });
+    }
+    /**
+     * Gets a list of cities matching search
+     * @param search
+     * @returns {Promise<{city: string, id: number}[]>}
+     */
+    static getCities(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.default.query(`SELECT city, id
+       FROM cities
+       WHERE city ILIKE $1
+       ORDER BY city
+       LIMIT 50
+      `, [`%${search}%`]);
+            return result.rows;
         });
     }
     /**

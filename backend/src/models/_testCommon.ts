@@ -25,10 +25,10 @@ async function commonBeforeAll() {
   );
 
   const res = await db.query(
-    `INSERT INTO groups (title, start_time, end_time)
-     VALUES ('g1', '2023-05-30T08:00:00.000Z', '2023-05-30T09:00:00.000Z'),
-            ('g2', '2023-05-30T10:00:00.000Z', '2023-05-30T11:00:00.000Z'),
-            ('g3', '2023-05-30T12:00:00.000Z', '2023-05-30T13:00:00.000Z')
+    `INSERT INTO groups (title, start_time, end_time, city_id)
+     VALUES ('g1', '2023-05-30T08:00:00.000Z', '2023-05-30T09:00:00.000Z', 1840034016),
+            ('g2', '2023-05-30T10:00:00.000Z', '2023-05-30T11:00:00.000Z', null),
+            ('g3', '2023-05-30T12:00:00.000Z', '2023-05-30T13:00:00.000Z', null)
      RETURNING id`
   );
 

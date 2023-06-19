@@ -9,6 +9,7 @@ const jsToSql = {
     startTime: "start_time",
     endTime: "end_time",
     maxMembers: "max_members",
+    cityId: "city_id",
 };
 /**
  * Creates sql for updating a row
@@ -86,6 +87,10 @@ function sqlForFiltering(filter) {
                                  WHERE username IN (${userParams.join(",")}))`;
                 matchers.push(userSubquery);
                 values.push(...filter.hasUsers);
+                break;
+            case "city":
+                matchers.push(`city_id = $${i}`);
+                values.push(filter.city);
                 break;
             default:
                 break;
