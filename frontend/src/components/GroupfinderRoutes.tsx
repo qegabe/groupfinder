@@ -11,6 +11,7 @@ import EditGroup from "./group/EditGroup";
 import UserGroups from "./group/UserGroups";
 import EditUser from "./user/EditUser";
 import UserProfile from "./user/UserProfile";
+import GroupChat from "./group/GroupChat";
 
 function GroupfinderRoutes() {
   const user = useAppSelector((s) => s.auth.user);
@@ -25,6 +26,7 @@ function GroupfinderRoutes() {
         <>
           <Route path="/groups/new" element={<NewGroup />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
+          <Route path="/groups/:id/chat" element={<GroupChat />} />
           <Route path="/groups/:id/edit" element={<EditGroup />} />
           <Route path="/user/groups" element={<UserGroups />} />
           <Route path="/user/edit" element={<EditUser />} />

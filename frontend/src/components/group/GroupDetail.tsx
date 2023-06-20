@@ -66,22 +66,37 @@ function GroupDetail() {
 
   if (!group) return <LoadingSpinner />;
 
+  const chatButton = (
+    <Button variant="contained" component={Link} to={`/groups/${id}/chat`}>
+      Chat
+    </Button>
+  );
+
   let buttons = null;
   if (group.members && user) {
     if (group.members[user.username as keyof object]?.isOwner) {
       buttons = (
-        <Button variant="contained" component={Link} to={`/groups/${id}/edit`}>
-          Edit
-        </Button>
+        <>
+          {chatButton}
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/groups/${id}/edit`}>
+            Edit
+          </Button>
+        </>
       );
     } else if (
       group.members[user.username as keyof object] &&
       !group.members[user.username as keyof object]?.isOwner
     ) {
       buttons = (
-        <Button variant="contained" onClick={leaveGroup}>
-          Leave
-        </Button>
+        <>
+          {chatButton}
+          <Button variant="contained" onClick={leaveGroup}>
+            Leave
+          </Button>
+        </>
       );
     } else {
       buttons = (

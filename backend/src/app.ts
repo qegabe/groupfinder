@@ -1,4 +1,9 @@
 import express, { ErrorRequestHandler } from "express";
+import wsExpress from "express-ws";
+
+const app = express();
+wsExpress(app);
+
 import morgan from "morgan";
 import cors from "cors";
 import { ExpressError, NotFoundError } from "./helpers/expressError";
@@ -7,9 +12,8 @@ import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import groupRoutes from "./routes/groups";
 import gameRoutes from "./routes/games";
+import chatRoute from "./chat/chat";
 import { authenticateJWT } from "./middleware/auth";
-
-const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/games", gameRoutes);
+app.use("/chat", chatRoute);
 
 /** Handle 404 errors -- this matches everything */
 app.use((req, res, next) => {
