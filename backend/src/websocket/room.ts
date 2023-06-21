@@ -1,4 +1,4 @@
-import ChatUser from "./chatuser";
+import WSUser from "./wsUser";
 
 // in-memory storage of roomNames -> room
 
@@ -9,7 +9,7 @@ const ROOMS = new Map();
  */
 class Room {
   id: number;
-  members: Set<ChatUser>;
+  members: Set<WSUser>;
 
   static get(roomId: number) {
     if (!ROOMS.has(roomId)) {
@@ -26,12 +26,12 @@ class Room {
   }
 
   /** member joining a room. */
-  join(member: ChatUser) {
+  join(member: WSUser) {
     this.members.add(member);
   }
 
   /** member leaving a room. */
-  leave(member: ChatUser) {
+  leave(member: WSUser) {
     this.members.delete(member);
   }
 

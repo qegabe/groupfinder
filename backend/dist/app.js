@@ -15,6 +15,7 @@ const users_1 = __importDefault(require("./routes/users"));
 const groups_1 = __importDefault(require("./routes/groups"));
 const games_1 = __importDefault(require("./routes/games"));
 const chat_1 = __importDefault(require("./chat/chat"));
+const trivia_1 = __importDefault(require("./games/trivia/trivia"));
 const auth_2 = require("./middleware/auth");
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -25,6 +26,7 @@ app.use("/api/users", users_1.default);
 app.use("/api/groups", groups_1.default);
 app.use("/api/games", games_1.default);
 app.use("/chat", chat_1.default);
+app.use("/trivia", trivia_1.default);
 /** Handle 404 errors -- this matches everything */
 app.use((req, res, next) => {
     return next(new expressError_1.NotFoundError());

@@ -3,21 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const wsUser_1 = __importDefault(require("../websocket/wsUser"));
-/** ChatUser is a individual connection from client -> server to chat. */
-class ChatUser extends wsUser_1.default {
-    /** handle a chat: broadcast to room. */
-    handleChat(text, avatarUrl) {
-        this.room.broadcast({
-            username: this.name,
-            type: "chat",
-            text,
-            avatarUrl,
-        });
+const wsUser_1 = __importDefault(require("../../websocket/wsUser"));
+const triviaroom_1 = __importDefault(require("./triviaroom"));
+class TriviaUser extends wsUser_1.default {
+    constructor(send, roomId) {
+        super(send, roomId);
+        this.room = triviaroom_1.default.get(roomId);
     }
     /** Handle messages from client:
-     *
-     * - {type: "chat", text: msg }     : chat
      */
     handleMessage(jsonData) {
         const msg = JSON.parse(jsonData);
@@ -28,13 +21,18 @@ class ChatUser extends wsUser_1.default {
         if (!this.verified)
             return;
         switch (msg.type) {
-            case "chat":
-                this.handleChat(msg.text, msg.avatarUrl);
+            case "start":
+                if (!this.room.started) {
+                    this.room.startGame();
+                }
+                break;
+            case "answer":
+                this.room.submitAnswer(this, msg.answer);
                 break;
             default:
                 break;
         }
     }
 }
-exports.default = ChatUser;
-//# sourceMappingURL=chatuser.js.map
+exports.default = TriviaUser;
+//# sourceMappingURL=triviauser.js.map

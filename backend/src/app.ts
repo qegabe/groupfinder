@@ -13,6 +13,7 @@ import userRoutes from "./routes/users";
 import groupRoutes from "./routes/groups";
 import gameRoutes from "./routes/games";
 import chatRoute from "./chat/chat";
+import triviaRoute from "./games/trivia/trivia";
 import { authenticateJWT } from "./middleware/auth";
 
 app.use(cors());
@@ -25,6 +26,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/games", gameRoutes);
 app.use("/chat", chatRoute);
+app.use("/trivia", triviaRoute);
 
 /** Handle 404 errors -- this matches everything */
 app.use((req, res, next) => {

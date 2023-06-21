@@ -8,6 +8,7 @@ import {
   Avatar,
 } from "@mui/material";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { Link } from "react-router-dom";
 
 function UserCard({ username, avatarUrl, isOwner, removeUser }: UserCardProps) {
   function handleClick(evt: MouseEvent) {
@@ -25,7 +26,13 @@ function UserCard({ username, avatarUrl, isOwner, removeUser }: UserCardProps) {
           sx={{ width: 30, height: 30, mr: 1 }}
           src={avatarUrl || undefined}
         />
-        <Typography variant="h6">{username}</Typography>
+        <Typography
+          variant="h6"
+          component={Link}
+          to={`/users/${username}`}
+          sx={{ color: "black", textDecoration: "none" }}>
+          {username}
+        </Typography>
       </CardContent>
       {removeUser !== undefined ? (
         <CardActions>
