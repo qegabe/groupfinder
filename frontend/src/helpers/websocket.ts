@@ -4,11 +4,12 @@ const host =
     : "localhost:5000";
 
 function startWebSocket(
+  path: string,
   id: number,
   token: string,
   onMessageCallback: (data: any) => void
 ): WebSocket {
-  const ws = new WebSocket(`ws://${host}/chat/${id}`);
+  const ws = new WebSocket(`ws://${host}/${path}/${id}`);
 
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "join", token }));

@@ -121,3 +121,26 @@ interface GameListProps {
 interface GameCardProps extends Game {
   removeGame?: (game: Game) => void;
 }
+
+/************************************************************* Trivia */
+
+interface Question {
+  question: string;
+  answers: string[];
+  category: string;
+}
+
+interface TriviaQuestionProps {
+  selectedAnswer?: number;
+  question?: Question;
+  correctAnswer?: string;
+  sendAnswer: (idx: number) => void;
+  nextQuestion: () => void;
+}
+
+interface TriviaScoresProps {
+  users: Group["members"];
+  scores: {
+    [username: string]: number;
+  };
+}

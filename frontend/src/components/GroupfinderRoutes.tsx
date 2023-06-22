@@ -12,6 +12,7 @@ import UserGroups from "./group/UserGroups";
 import EditUser from "./user/EditUser";
 import UserProfile from "./user/UserProfile";
 import GroupChat from "./group/GroupChat";
+import TriviaGame from "./trivia/TriviaGame";
 
 function GroupfinderRoutes() {
   const user = useAppSelector((s) => s.auth.user);
@@ -24,6 +25,7 @@ function GroupfinderRoutes() {
       <Route path="/users/:username" element={<UserProfile />} />
       {user ? (
         <>
+          <Route path="/games/trivia/:id" element={<TriviaGame />} />
           <Route path="/groups/new" element={<NewGroup />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
           <Route path="/groups/:id/chat" element={<GroupChat />} />

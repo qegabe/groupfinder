@@ -27,7 +27,11 @@ class Game {
     let game = dbQuery.rows[0];
     if (game) return game;
 
-    [game] = await getGameData([id]);
+    const data = await requestIGDB(
+      "games",
+      `fields name,cover; where id = ${id};`
+    );
+    [game] = await addCovers(data);
     if (!game) throw new NotFoundError(`No game found with id: ${id}`);
 
     await db.query(
@@ -47,18 +51,30 @@ class Game {
    */
   static async search(term: string): Promise<IGame[]> {
     const data = await requestIGDB(
-      "search",
-      `fields game; search "${term}"; limit 20;`
+      "games",
+      `fields name,cover; search "${term}"; where category = 0; limit 20;`
     );
-    if (data.length === 0) return [];
+    const gameData = await addCovers(data);
 
-    const gameIds = data.reduce((acc: number[], g: any) => {
-      if (g.game) {
-        acc.push(g.game);
-      }
-      return acc;
-    }, []);
-    return getGameData(gameIds);
+    if (gameData.length > 0) {
+      const gameIds: number[] = data.map((g) => g.id);
+      const params = gameIds.map((g, i) => `$${i + 1}`);
+
+      const result = await db.query(
+        `SELECT id, title, cover_url AS "coverUrl"
+       FROM games
+       WHERE id NOT IN (${params.join(",")})
+             AND title ILIKE $${params.length + 1}
+      `,
+        [...gameIds, `%${term}%`]
+      );
+
+      gameData.push(...result.rows);
+    }
+
+    gameData.sort((a, b) => a.id - b.id);
+
+    return gameData;
   }
 
   /**
@@ -156,23 +172,15 @@ class Game {
 }
 
 /**
- * Gets game data from an array of game ids
- * @param ids game ids
+ * Adds cover urls to results from IGDB
+ * @param data games
  * @returns {Promise<IGame[]>}
  */
-async function getGameData(ids: number[]): Promise<IGame[]> {
-  if (ids.length === 0)
-    return new Promise<IGame[]>((resolve, reject) => {
-      resolve([]);
-    });
-  let gameData: IGame[] = [];
-  const data = await requestIGDB(
-    "games",
-    `fields name,cover,category; where id = (${ids.join(",")});`
-  );
+async function addCovers(data: any[]): Promise<IGame[]> {
+  const gameData = [];
   if (data.length > 0) {
     const coverIds = data.reduce((acc: number[], g: any) => {
-      if (g.cover && g.category === 0) {
+      if (g.cover) {
         acc.push(g.cover);
       }
       return acc;
@@ -192,13 +200,11 @@ async function getGameData(ids: number[]): Promise<IGame[]> {
           break;
         }
       }
-      if (g.category === 0) {
-        gameData.push({
-          id: g.id,
-          title: g.name,
-          coverUrl,
-        });
-      }
+      gameData.push({
+        id: g.id,
+        title: g.name,
+        coverUrl,
+      });
     }
   }
   return gameData;

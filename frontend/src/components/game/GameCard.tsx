@@ -26,8 +26,8 @@ function GameCard({ id, title, coverUrl, removeGame }: GameCardProps) {
         />
         <Typography variant="h6">{title}</Typography>
       </CardContent>
-      {removeGame !== undefined ? (
-        <CardActions>
+      <CardActions>
+        {removeGame !== undefined ? (
           <IconButton
             aria-label="delete"
             sx={{ ml: 3 }}
@@ -35,8 +35,8 @@ function GameCard({ id, title, coverUrl, removeGame }: GameCardProps) {
             onClick={handleClick}>
             <RemoveCircleIcon />
           </IconButton>
-        </CardActions>
-      ) : null}
+        ) : null}
+      </CardActions>
     </Card>
   );
 }

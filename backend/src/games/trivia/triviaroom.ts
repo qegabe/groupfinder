@@ -53,6 +53,7 @@ class TriviaRoom extends Room {
   userAnswers = new Map<TriviaUser, string>();
   scores = new Map<TriviaUser, number>();
   round: number = 0;
+  sentResults: boolean = false;
 
   /** Gets a room if it exists otherwise creates a new room */
   static get(roomId: number) {
@@ -94,17 +95,31 @@ class TriviaRoom extends Room {
   /** Gets the initial set of questions and sends them */
   async startGame() {
     this.started = true;
+    this.broadcast({ type: "start" });
     this.questions = await getQuestions(roundDifficulty[this.round]);
     this.broadcastQuestion();
   }
 
-  /** Ends game and sends final results */
-  endGame() {
+  /** Resets the game */
+  reset() {
     this.round = 0;
+    this.questions = [];
     this.currentQuestion = 0;
     this.started = false;
+    this.sentResults = false;
+    this.scores.clear();
+    this.userAnswers.clear();
+  }
 
+  /** Ends game and sends final results */
+  endGame() {
     this.broadcast({ type: "final", scores: this.formatScores() });
+    this.reset();
+  }
+
+  restartGame() {
+    this.reset();
+    this.broadcast({ type: "restart" });
   }
 
   /** Increments the round counter and gets new questions, ends game if last round */
@@ -125,6 +140,7 @@ class TriviaRoom extends Room {
   /** Increments the question counter and sends the next question to clients, next round if last question */
   nextQuestion() {
     this.currentQuestion += 1;
+    this.sentResults = false;
     this.userAnswers.clear();
     if (this.currentQuestion < this.questions.length) {
       this.broadcastQuestion();
@@ -136,22 +152,19 @@ class TriviaRoom extends Room {
   /** Checks all user's answers and increase score if correct, send results to clients */
   getResults() {
     const currQ = this.questions[this.currentQuestion];
-    //console.log(currQ);
 
     for (let user of this.members) {
       const answer = this.userAnswers.get(user);
       if (currQ.answers[answer]) {
         this.scores.set(user, this.scores.get(user) + 100 * (this.round + 1));
       }
-      user.send({
-        type: "result",
-        correct: currQ.answers[answer] || false,
-        correctAnswer: currQ.correctAnswer,
-        scores: this.formatScores(),
-      });
     }
-
-    this.nextQuestion();
+    this.sentResults = true;
+    this.broadcast({
+      type: "result",
+      correctAnswer: currQ.correctAnswer,
+      scores: this.formatScores(),
+    });
   }
 
   /** Sets a user's answer */
@@ -163,6 +176,31 @@ class TriviaRoom extends Room {
     if (this.userAnswers.size === this.members.size) {
       this.getResults();
     }
+  }
+
+  /** Sends the current game state to a user */
+  sendState(user: TriviaUser) {
+    const currQ = this.questions[this.currentQuestion];
+
+    let question;
+    if (currQ) {
+      question = {
+        question: currQ.question,
+        answers: _.shuffle(Object.keys(currQ.answers)),
+        category: currQ.category,
+      };
+    }
+
+    const state = {
+      type: "gameState",
+      question,
+      correctAnswer: this.sentResults ? currQ.correctAnswer : undefined,
+      scores: this.formatScores(),
+      round: this.round,
+      started: this.started,
+    };
+
+    user.send(state);
   }
 }
 

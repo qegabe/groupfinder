@@ -55,6 +55,7 @@ class TriviaRoom extends room_1.default {
         this.userAnswers = new Map();
         this.scores = new Map();
         this.round = 0;
+        this.sentResults = false;
     }
     /** Gets a room if it exists otherwise creates a new room */
     static get(roomId) {
@@ -91,16 +92,29 @@ class TriviaRoom extends room_1.default {
     startGame() {
         return __awaiter(this, void 0, void 0, function* () {
             this.started = true;
+            this.broadcast({ type: "start" });
             this.questions = yield getQuestions(roundDifficulty[this.round]);
             this.broadcastQuestion();
         });
     }
-    /** Ends game and sends final results */
-    endGame() {
+    /** Resets the game */
+    reset() {
         this.round = 0;
+        this.questions = [];
         this.currentQuestion = 0;
         this.started = false;
+        this.sentResults = false;
+        this.scores.clear();
+        this.userAnswers.clear();
+    }
+    /** Ends game and sends final results */
+    endGame() {
         this.broadcast({ type: "final", scores: this.formatScores() });
+        this.reset();
+    }
+    restartGame() {
+        this.reset();
+        this.broadcast({ type: "restart" });
     }
     /** Increments the round counter and gets new questions, ends game if last round */
     nextRound() {
@@ -120,6 +134,7 @@ class TriviaRoom extends room_1.default {
     /** Increments the question counter and sends the next question to clients, next round if last question */
     nextQuestion() {
         this.currentQuestion += 1;
+        this.sentResults = false;
         this.userAnswers.clear();
         if (this.currentQuestion < this.questions.length) {
             this.broadcastQuestion();
@@ -131,20 +146,18 @@ class TriviaRoom extends room_1.default {
     /** Checks all user's answers and increase score if correct, send results to clients */
     getResults() {
         const currQ = this.questions[this.currentQuestion];
-        //console.log(currQ);
         for (let user of this.members) {
             const answer = this.userAnswers.get(user);
             if (currQ.answers[answer]) {
                 this.scores.set(user, this.scores.get(user) + 100 * (this.round + 1));
             }
-            user.send({
-                type: "result",
-                correct: currQ.answers[answer] || false,
-                correctAnswer: currQ.correctAnswer,
-                scores: this.formatScores(),
-            });
         }
-        this.nextQuestion();
+        this.sentResults = true;
+        this.broadcast({
+            type: "result",
+            correctAnswer: currQ.correctAnswer,
+            scores: this.formatScores(),
+        });
     }
     /** Sets a user's answer */
     submitAnswer(user, answer) {
@@ -154,6 +167,27 @@ class TriviaRoom extends room_1.default {
         if (this.userAnswers.size === this.members.size) {
             this.getResults();
         }
+    }
+    /** Sends the current game state to a user */
+    sendState(user) {
+        const currQ = this.questions[this.currentQuestion];
+        let question;
+        if (currQ) {
+            question = {
+                question: currQ.question,
+                answers: lodash_1.default.shuffle(Object.keys(currQ.answers)),
+                category: currQ.category,
+            };
+        }
+        const state = {
+            type: "gameState",
+            question,
+            correctAnswer: this.sentResults ? currQ.correctAnswer : undefined,
+            scores: this.formatScores(),
+            round: this.round,
+            started: this.started,
+        };
+        user.send(state);
     }
 }
 exports.default = TriviaRoom;

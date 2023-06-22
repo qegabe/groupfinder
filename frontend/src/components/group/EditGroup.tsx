@@ -199,15 +199,15 @@ function EditGroup() {
         shouldReturn={false}
         buttons={{ submit: "Save", cancel: "Cancel" }}
       />
-      <Grid container spacing={2}>
-        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
+      <Grid container spacing={2} justifyContent="space-evenly">
+        <Grid item xs={3}>
           <AddUser addUser={addUser} />
           <Box sx={{ my: 2 }}>
             <Typography>Users</Typography>
             <UserList userData={groupData.members} removeUser={removeUser} />
           </Box>
         </Grid>
-        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
+        <Grid item xs={3}>
           <AddGame addGame={addGame} />
           <Box sx={{ my: 2 }}>
             <Typography>Games</Typography>

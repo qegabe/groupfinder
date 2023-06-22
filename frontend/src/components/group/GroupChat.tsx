@@ -30,8 +30,7 @@ function Message({ text, username, avatarUrl }: IMessage) {
 
 function GroupChat() {
   const { id } = useParams();
-  const user = useAppSelector((s) => s.auth.user);
-  const token = useAppSelector((s) => s.auth.token);
+  const { user, token } = useAppSelector((s) => s.auth);
   const [text, setText] = useState("");
   const [messageData, setMessageData] = useState<IMessage[]>([]);
 
@@ -50,6 +49,7 @@ function GroupChat() {
   useEffect(() => {
     if (!ws.current) {
       ws.current = startWebSocket(
+        "chat",
         +(id as string),
         token || "",
         messageRecieved

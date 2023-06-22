@@ -107,6 +107,8 @@ function GroupDetail() {
     }
   }
 
+  const hasTrivia = group.games.some((g) => g.id === -1);
+
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3" sx={{ my: 2, textTransform: "capitalize" }}>
@@ -141,7 +143,19 @@ function GroupDetail() {
         </Grid>
       </Grid>
 
-      {buttons}
+      {hasTrivia ? (
+        <Button
+          sx={{ mb: 4 }}
+          variant="contained"
+          component={Link}
+          to={`/games/trivia/${id}`}>
+          Play Trivia
+        </Button>
+      ) : null}
+
+      <Grid container spacing={2} direction="row" justifyContent="center">
+        {buttons}
+      </Grid>
     </Box>
   );
 }

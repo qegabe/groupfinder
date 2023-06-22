@@ -17,6 +17,7 @@ class TriviaUser extends WSUser {
 
     if (msg.type === "join") {
       this.handleJoin(msg.token);
+      this.room.sendState(this);
       return;
     }
 
@@ -28,8 +29,21 @@ class TriviaUser extends WSUser {
           this.room.startGame();
         }
         break;
+      case "end":
+        if (this.room.started) {
+          this.room.endGame();
+        }
+        break;
       case "answer":
         this.room.submitAnswer(this, msg.answer);
+        break;
+      case "next":
+        if (this.room.started) {
+          this.room.nextQuestion();
+        }
+        break;
+      case "restart":
+        this.room.restartGame();
         break;
       default:
         break;

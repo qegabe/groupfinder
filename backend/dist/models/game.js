@@ -33,7 +33,8 @@ class Game {
             let game = dbQuery.rows[0];
             if (game)
                 return game;
-            [game] = yield getGameData([id]);
+            const data = yield (0, igdb_1.requestIGDB)("games", `fields name,cover; where id = ${id};`);
+            [game] = yield addCovers(data);
             if (!game)
                 throw new expressError_1.NotFoundError(`No game found with id: ${id}`);
             yield db_1.default.query(`INSERT INTO games (id, title, cover_url)
@@ -49,16 +50,20 @@ class Game {
      */
     static search(term) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield (0, igdb_1.requestIGDB)("search", `fields game; search "${term}"; limit 20;`);
-            if (data.length === 0)
-                return [];
-            const gameIds = data.reduce((acc, g) => {
-                if (g.game) {
-                    acc.push(g.game);
-                }
-                return acc;
-            }, []);
-            return getGameData(gameIds);
+            const data = yield (0, igdb_1.requestIGDB)("games", `fields name,cover; search "${term}"; where category = 0; limit 20;`);
+            const gameData = yield addCovers(data);
+            if (gameData.length > 0) {
+                const gameIds = data.map((g) => g.id);
+                const params = gameIds.map((g, i) => `$${i + 1}`);
+                const result = yield db_1.default.query(`SELECT id, title, cover_url AS "coverUrl"
+       FROM games
+       WHERE id NOT IN (${params.join(",")})
+             AND title ILIKE $${params.length + 1}
+      `, [...gameIds, `%${term}%`]);
+                gameData.push(...result.rows);
+            }
+            gameData.sort((a, b) => a.id - b.id);
+            return gameData;
         });
     }
     /**
@@ -150,21 +155,16 @@ class Game {
     }
 }
 /**
- * Gets game data from an array of game ids
- * @param ids game ids
+ * Adds cover urls to results from IGDB
+ * @param data games
  * @returns {Promise<IGame[]>}
  */
-function getGameData(ids) {
+function addCovers(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (ids.length === 0)
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
-        let gameData = [];
-        const data = yield (0, igdb_1.requestIGDB)("games", `fields name,cover,category; where id = (${ids.join(",")});`);
+        const gameData = [];
         if (data.length > 0) {
             const coverIds = data.reduce((acc, g) => {
-                if (g.cover && g.category === 0) {
+                if (g.cover) {
                     acc.push(g.cover);
                 }
                 return acc;
@@ -181,13 +181,11 @@ function getGameData(ids) {
                         break;
                     }
                 }
-                if (g.category === 0) {
-                    gameData.push({
-                        id: g.id,
-                        title: g.name,
-                        coverUrl,
-                    });
-                }
+                gameData.push({
+                    id: g.id,
+                    title: g.name,
+                    coverUrl,
+                });
             }
         }
         return gameData;
