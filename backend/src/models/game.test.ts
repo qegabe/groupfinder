@@ -16,14 +16,12 @@ const mockrequest = jest
   .mockImplementation(async (endpoint, data) => {
     switch (endpoint) {
       case "games":
-        if (data === "fields name,cover,category; where id = (0);") {
+        if (data === "fields name,cover; where id = 0;") {
           return [];
         }
-        return [{ id: 3, name: "game3", cover: 3, category: 0 }];
+        return [{ id: 3, name: "game3", cover: 3 }];
       case "covers":
         return [{ id: 3, url: "//www.img.com/test.png" }];
-      case "search":
-        return [{ id: 0, game: 3 }];
       default:
         return [];
     }
@@ -93,7 +91,7 @@ describe("search", () => {
         coverUrl: "https://www.img.com/test.png",
       },
     ]);
-    expect(mockrequest.mock.calls).toHaveLength(3);
+    expect(mockrequest.mock.calls).toHaveLength(2);
   });
 });
 

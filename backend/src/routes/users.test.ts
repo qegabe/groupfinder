@@ -139,7 +139,7 @@ describe("PATCH /api/users/:username", () => {
       "instance.username does not meet minimum length of 1",
       "instance.password is not of a type(s) string",
       "instance.bio is not of a type(s) string",
-      'instance.avatarUrl does not conform to the "uri" format',
+      "instance.avatarUrl is not any of [subschema 0],[subschema 1]",
       'instance is not allowed to have the additional property "notAProperty"',
     ]);
   });
