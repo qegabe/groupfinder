@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const room_1 = __importDefault(require("../../websocket/room"));
 const axios_1 = __importDefault(require("axios"));
 const lodash_1 = __importDefault(require("lodash"));
+const user_1 = __importDefault(require("../../models/user"));
 const TRIVIA_ROOMS = new Map();
 const BASE_URL = "https://the-trivia-api.com/v2";
 const roundDifficulty = ["easy", "medium", "hard"];
@@ -107,10 +108,15 @@ class TriviaRoom extends room_1.default {
         this.scores.clear();
         this.userAnswers.clear();
     }
-    /** Ends game and sends final results */
+    /** Ends game, updates high scores and sends final results */
     endGame() {
-        this.broadcast({ type: "final", scores: this.formatScores() });
-        this.reset();
+        return __awaiter(this, void 0, void 0, function* () {
+            for (let user of this.members) {
+                yield user_1.default.updateHighScore(user.name, this.scores.get(user));
+            }
+            this.broadcast({ type: "final", scores: this.formatScores() });
+            this.reset();
+        });
     }
     restartGame() {
         this.reset();

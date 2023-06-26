@@ -181,6 +181,26 @@ class User {
   }
 
   /**
+   * Updates a user's trivia high score.
+   * Won't update db if newScore < current score
+   * @param {string} username user to update
+   * @param {number} newScore
+   * @returns {Promise<void>}
+   */
+  static async updateHighScore(
+    username: string,
+    newScore: number
+  ): Promise<void> {
+    await db.query(
+      `UPDATE users
+       SET trivia_score = $1
+       WHERE username = $2 AND (trivia_score IS NULL OR trivia_score < $1)
+      `,
+      [newScore, username]
+    );
+  }
+
+  /**
    * Removes a user
    * @param {string} username user to remove
    */

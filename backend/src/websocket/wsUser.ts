@@ -2,6 +2,7 @@ import ws from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Room from "./room";
 import { SECRET_KEY } from "../config";
+import Group from "../models/group";
 
 /** WSUser is a individual connection from client -> server to chat. */
 class WSUser {
@@ -28,16 +29,27 @@ class WSUser {
   }
 
   /** handle joining: add to room members */
-  handleJoin(token: string) {
+  async handleJoin(token: string) {
     try {
       const user = jwt.verify(token, SECRET_KEY);
       this.name = (user as JwtPayload).username;
+      if (!(await Group.isMember(this.room.id, this.name))) {
+        throw Error("Not member of group");
+      }
       this.verified = true;
       this.room.join(this);
-      this.send({ type: "system", result: "Successfully verified and joined" });
+      this.send({
+        type: "auth",
+        result: true,
+        message: "Successfully verified and joined",
+      });
     } catch (error) {
       console.error(error);
-      this.send({ type: "system", result: "Failed to verify" });
+      this.send({
+        type: "auth",
+        result: false,
+        message: `Failed to verify: ${error.message}`,
+      });
     }
   }
 

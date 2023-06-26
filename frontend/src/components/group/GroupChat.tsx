@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo, FormEvent } from "react";
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import { startWebSocket } from "../../helpers/websocket";
 import { useAppSelector } from "../../hooks/redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface IMessage {
   username: string;
@@ -33,6 +33,7 @@ function GroupChat() {
   const { user, token } = useAppSelector((s) => s.auth);
   const [text, setText] = useState("");
   const [messageData, setMessageData] = useState<IMessage[]>([]);
+  const navigate = useNavigate();
 
   const ws = useRef<WebSocket>();
 
@@ -41,9 +42,13 @@ function GroupChat() {
       const msg = JSON.parse(data);
       if (msg.type === "chat") {
         setMessageData((md) => [...md, msg]);
+      } else if (msg.type === "auth" && !msg.result) {
+        ws.current?.close();
+        ws.current = undefined;
+        navigate("/");
       }
     },
-    []
+    [navigate]
   );
 
   useEffect(() => {

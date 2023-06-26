@@ -2,6 +2,7 @@ import Room from "../../websocket/room";
 import axios from "axios";
 import _ from "lodash";
 import TriviaUser from "./triviauser";
+import User from "../../models/user";
 
 const TRIVIA_ROOMS = new Map<number, TriviaRoom>();
 
@@ -111,8 +112,11 @@ class TriviaRoom extends Room {
     this.userAnswers.clear();
   }
 
-  /** Ends game and sends final results */
-  endGame() {
+  /** Ends game, updates high scores and sends final results */
+  async endGame() {
+    for (let user of this.members) {
+      await User.updateHighScore(user.name, this.scores.get(user));
+    }
     this.broadcast({ type: "final", scores: this.formatScores() });
     this.reset();
   }

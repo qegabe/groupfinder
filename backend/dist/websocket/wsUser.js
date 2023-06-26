@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const room_1 = __importDefault(require("./room"));
 const config_1 = require("../config");
+const group_1 = __importDefault(require("../models/group"));
 /** WSUser is a individual connection from client -> server to chat. */
 class WSUser {
     /** make chat: store connection-device, room */
@@ -28,17 +38,30 @@ class WSUser {
     }
     /** handle joining: add to room members */
     handleJoin(token) {
-        try {
-            const user = jsonwebtoken_1.default.verify(token, config_1.SECRET_KEY);
-            this.name = user.username;
-            this.verified = true;
-            this.room.join(this);
-            this.send({ type: "system", result: "Successfully verified and joined" });
-        }
-        catch (error) {
-            console.error(error);
-            this.send({ type: "system", result: "Failed to verify" });
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = jsonwebtoken_1.default.verify(token, config_1.SECRET_KEY);
+                this.name = user.username;
+                if (!(yield group_1.default.isMember(this.room.id, this.name))) {
+                    throw Error("Not member of group");
+                }
+                this.verified = true;
+                this.room.join(this);
+                this.send({
+                    type: "auth",
+                    result: true,
+                    message: "Successfully verified and joined",
+                });
+            }
+            catch (error) {
+                console.error(error);
+                this.send({
+                    type: "auth",
+                    result: false,
+                    message: `Failed to verify: ${error.message}`,
+                });
+            }
+        });
     }
     /** Handle messages from client
      */

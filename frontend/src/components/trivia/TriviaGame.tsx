@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useEffect, useState } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { startWebSocket } from "../../helpers/websocket";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import TriviaQuestion from "./TriviaQuestion";
 import GroupFinderApi from "../../api";
@@ -30,6 +30,7 @@ function TriviaGame() {
   const { token } = useAppSelector((s) => s.auth);
   const [groupUsers, setGroupUsers] = useState<Group["members"]>({});
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
+  const navigate = useNavigate();
 
   const ws = useRef<WebSocket>();
 
@@ -38,6 +39,13 @@ function TriviaGame() {
       const msg = JSON.parse(data);
 
       switch (msg.type) {
+        case "auth":
+          if (!msg.result) {
+            ws.current?.close();
+            ws.current = undefined;
+            navigate("/");
+          }
+          break;
         case "start":
           setGameState((gs) => ({
             ...gs,
@@ -84,7 +92,7 @@ function TriviaGame() {
           break;
       }
     },
-    []
+    [navigate]
   );
 
   //Connect to websocket
