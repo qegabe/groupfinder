@@ -70,17 +70,22 @@ function EditGroup() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          bgcolor: "white",
+          bgcolor: "#121212",
           p: 5,
         }}>
         <Typography variant="h6">
           Are you sure you want to delete this group?
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-          <Button onClick={deleteGroup} variant="contained" color="error">
+          <Button
+            onClick={deleteGroup}
+            variant="contained"
+            color="error"
+            sx={{ mr: 1 }}>
             Delete
           </Button>
           <Button
+            variant="outlined"
             onClick={() => {
               setConfirmOpen(false);
             }}>
@@ -177,7 +182,7 @@ function EditGroup() {
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
         <Typography variant="h3">Edit Group</Typography>
         <Tooltip title="Delete Group">
           <IconButton

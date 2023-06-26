@@ -32,7 +32,7 @@ function UserCard({ username, avatarUrl, isOwner, removeUser }: UserCardProps) {
           variant="h6"
           component={Link}
           to={`/users/${username}`}
-          sx={{ color: "black", textDecoration: "none" }}>
+          sx={{ color: "inherit", textDecoration: "none" }}>
           {username}
         </Typography>
       </CardContent>

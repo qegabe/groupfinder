@@ -22,7 +22,9 @@ function Login() {
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3">Login</Typography>
+      <Typography variant="h3" sx={{ mt: 2 }}>
+        Login
+      </Typography>
       {formErrors.message ? (
         <Alert severity="error">{formErrors.message}</Alert>
       ) : null}

@@ -50,7 +50,9 @@ function EditUser() {
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3">Edit Profile</Typography>
+      <Typography variant="h3" sx={{ mt: 2 }}>
+        Edit Profile
+      </Typography>
       {alerts}
       <Box
         component="form"
@@ -87,10 +89,14 @@ function EditUser() {
             justifyContent: "center",
             my: 2,
           }}>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" sx={{ mr: 1 }}>
             Save
           </Button>
-          <Button component={Link} to="/" variant="contained" color="secondary">
+          <Button
+            component={Link}
+            to={user ? `/users/${user.username}` : "/"}
+            variant="outlined"
+            color="secondary">
             Cancel
           </Button>
         </Box>

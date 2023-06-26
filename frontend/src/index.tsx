@@ -15,6 +15,10 @@ import { Provider } from "react-redux";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from "./theme";
+import { CssBaseline } from "@mui/material";
+
 const store = setupStore();
 
 const root = ReactDOM.createRoot(
@@ -25,7 +29,10 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <App />
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
         </LocalizationProvider>
       </BrowserRouter>
     </Provider>

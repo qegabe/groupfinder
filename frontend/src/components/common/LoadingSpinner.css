@@ -13,7 +13,7 @@
   margin: 1rem;
   border-radius: 50%;
   border: 14px dotted;
-  border-color: blue transparent transparent transparent;
+  border-color: #3fb56a transparent transparent transparent;
   animation: spin 2s linear infinite;
 }
 

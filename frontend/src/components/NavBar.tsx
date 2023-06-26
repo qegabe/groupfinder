@@ -70,7 +70,7 @@ function NavBar() {
   );
 
   return (
-    <AppBar position="static">
+    <AppBar color="primary" enableColorOnDark position="static">
       <Container maxWidth={false}>
         <Toolbar disableGutters>
           <Typography
@@ -89,10 +89,9 @@ function NavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: "flex" }}>
             <Button
-              variant="outlined"
               component={Link}
               to="/groups"
-              sx={{ my: 2, color: "white", display: "block" }}>
+              sx={{ my: 2, color: "inherit", display: "block" }}>
               Groups
             </Button>
           </Box>
@@ -112,13 +111,13 @@ function NavBar() {
               <Button
                 component={Link}
                 to="/register"
-                sx={{ my: 2, color: "white" }}>
+                sx={{ my: 2, color: "inherit" }}>
                 Register
               </Button>
               <Button
                 component={Link}
                 to="/login"
-                sx={{ my: 2, color: "white" }}>
+                sx={{ my: 2, color: "inherit" }}>
                 Login
               </Button>
             </Box>

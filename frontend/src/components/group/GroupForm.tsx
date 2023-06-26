@@ -122,14 +122,14 @@ function GroupForm({
         {...formErrors.description}
       />
       <DateTimePicker
-        sx={{ width: "50%" }}
+        sx={{ width: "50%", my: 1 }}
         label="Start Time"
         value={formData.startTime}
         onChange={(value) => setTimeData(value, "startTime")}
         slotProps={{ textField: { ...formErrors.startTime } }}
       />
       <DateTimePicker
-        sx={{ width: "50%" }}
+        sx={{ width: "50%", my: 1 }}
         label="End Time"
         value={formData.endTime}
         onChange={(value) => setTimeData(value, "endTime")}
@@ -238,13 +238,13 @@ function GroupForm({
         />
       </Box>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" sx={{ mr: 1 }}>
           {buttons.submit}
         </Button>
         <Button
           component={Link}
           to={returnPath}
-          variant="contained"
+          variant="outlined"
           color="secondary">
           {buttons.cancel}
         </Button>

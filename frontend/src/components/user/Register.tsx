@@ -22,11 +22,13 @@ function Register() {
 
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3">Register</Typography>
+      <Typography variant="h3" sx={{ mt: 2 }}>
+        Register
+      </Typography>
       <Box
         component="form"
         autoComplete="off"
-        sx={{ display: "block", my: 3, width: "60%" }}
+        sx={{ display: "grid", my: 3, width: "40%", justifyItems: "center" }}
         onSubmit={handleSubmit}>
         <TextField
           fullWidth
@@ -49,7 +51,7 @@ function Register() {
           onChange={handleChange}
           {...formErrors.password}
         />
-        <Button variant="contained" type="submit">
+        <Button sx={{ my: 2 }} variant="contained" type="submit">
           Submit
         </Button>
       </Box>
