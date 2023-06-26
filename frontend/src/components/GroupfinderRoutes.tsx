@@ -22,12 +22,12 @@ function GroupfinderRoutes() {
       <Route path="/" element={<Home />} />
 
       <Route path="/groups" element={<Groups />} />
+      <Route path="/groups/:id" element={<GroupDetail />} />
       <Route path="/users/:username" element={<UserProfile />} />
       {user ? (
         <>
           <Route path="/games/trivia/:id" element={<TriviaGame />} />
           <Route path="/groups/new" element={<NewGroup />} />
-          <Route path="/groups/:id" element={<GroupDetail />} />
           <Route path="/groups/:id/chat" element={<GroupChat />} />
           <Route path="/groups/:id/edit" element={<EditGroup />} />
           <Route path="/user/groups" element={<UserGroups />} />

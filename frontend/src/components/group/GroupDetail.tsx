@@ -9,17 +9,28 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useAppSelector } from "../../hooks/redux";
 import GameList from "../game/GameList";
 import UserList from "../user/UserList";
+import SomethingWentWrong from "../common/SomethingWentWrong";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 function GroupDetail() {
   const { id } = useParams();
   const [group, setGroup] = useState<Group>();
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [isError, setIsError] = useState(false);
   const user = useAppSelector((s) => s.auth.user);
 
   useEffect(() => {
     async function loadGroup() {
-      setGroup(await GroupFinderApi.getGroup(+(id as string)));
+      try {
+        setGroup(await GroupFinderApi.getGroup(+(id as string)));
+      } catch (error: any) {
+        if (error === `You are not a member of group with id: ${id}`) {
+          setIsPrivate(true);
+        } else {
+          setIsError(true);
+        }
+      }
     }
     loadGroup();
   }, [id]);
@@ -64,6 +75,22 @@ function GroupDetail() {
     }
   }
 
+  if (isError) return <SomethingWentWrong />;
+
+  if (isPrivate) {
+    return (
+      <Box
+        sx={{
+          height: 600,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Typography variant="h2">This group is private!</Typography>
+      </Box>
+    );
+  }
+
   if (!group) return <LoadingSpinner />;
 
   const chatButton = (
@@ -72,9 +99,14 @@ function GroupDetail() {
     </Button>
   );
 
+  const isMember = Boolean(group.members[user?.username as keyof object]);
+  const isOwner = Boolean(
+    group.members[user?.username as keyof object]?.isOwner
+  );
+
   let buttons = null;
   if (group.members && user) {
-    if (group.members[user.username as keyof object]?.isOwner) {
+    if (isOwner) {
       buttons = (
         <>
           {chatButton}
@@ -86,10 +118,7 @@ function GroupDetail() {
           </Button>
         </>
       );
-    } else if (
-      group.members[user.username as keyof object] &&
-      !group.members[user.username as keyof object]?.isOwner
-    ) {
+    } else if (isMember) {
       buttons = (
         <>
           {chatButton}
@@ -143,7 +172,7 @@ function GroupDetail() {
         </Grid>
       </Grid>
 
-      {hasTrivia ? (
+      {hasTrivia && isMember ? (
         <Button
           sx={{ mb: 4 }}
           variant="contained"
