@@ -34,8 +34,12 @@ function AddGame({ addGame }: AddGameProps) {
   }, [inputValue, search, game]);
 
   return (
-    <Box component="form" sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      data-testid="form-addgame"
+      component="form"
+      sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
+        data-testid="autocomplete-addgame"
         sx={{ width: 300 }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.title
@@ -46,7 +50,7 @@ function AddGame({ addGame }: AddGameProps) {
         includeInputInList
         filterSelectedOptions
         value={game}
-        noOptionsText="No games"
+        noOptionsText="Start typing to search for games..."
         onChange={(e: any, newValue: Game | null) => {
           setGames(newValue ? [newValue, ...games] : games);
           setGame(newValue);

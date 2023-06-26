@@ -20,7 +20,9 @@ function UserCard({ username, avatarUrl, isOwner, removeUser }: UserCardProps) {
   const disabled = { disabled: isOwner };
 
   return (
-    <Card sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Card
+      data-testid={`usercard-${username}`}
+      sx={{ display: "flex", justifyContent: "space-between" }}>
       <CardContent sx={{ display: "flex" }}>
         <Avatar
           sx={{ width: 30, height: 30, mr: 1 }}

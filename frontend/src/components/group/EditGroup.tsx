@@ -182,6 +182,7 @@ function EditGroup() {
         <Tooltip title="Delete Group">
           <IconButton
             color="error"
+            aria-label="delete group"
             onClick={() => {
               setConfirmOpen(true);
             }}>

@@ -30,6 +30,11 @@ function UserProfile() {
       <Box sx={{ my: 2 }}>
         <Typography sx={{ fontStyle: "italic" }}>{userData.bio}</Typography>
       </Box>
+      {userData.triviaScore !== null ? (
+        <Box>
+          <Typography>Trivia High Score: {userData.triviaScore}</Typography>
+        </Box>
+      ) : null}
       {user?.username === userData.username ? (
         <Button variant="contained" component={Link} to={`/user/edit`}>
           Edit

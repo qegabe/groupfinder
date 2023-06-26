@@ -21,8 +21,8 @@ function EditUser() {
     async function loadUser() {
       const userData = await GroupFinderApi.getUser(user?.username as string);
       setFormData((fd) => ({
-        avatarUrl: userData.avatarUrl,
-        bio: userData.bio,
+        avatarUrl: userData.avatarUrl || "",
+        bio: userData.bio || "",
       }));
     }
     loadUser();

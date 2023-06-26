@@ -22,7 +22,15 @@ interface Group {
 
 type ListGroup = Omit<
   Group,
-  "description" | "location" | "isPrivate" | "maxMembers" | "members" | "games"
+  | "description"
+  | "location"
+  | "isPrivate"
+  | "maxMembers"
+  | "members"
+  | "games"
+  | "address"
+  | "city"
+  | "cityId"
 >;
 
 interface User {

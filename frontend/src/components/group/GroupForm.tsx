@@ -181,7 +181,7 @@ function GroupForm({
             includeInputInList
             filterSelectedOptions
             value={formData.cityData}
-            noOptionsText="No cities..."
+            noOptionsText="Start typing to search cities..."
             onChange={(e: any, newValue: City | null) => {
               setCities(newValue ? [newValue, ...cities] : cities);
               setFormData((fd: GroupFormData) => ({
@@ -193,13 +193,7 @@ function GroupForm({
               setSearchValue(newInputValue);
             }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="City"
-                placeholder="Leave blank if online"
-                fullWidth
-                required
-              />
+              <TextField {...params} label="City" fullWidth required />
             )}
             renderOption={(props, city) => {
               return (

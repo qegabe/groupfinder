@@ -34,8 +34,12 @@ function AddUser({ addUser }: AddUserProps) {
   }, [inputValue, search, user]);
 
   return (
-    <Box component="form" sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      data-testid="form-adduser"
+      component="form"
+      sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
+        data-testid="autocomplete-adduser"
         sx={{ width: 300 }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.username
@@ -46,7 +50,7 @@ function AddUser({ addUser }: AddUserProps) {
         includeInputInList
         filterSelectedOptions
         value={user}
-        noOptionsText="No users"
+        noOptionsText="Start typing to search for users..."
         onChange={(e: any, newValue: User | null) => {
           setUsers(newValue ? [newValue, ...users] : users);
           setUser(newValue);

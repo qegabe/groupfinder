@@ -17,7 +17,9 @@ function GameCard({ id, title, coverUrl, removeGame }: GameCardProps) {
   }
 
   return (
-    <Card sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Card
+      data-testid={`gamecard-${id}`}
+      sx={{ display: "flex", justifyContent: "space-between" }}>
       <CardContent sx={{ display: "flex" }}>
         <Avatar
           variant="square"
