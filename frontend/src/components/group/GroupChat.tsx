@@ -8,13 +8,11 @@ import useChatScroll from "../../hooks/useChatScroll";
 interface IMessage {
   username?: string;
   text: string;
-  style?: string;
   avatarUrl?: string | null;
-  showAvatar?: boolean;
-  type: "chat";
+  type: "chat" | "system";
 }
 
-function Message({ text, username, avatarUrl, style, showAvatar }: IMessage) {
+function Message({ text, username, avatarUrl, type }: IMessage) {
   return (
     <Box
       sx={{
@@ -22,18 +20,20 @@ function Message({ text, username, avatarUrl, style, showAvatar }: IMessage) {
         alignItems: "center",
         my: 0.5,
       }}>
-      {showAvatar ? (
-        <Avatar
-          sx={{ width: 20, height: 20, mx: 1 }}
-          src={avatarUrl || undefined}
-        />
+      {type === "chat" ? (
+        <>
+          <Avatar
+            sx={{ width: 20, height: 20, mx: 1 }}
+            src={avatarUrl || undefined}
+          />
+          <Typography sx={{ fontWeight: "bold" }} component="span">
+            {username}:
+          </Typography>
+        </>
       ) : null}
-      {username ? (
-        <Typography sx={{ fontWeight: "bold" }} component="span">
-          {username}:
-        </Typography>
-      ) : null}
-      <Typography sx={{ ml: 1, fontStyle: style }} component="span">
+      <Typography
+        sx={{ ml: 1, fontStyle: type === "system" ? "italic" : undefined }}
+        component="span">
         {text}
       </Typography>
     </Box>
@@ -53,7 +53,7 @@ function GroupChat() {
   const messageRecieved = useMemo(
     () => (data: any) => {
       const msg = JSON.parse(data);
-      if (msg.type === "chat") {
+      if (msg.type === "chat" || msg.type === "system") {
         setMessageData((md) => [...md, msg]);
       } else if (msg.type === "auth" && !msg.result) {
         ws.current?.close();
@@ -96,9 +96,7 @@ function GroupChat() {
     }
   }
 
-  const messages = messageData.map((m, i) => (
-    <Message key={i} showAvatar={true} {...m} />
-  ));
+  const messages = messageData.map((m, i) => <Message key={i} {...m} />);
 
   return (
     <Box
