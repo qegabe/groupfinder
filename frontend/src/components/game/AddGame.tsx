@@ -40,7 +40,7 @@ function AddGame({ addGame }: AddGameProps) {
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
         data-testid="autocomplete-addgame"
-        sx={{ width: 300 }}
+        sx={{ width: "100%" }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.title
         }

@@ -1,17 +1,17 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 function Home() {
   return (
     <Box
-      component="div"
       sx={{
-        height: 600,
+        height: "calc(100vh - 68px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        fontSize: { xs: "1.75rem", md: "3rem" },
       }}>
-      <Typography variant="h2">Welcome to Groupfinder!</Typography>
+      Welcome to Groupfinder!
     </Box>
   );
 }

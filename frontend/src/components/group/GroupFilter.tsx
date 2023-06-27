@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Slider, Stack, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import AddGame from "../game/AddGame";
 import GameList from "../game/GameList";
 
-function GroupFilter({ formData, setFormData }: GroupFilterProps) {
-  const [games, setGames] = useState<Game[]>([]);
-
+function GroupFilter({
+  formData,
+  setFormData,
+  games,
+  setGames,
+}: GroupFilterProps) {
   function handleSliderChange(evt: Event, value: number | number[]) {
     setFormData((fd: any) => ({
       ...fd,
@@ -27,6 +30,7 @@ function GroupFilter({ formData, setFormData }: GroupFilterProps) {
       startTimeAfter: null,
       startTimeBefore: null,
       maxSize: 10,
+      hasGames: [],
     });
     setGames([]);
   }
@@ -56,13 +60,15 @@ function GroupFilter({ formData, setFormData }: GroupFilterProps) {
       <Box
         component="form"
         sx={{
-          display: "grid",
+          display: "flex",
+          flexDirection: "column",
           justifyItems: "center",
+          alignItems: "center",
         }}>
         <Typography variant="h6" sx={{ my: 2 }}>
           Filter Groups
         </Typography>
-        <Button variant="outlined" onClick={reset} sx={{ my: 2 }}>
+        <Button variant="outlined" onClick={reset} sx={{ my: 2, mx: "auto" }}>
           Reset
         </Button>
         <DateTimePicker

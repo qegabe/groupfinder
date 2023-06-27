@@ -19,11 +19,22 @@ import GameList from "../game/GameList";
 import AddUser from "../user/AddUser";
 import UserList from "../user/UserList";
 
+const INITIAL_STATE: GroupFormData = {
+  title: "",
+  description: "",
+  startTime: null,
+  endTime: null,
+  address: "",
+  cityData: null,
+  isPrivate: false,
+  maxMembers: 10,
+};
+
 function EditGroup() {
   const { id } = useParams();
   const groupId = +(id as string);
   const [groupData, setGroupData] = useState<Group>();
-  const [formData, setFormData] = useState<GroupFormData>();
+  const [formData, setFormData] = useState<GroupFormData>(INITIAL_STATE);
   const [alertData, setAlertData] = useState<any[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,7 +55,7 @@ function EditGroup() {
       });
     }
     loadGroup();
-  }, [groupId, setGroupData]);
+  }, [groupId]);
 
   async function submit() {
     if (formData) {

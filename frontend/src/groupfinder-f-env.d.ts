@@ -69,7 +69,9 @@ interface GroupFormData {
 interface GroupFormProps {
   initialState?: GroupFormData;
   formData: GroupFormData;
-  setFormData: (value: any) => void;
+  setFormData: import("react").Dispatch<
+    import("react").SetStateAction<GroupFormData>
+  >;
   submit: () => Promise<void>;
   returnPath: string;
   shouldReturn: boolean;
@@ -86,9 +88,20 @@ interface GroupCardProps {
   startTime: import("dayjs").Dayjs;
 }
 
+interface GroupFilterFormData {
+  startTimeAfter: import("dayjs").Dayjs | null;
+  startTimeBefore: import("dayjs").Dayjs | null;
+  maxSize: number;
+  hasGames: number[];
+}
+
 interface GroupFilterProps {
-  formData: any;
-  setFormData: (value: any) => void;
+  formData: GroupFilterFormData;
+  setFormData: import("react").Dispatch<
+    import("react").SetStateAction<GroupFilterFormData>
+  >;
+  games: Game[];
+  setGames: import("react").Dispatch<import("react").SetStateAction<Game[]>>;
 }
 
 interface SearchBarProps {
