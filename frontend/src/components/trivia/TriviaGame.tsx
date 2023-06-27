@@ -6,6 +6,8 @@ import { useAppSelector } from "../../hooks/redux";
 import TriviaQuestion from "./TriviaQuestion";
 import GroupFinderApi from "../../api";
 import TriviaScores from "./TriviaScores";
+import TriviaGameOver from "./TriviaGameOver";
+import TriviaRoundTransition from "./TriviaRoundTransition";
 
 interface GameState {
   question: Question | undefined;
@@ -13,6 +15,8 @@ interface GameState {
   selectedAnswer: number | undefined;
   started: boolean;
   gameOver: boolean;
+  round: number;
+  showRound: boolean;
   scores: { [username: string]: number };
 }
 
@@ -22,6 +26,8 @@ const INITIAL_STATE: GameState = {
   selectedAnswer: undefined,
   started: false,
   gameOver: false,
+  round: 0,
+  showRound: false,
   scores: {},
 };
 
@@ -59,6 +65,7 @@ function TriviaGame() {
             correctAnswer: msg.correctAnswer,
             started: msg.started,
             scores: msg.scores,
+            round: msg.round,
           }));
           break;
         case "question":
@@ -67,6 +74,7 @@ function TriviaGame() {
             question: msg.question,
             selectedAnswer: undefined,
             correctAnswer: undefined,
+            showRound: false,
           }));
           break;
         case "result":
@@ -75,6 +83,13 @@ function TriviaGame() {
             answered: false,
             correctAnswer: msg.correctAnswer,
             scores: msg.scores,
+          }));
+          break;
+        case "nextRound":
+          setGameState((gs) => ({
+            ...gs,
+            round: msg.round,
+            showRound: true,
           }));
           break;
         case "final":
@@ -155,22 +170,42 @@ function TriviaGame() {
 
   if (gameState.gameOver)
     return (
-      <Box>
-        <Grid container height={800}>
-          <Grid sx={{ boxShadow: 1, p: 2, mt: 2 }} item xs={12}>
-            <Typography variant="h3" display="flex" justifyContent="center">
-              Final Scores
-            </Typography>
-            <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
-              <TriviaScores users={groupUsers} scores={gameState.scores} />
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
-              {restartButton}
-            </Box>
-          </Grid>
-        </Grid>
+      <TriviaGameOver
+        users={groupUsers}
+        scores={gameState.scores}
+        restartButton={restartButton}
+      />
+    );
+
+  let side = null;
+  if (gameState.started && !gameState.showRound) {
+    side = (
+      <TriviaQuestion
+        selectedAnswer={gameState.selectedAnswer}
+        correctAnswer={gameState.correctAnswer}
+        question={gameState.question}
+        sendAnswer={sendAnswer}
+        nextQuestion={nextQuestion}
+      />
+    );
+  } else if (gameState.showRound) {
+    side = <TriviaRoundTransition round={gameState.round} />;
+  } else {
+    side = (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}>
+        <Typography variant="h1" sx={{ my: 4 }}>
+          Trivia
+        </Typography>
+        <Button size="large" variant="contained" onClick={startGame}>
+          Start Game
+        </Button>
       </Box>
     );
+  }
 
   return (
     <Box>
@@ -206,28 +241,7 @@ function TriviaGame() {
           xs={9}
           justifyContent="center"
           alignContent={gameState.started ? "baseline" : "center"}>
-          {gameState.started ? (
-            <TriviaQuestion
-              selectedAnswer={gameState.selectedAnswer}
-              correctAnswer={gameState.correctAnswer}
-              question={gameState.question}
-              sendAnswer={sendAnswer}
-              nextQuestion={nextQuestion}
-            />
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-              }}>
-              <Typography variant="h1" sx={{ my: 4 }}>
-                Trivia
-              </Typography>
-              <Button size="large" variant="contained" onClick={startGame}>
-                Start Game
-              </Button>
-            </Box>
-          )}
+          {side}
         </Grid>
       </Grid>
     </Box>

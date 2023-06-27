@@ -152,3 +152,7 @@ interface TriviaScoresProps {
     [username: string]: number;
   };
 }
+
+interface TriviaGameOverProps extends TriviaScoresProps {
+  restartButton: import("react").ReactElement;
+}

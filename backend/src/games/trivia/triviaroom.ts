@@ -53,8 +53,9 @@ class TriviaRoom extends Room {
   currentQuestion: number = 0;
   userAnswers = new Map<TriviaUser, string>();
   scores = new Map<TriviaUser, number>();
-  round: number = 0;
+  round: number = -1;
   sentResults: boolean = false;
+  questionTimeOut: NodeJS.Timeout;
 
   /** Gets a room if it exists otherwise creates a new room */
   static get(roomId: number) {
@@ -83,6 +84,9 @@ class TriviaRoom extends Room {
       category: currQ.category,
     };
     this.broadcast({ type: "question", question });
+    this.questionTimeOut = setTimeout(() => {
+      this.getResults();
+    }, 60000);
   }
 
   formatScores() {
@@ -97,19 +101,19 @@ class TriviaRoom extends Room {
   async startGame() {
     this.started = true;
     this.broadcast({ type: "start" });
-    this.questions = await getQuestions(roundDifficulty[this.round]);
-    this.broadcastQuestion();
+    this.nextRound();
   }
 
   /** Resets the game */
   reset() {
-    this.round = 0;
+    this.round = -1;
     this.questions = [];
     this.currentQuestion = 0;
     this.started = false;
     this.sentResults = false;
     this.scores.clear();
     this.userAnswers.clear();
+    clearTimeout(this.questionTimeOut);
   }
 
   /** Ends game, updates high scores and sends final results */
@@ -135,7 +139,9 @@ class TriviaRoom extends Room {
         roundDifficulty[this.round]
       );
       this.currentQuestion = 0;
-      this.broadcastQuestion();
+      setTimeout(() => {
+        this.broadcastQuestion();
+      }, 2000);
     } else {
       this.endGame();
     }
@@ -178,6 +184,7 @@ class TriviaRoom extends Room {
     }
 
     if (this.userAnswers.size === this.members.size) {
+      clearTimeout(this.questionTimeOut);
       this.getResults();
     }
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import LoadingSpinner from "../common/LoadingSpinner";
+import TriviaTimer from "./TriviaTimer";
 
 function TriviaQuestion({
   selectedAnswer,
@@ -28,8 +29,13 @@ function TriviaQuestion({
 
   return (
     <Box sx={{ width: "100%", mx: 3 }}>
-      <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-        <Typography sx={{ textTransform: "capitalize" }} variant="h5">
+      <Box sx={{ display: "grid", my: 4, alignItems: "center" }}>
+        <Box justifySelf="left">
+          <TriviaTimer key={question.question} initialTime={60} />
+        </Box>
+        <Typography
+          sx={{ textTransform: "capitalize", justifySelf: "center" }}
+          variant="h5">
           {question.category.replaceAll("_", " ")}
         </Typography>
       </Box>

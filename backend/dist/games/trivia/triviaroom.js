@@ -55,7 +55,7 @@ class TriviaRoom extends room_1.default {
         this.currentQuestion = 0;
         this.userAnswers = new Map();
         this.scores = new Map();
-        this.round = 0;
+        this.round = -1;
         this.sentResults = false;
     }
     /** Gets a room if it exists otherwise creates a new room */
@@ -81,6 +81,9 @@ class TriviaRoom extends room_1.default {
             category: currQ.category,
         };
         this.broadcast({ type: "question", question });
+        this.questionTimeOut = setTimeout(() => {
+            this.getResults();
+        }, 60000);
     }
     formatScores() {
         const s = {};
@@ -94,19 +97,19 @@ class TriviaRoom extends room_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             this.started = true;
             this.broadcast({ type: "start" });
-            this.questions = yield getQuestions(roundDifficulty[this.round]);
-            this.broadcastQuestion();
+            this.nextRound();
         });
     }
     /** Resets the game */
     reset() {
-        this.round = 0;
+        this.round = -1;
         this.questions = [];
         this.currentQuestion = 0;
         this.started = false;
         this.sentResults = false;
         this.scores.clear();
         this.userAnswers.clear();
+        clearTimeout(this.questionTimeOut);
     }
     /** Ends game, updates high scores and sends final results */
     endGame() {
@@ -130,7 +133,9 @@ class TriviaRoom extends room_1.default {
                 this.broadcast({ type: "nextRound", round: this.round + 1 });
                 this.questions = this.questions = yield getQuestions(roundDifficulty[this.round]);
                 this.currentQuestion = 0;
-                this.broadcastQuestion();
+                setTimeout(() => {
+                    this.broadcastQuestion();
+                }, 2000);
             }
             else {
                 this.endGame();
@@ -171,6 +176,7 @@ class TriviaRoom extends room_1.default {
             this.userAnswers.set(user, answer);
         }
         if (this.userAnswers.size === this.members.size) {
+            clearTimeout(this.questionTimeOut);
             this.getResults();
         }
     }
