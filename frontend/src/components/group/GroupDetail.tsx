@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Button,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import GroupFinderApi from "../../api";
 import { Link, useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -10,6 +18,7 @@ import { useAppSelector } from "../../hooks/redux";
 import GameList from "../game/GameList";
 import UserList from "../user/UserList";
 import SomethingWentWrong from "../common/SomethingWentWrong";
+import GroupChat from "./GroupChat";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -93,99 +102,110 @@ function GroupDetail() {
 
   if (!group) return <LoadingSpinner />;
 
-  const chatButton = (
-    <Button variant="contained" component={Link} to={`/groups/${id}/chat`}>
-      Chat
-    </Button>
-  );
-
   const isMember = Boolean(group.members[user?.username as keyof object]);
   const isOwner = Boolean(
     group.members[user?.username as keyof object]?.isOwner
   );
 
-  let buttons = null;
-  if (group.members && user) {
-    if (isOwner) {
-      buttons = (
-        <>
-          {chatButton}
-          <Button
-            variant="contained"
-            component={Link}
-            to={`/groups/${id}/edit`}>
-            Edit
-          </Button>
-        </>
-      );
-    } else if (isMember) {
-      buttons = (
-        <>
-          {chatButton}
-          <Button variant="contained" onClick={leaveGroup}>
-            Leave
-          </Button>
-        </>
-      );
-    } else {
-      buttons = (
-        <Button variant="contained" onClick={joinGroup}>
-          Join
-        </Button>
-      );
-    }
-  }
-
   const hasTrivia = group.games.some((g) => g.id === -1);
 
   return (
-    <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3" sx={{ my: 2, textTransform: "capitalize" }}>
-        {group.title}
-      </Typography>
-      <Box sx={{ my: 2 }}>
-        <Typography sx={{ fontStyle: "italic" }}>
-          {group.description}
-        </Typography>
-      </Box>
-      <Typography>Starting at: {group.startTime.format("LLL")}</Typography>
-      <Typography>
-        Lasts {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
-      </Typography>
-      {group.cityId ? (
-        <Typography>
-          Location: {group.address}, {group.city}
-        </Typography>
-      ) : null}
-      <Grid container spacing={2}>
-        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
-          <Box sx={{ my: 2 }}>
-            <Typography>Users</Typography>
-            <UserList userData={group.members} />
+    <Grid container spacing={2}>
+      <Grid item xs={2}>
+        <Box sx={{ mt: 2, ml: 2 }}>
+          <Typography>Users</Typography>
+          <UserList userData={group.members} />
+        </Box>
+      </Grid>
+      <Grid item container direction="column" xs={7}>
+        <Grid item container justifyContent="space-between">
+          <Box display="flex" alignItems="center">
+            <Typography
+              variant="h3"
+              sx={{ mt: 2, textTransform: "capitalize" }}>
+              {group.title}
+            </Typography>
+            {isOwner ? (
+              <Tooltip title="Edit">
+                <IconButton
+                  sx={{ mt: 2, height: 40, width: 40 }}
+                  component={Link}
+                  to={`/groups/${id}/edit`}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            ) : null}
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            {isMember && !isOwner ? (
+              <Button variant="contained" onClick={leaveGroup}>
+                Leave Group
+              </Button>
+            ) : null}
+            {!isMember && user ? (
+              <Button variant="contained" onClick={joinGroup}>
+                Join Group
+              </Button>
+            ) : null}
           </Box>
         </Grid>
-        <Grid item sx={{ display: "grid", justifyContent: "center" }} xs={6}>
+        <Grid item>
+          <hr />
+          <Box>
+            {group.cityId ? (
+              <Typography>
+                Location: {group.address}, {group.city}
+              </Typography>
+            ) : null}
+            <Typography>
+              Starting at: {group.startTime.format("LLL")}
+            </Typography>
+            <Typography>
+              Lasts{" "}
+              {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <hr />
           <Box sx={{ my: 2 }}>
+            <Typography sx={{ fontStyle: "italic" }}>
+              {group.description}
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        container
+        direction="column"
+        maxHeight="100vh"
+        height="calc(100vh - 84px)"
+        xs={3}>
+        {hasTrivia && isMember ? (
+          <Grid item container justifyContent="center">
+            <Button
+              sx={{ mt: 2 }}
+              variant="contained"
+              component={Link}
+              to={`/games/trivia/${id}`}>
+              Play Trivia
+            </Button>
+          </Grid>
+        ) : null}
+        <Grid item flexGrow={1}>
+          <Box sx={{ mt: 2, mr: 2, maxHeight: 390 }}>
             <Typography>Games</Typography>
             <GameList gameData={group.games} />
           </Box>
         </Grid>
+        {isMember ? (
+          <Grid item flexGrow={3} sx={{ maxHeight: 480 }}>
+            <GroupChat />
+          </Grid>
+        ) : null}
       </Grid>
-
-      {hasTrivia && isMember ? (
-        <Button
-          sx={{ mb: 4 }}
-          variant="contained"
-          component={Link}
-          to={`/games/trivia/${id}`}>
-          Play Trivia
-        </Button>
-      ) : null}
-
-      <Grid container spacing={2} direction="row" justifyContent="center">
-        {buttons}
-      </Grid>
-    </Box>
+    </Grid>
   );
 }
 

@@ -3,25 +3,37 @@ import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import { startWebSocket } from "../../helpers/websocket";
 import { useAppSelector } from "../../hooks/redux";
 import { useNavigate, useParams } from "react-router-dom";
+import useChatScroll from "../../hooks/useChatScroll";
 
 interface IMessage {
-  username: string;
+  username?: string;
   text: string;
-  avatarUrl: string | null;
+  style?: string;
+  avatarUrl?: string | null;
+  showAvatar?: boolean;
   type: "chat";
 }
 
-function Message({ text, username, avatarUrl }: IMessage) {
+function Message({ text, username, avatarUrl, style, showAvatar }: IMessage) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", my: 0.5 }}>
-      <Avatar
-        sx={{ width: 20, height: 20, mx: 1 }}
-        src={avatarUrl || undefined}
-      />
-      <Typography sx={{ fontWeight: "bold" }} component="span">
-        {username}:
-      </Typography>
-      <Typography sx={{ ml: 1 }} component="span">
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        my: 0.5,
+      }}>
+      {showAvatar ? (
+        <Avatar
+          sx={{ width: 20, height: 20, mx: 1 }}
+          src={avatarUrl || undefined}
+        />
+      ) : null}
+      {username ? (
+        <Typography sx={{ fontWeight: "bold" }} component="span">
+          {username}:
+        </Typography>
+      ) : null}
+      <Typography sx={{ ml: 1, fontStyle: style }} component="span">
         {text}
       </Typography>
     </Box>
@@ -33,6 +45,7 @@ function GroupChat() {
   const { user, token } = useAppSelector((s) => s.auth);
   const [text, setText] = useState("");
   const [messageData, setMessageData] = useState<IMessage[]>([]);
+  const ref = useChatScroll(messageData);
   const navigate = useNavigate();
 
   const ws = useRef<WebSocket>();
@@ -83,15 +96,34 @@ function GroupChat() {
     }
   }
 
-  const messages = messageData.map((m, i) => <Message key={i} {...m} />);
+  const messages = messageData.map((m, i) => (
+    <Message key={i} showAvatar={true} {...m} />
+  ));
 
   return (
-    <Box sx={{ display: "grid", justifyContent: "center", mt: 2 }}>
-      <Box sx={{ height: "80vh", boxShadow: 1 }}>{messages}</Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        my: 2,
+        mr: 2,
+        border: 1,
+        borderColor: "inherit",
+        borderRadius: 1,
+      }}>
+      <Box
+        ref={ref}
+        sx={{
+          boxShadow: 1,
+          flexGrow: 3,
+          overflowY: "auto",
+        }}>
+        {messages}
+      </Box>
       <Box
         component="form"
         sx={{
-          width: "50vw",
           display: "flex",
         }}
         onSubmit={handleSubmit}>

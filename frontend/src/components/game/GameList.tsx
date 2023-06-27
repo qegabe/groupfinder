@@ -7,7 +7,11 @@ function GameList({ gameData, removeGame }: GameListProps) {
     <GameCard key={g.id} removeGame={removeGame} {...g} />
   ));
 
-  return <Stack spacing={2}>{games}</Stack>;
+  return (
+    <Stack sx={{ overflowY: "auto" }} spacing={2}>
+      {games}
+    </Stack>
+  );
 }
 
 export default GameList;
