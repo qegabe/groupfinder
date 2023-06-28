@@ -57,7 +57,13 @@ function EditUser() {
       <Box
         component="form"
         autoComplete="off"
-        sx={{ display: "grid", my: 3, width: "40%", justifyItems: "center" }}
+        sx={{
+          display: "grid",
+          my: 3,
+          px: 1,
+          width: { xs: "100%", md: "60%" },
+          justifyItems: "center",
+        }}
         onSubmit={handleSubmit}>
         <TextField
           fullWidth
