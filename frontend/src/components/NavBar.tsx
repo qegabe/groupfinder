@@ -11,29 +11,42 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { logout } from "../actions/actionCreators";
+import { theme } from "../theme";
 
 function NavBar() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
+  const [authAnchorEl, setAuthAnchorEl] = useState<null | HTMLElement>(null);
   const user = useAppSelector((s) => s.auth.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const isMenuOpen = Boolean(anchorEl);
+  const isUserMenuOpen = Boolean(userAnchorEl);
+  const isAuthMenuOpen = Boolean(authAnchorEl);
 
-  function handleMenuOpen(evt: MouseEvent<HTMLElement>) {
-    setAnchorEl(evt.currentTarget);
+  function handleUserMenuOpen(evt: MouseEvent<HTMLElement>) {
+    setUserAnchorEl(evt.currentTarget);
   }
 
-  function handleMenuClose() {
-    setAnchorEl(null);
+  function handleUserMenuClose() {
+    setUserAnchorEl(null);
   }
 
-  const renderMenu = (
+  function handleAuthMenuOpen(evt: MouseEvent<HTMLElement>) {
+    console.log("test");
+    setAuthAnchorEl(evt.currentTarget);
+  }
+
+  function handleAuthMenuClose() {
+    setAuthAnchorEl(null);
+  }
+
+  const userMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={userAnchorEl}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
@@ -43,28 +56,59 @@ function NavBar() {
         vertical: "top",
         horizontal: "right",
       }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}>
+      open={isUserMenuOpen}
+      onClose={handleUserMenuClose}>
       <MenuItem
         onClick={(e) => {
-          handleMenuClose();
+          handleUserMenuClose();
           navigate("/user/groups");
         }}>
         My Groups
       </MenuItem>
       <MenuItem
         onClick={(e) => {
-          handleMenuClose();
+          handleUserMenuClose();
           navigate(`/users/${user?.username}`);
         }}>
         Profile
       </MenuItem>
       <MenuItem
         onClick={(e) => {
-          handleMenuClose();
+          handleUserMenuClose();
           dispatch(logout());
         }}>
         Logout
+      </MenuItem>
+    </Menu>
+  );
+
+  const authMenu = (
+    <Menu
+      anchorEl={authAnchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isAuthMenuOpen}
+      onClose={handleAuthMenuClose}>
+      <MenuItem
+        onClick={(e) => {
+          handleAuthMenuClose();
+          navigate("/register");
+        }}>
+        Register
+      </MenuItem>
+      <MenuItem
+        onClick={(e) => {
+          handleAuthMenuClose();
+          navigate("/login");
+        }}>
+        Login
       </MenuItem>
     </Menu>
   );
@@ -98,33 +142,46 @@ function NavBar() {
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <IconButton
-                onClick={handleMenuOpen}
+                onClick={handleUserMenuOpen}
                 size="small"
-                aria-controls={isMenuOpen ? "account-menu" : undefined}
+                aria-controls={isUserMenuOpen ? "account-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={isMenuOpen ? "true" : undefined}>
+                aria-expanded={isUserMenuOpen ? "true" : undefined}>
                 <Avatar src={user.avatarUrl || undefined} />
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ flexGrow: 0 }}>
-              <Button
-                component={Link}
-                to="/register"
-                sx={{ my: 2, color: "inherit" }}>
-                Register
-              </Button>
-              <Button
-                component={Link}
-                to="/login"
-                sx={{ my: 2, color: "inherit" }}>
-                Login
-              </Button>
-            </Box>
+            <>
+              <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+                <Button
+                  component={Link}
+                  to="/register"
+                  sx={{ my: 2, color: "inherit" }}>
+                  Register
+                </Button>
+                <Button
+                  component={Link}
+                  to="/login"
+                  sx={{ my: 2, color: "inherit" }}>
+                  Login
+                </Button>
+              </Box>
+              <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  onClick={handleAuthMenuOpen}
+                  size="small"
+                  aria-controls={isAuthMenuOpen ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={isAuthMenuOpen ? "true" : undefined}>
+                  <MenuIcon sx={{ color: theme.palette.background.default }} />
+                </IconButton>
+              </Box>
+            </>
           )}
         </Toolbar>
       </Container>
-      {renderMenu}
+      {authMenu}
+      {userMenu}
     </AppBar>
   );
 }
