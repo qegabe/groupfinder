@@ -52,11 +52,7 @@ function GroupFilter({
   }
 
   return (
-    <Stack
-      spacing={2}
-      sx={{
-        boxShadow: 1,
-      }}>
+    <Stack spacing={2}>
       <Box
         component="form"
         sx={{
@@ -65,9 +61,6 @@ function GroupFilter({
           justifyItems: "center",
           alignItems: "center",
         }}>
-        <Typography variant="h6" sx={{ my: 2 }}>
-          Filter Groups
-        </Typography>
         <Button variant="outlined" onClick={reset} sx={{ my: 2, mx: "auto" }}>
           Reset
         </Button>
