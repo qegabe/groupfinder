@@ -259,7 +259,7 @@ function GroupDetail() {
           <Box
             sx={{
               width: { xs: 300, md: 500 },
-              height: { xs: 400, md: 500 },
+              height: { xs: 300, md: 500 },
               backgroundColor: theme.palette.background.default,
             }}>
             <GroupChat />
