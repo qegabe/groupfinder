@@ -35,8 +35,7 @@ function AddGame({ addGame }: AddGameProps) {
 
   return (
     <Box
-      data-testid="form-addgame"
-      component="form"
+      data-testid="div-addgame"
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
         data-testid="autocomplete-addgame"

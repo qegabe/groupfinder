@@ -35,8 +35,7 @@ function AddUser({ addUser }: AddUserProps) {
 
   return (
     <Box
-      data-testid="form-adduser"
-      component="form"
+      data-testid="div-adduser"
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
         data-testid="autocomplete-adduser"
