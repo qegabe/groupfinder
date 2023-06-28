@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Avatar } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography, Avatar } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import GroupFinderApi from "../../api";
 import { Link, useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
@@ -26,20 +27,22 @@ function UserProfile() {
         <Typography variant="h3" sx={{ m: 2, textTransform: "capitalize" }}>
           {userData.username}
         </Typography>
-      </Box>
-      <Box sx={{ my: 2 }}>
-        <Typography sx={{ fontStyle: "italic" }}>{userData.bio}</Typography>
+        {user?.username === userData.username ? (
+          <Tooltip title="Edit">
+            <IconButton aria-label="edit" component={Link} to={`/user/edit`}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        ) : null}
       </Box>
       {userData.triviaScore !== null ? (
         <Box>
           <Typography>Trivia High Score: {userData.triviaScore}</Typography>
         </Box>
       ) : null}
-      {user?.username === userData.username ? (
-        <Button variant="contained" component={Link} to={`/user/edit`}>
-          Edit
-        </Button>
-      ) : null}
+      <Box sx={{ my: 2 }}>
+        <Typography sx={{ fontStyle: "italic" }}>{userData.bio}</Typography>
+      </Box>
     </Box>
   );
 }

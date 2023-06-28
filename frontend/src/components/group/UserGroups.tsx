@@ -21,7 +21,7 @@ function UserGroups() {
   }, [user?.username]);
 
   return (
-    <Box sx={{ my: 4 }}>
+    <Box sx={{ my: 4, mx: 2 }}>
       <Typography variant="h4">Your Groups</Typography>
       {loading ? <LoadingSpinner /> : <GroupList groupsData={groupsData} />}
     </Box>
