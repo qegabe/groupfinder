@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Box,
   Button,
   Grid,
@@ -10,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useParams, useNavigate } from "react-router-dom";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
@@ -18,6 +22,7 @@ import AddGame from "../game/AddGame";
 import GameList from "../game/GameList";
 import AddUser from "../user/AddUser";
 import UserList from "../user/UserList";
+import { theme } from "../../theme";
 
 const INITIAL_STATE: GroupFormData = {
   title: "",
@@ -191,6 +196,57 @@ function EditGroup() {
   //Loading spinner if group not loaded
   if (!groupData) return <LoadingSpinner />;
 
+  const editUsersAndGames = (
+    <Grid
+      container
+      spacing={2}
+      justifyContent="space-between"
+      direction={{ xs: "column", md: "row" }}
+      mt={1}
+      px={1}>
+      <Grid item xs={5}>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="users-content"
+            id="users-header">
+            <Typography>Edit Users</Typography>
+          </AccordionSummary>
+          <AccordionDetails
+            sx={{
+              backgroundColor: theme.palette.background.default,
+              pt: 2,
+            }}>
+            <AddUser addUser={addUser} />
+            <Box mt={2}>
+              <UserList userData={groupData.members} removeUser={removeUser} />
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+      <Grid item xs={5}>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="users-content"
+            id="users-header">
+            <Typography>Edit Games</Typography>
+          </AccordionSummary>
+          <AccordionDetails
+            sx={{
+              backgroundColor: theme.palette.background.default,
+              pt: 2,
+            }}>
+            <AddGame addGame={addGame} />
+            <Box mt={2}>
+              <GameList gameData={groupData.games} removeGame={removeGame} />
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+    </Grid>
+  );
+
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
@@ -212,26 +268,11 @@ function EditGroup() {
         formData={formData as GroupFormData}
         setFormData={setFormData}
         submit={submit}
-        returnPath="/groups"
+        returnPath={`/groups/${id}`}
         shouldReturn={false}
         buttons={{ submit: "Save", cancel: "Cancel" }}
+        extra={editUsersAndGames}
       />
-      <Grid container spacing={2} justifyContent="space-evenly">
-        <Grid item xs={3}>
-          <AddUser addUser={addUser} />
-          <Box sx={{ my: 2 }}>
-            <Typography>Users</Typography>
-            <UserList userData={groupData.members} removeUser={removeUser} />
-          </Box>
-        </Grid>
-        <Grid item xs={3}>
-          <AddGame addGame={addGame} />
-          <Box sx={{ my: 2 }}>
-            <Typography>Games</Typography>
-            <GameList gameData={groupData.games} removeGame={removeGame} />
-          </Box>
-        </Grid>
-      </Grid>
       {confirmModal}
     </Box>
   );

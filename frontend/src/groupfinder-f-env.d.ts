@@ -76,6 +76,7 @@ interface GroupFormProps {
   returnPath: string;
   shouldReturn: boolean;
   buttons: { submit: string; cancel: string };
+  extra?: import("react").ReactElement;
 }
 
 interface GroupListProps {

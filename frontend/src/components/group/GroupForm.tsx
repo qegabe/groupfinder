@@ -28,6 +28,7 @@ function GroupForm({
   returnPath,
   shouldReturn,
   buttons,
+  extra,
 }: GroupFormProps) {
   const [isOnline, setIsOnline] = useState(formData.address ? false : true);
   const [cities, setCities] = useState<City[]>([]);
@@ -98,7 +99,7 @@ function GroupForm({
     <Box
       component="form"
       autoComplete="off"
-      sx={{ display: "block", my: 3, width: "60%" }}
+      sx={{ display: "block", my: 3, px: 1, width: { xs: "100%", md: "60%" } }}
       onSubmit={handleSubmit}>
       <TextField
         fullWidth
@@ -149,7 +150,8 @@ function GroupForm({
           />
         </Box>
       ) : (
-        <Box sx={{ display: "flex" }}>
+        <Box
+          sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
           <FormControlLabel
             control={
               <Switch
@@ -165,13 +167,13 @@ function GroupForm({
             required
             id="address"
             label="Address"
-            sx={{ my: 1, width: "50%" }}
+            sx={{ my: 1 }}
             value={formData.address}
             onChange={handleChange}
             {...formErrors.address}
           />
           <Autocomplete
-            sx={{ my: 1, width: "50%" }}
+            sx={{ my: 1, width: { xs: "100%", md: "60%" } }}
             getOptionLabel={(option) =>
               typeof option === "string" ? option : option.city
             }
@@ -237,7 +239,14 @@ function GroupForm({
           {...formErrors.maxMembers}
         />
       </Box>
-      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      {extra ? extra : null}
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          mt: 2,
+        }}>
         <Button type="submit" variant="contained" sx={{ mr: 1 }}>
           {buttons.submit}
         </Button>

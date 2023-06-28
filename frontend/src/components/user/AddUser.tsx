@@ -40,7 +40,7 @@ function AddUser({ addUser }: AddUserProps) {
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
         data-testid="autocomplete-adduser"
-        sx={{ width: 300 }}
+        sx={{ width: "100%" }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.username
         }
