@@ -17,7 +17,9 @@ function Message({ text, username, avatarUrl, type }: IMessage) {
     <Box
       sx={{
         display: "flex",
+        flexWrap: "nowrap",
         alignItems: "center",
+        width: "100%",
         my: 0.5,
       }}>
       {type === "chat" ? (
@@ -32,8 +34,11 @@ function Message({ text, username, avatarUrl, type }: IMessage) {
         </>
       ) : null}
       <Typography
-        sx={{ ml: 1, fontStyle: type === "system" ? "italic" : undefined }}
-        component="span">
+        sx={{
+          mx: 1,
+          fontStyle: type === "system" ? "italic" : undefined,
+          overflowWrap: "anywhere",
+        }}>
         {text}
       </Typography>
     </Box>
@@ -105,7 +110,6 @@ function GroupChat() {
         flexDirection: "column",
         height: "100%",
         my: 2,
-        mr: 2,
         border: 1,
         borderColor: "inherit",
         borderRadius: 1,

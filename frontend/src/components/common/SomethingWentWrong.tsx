@@ -5,7 +5,7 @@ function SomethingWentWrong() {
   return (
     <Box
       sx={{
-        height: 600,
+        height: "calc(100vh - 68px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

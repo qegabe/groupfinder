@@ -6,8 +6,15 @@ import {
   Button,
   Tooltip,
   Typography,
+  Collapse,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CommentIcon from "@mui/icons-material/Comment";
+import CloseIcon from "@mui/icons-material/Close";
 import GroupFinderApi from "../../api";
 import { Link, useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -19,6 +26,7 @@ import GameList from "../game/GameList";
 import UserList from "../user/UserList";
 import SomethingWentWrong from "../common/SomethingWentWrong";
 import GroupChat from "./GroupChat";
+import { theme } from "../../theme";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -27,6 +35,7 @@ function GroupDetail() {
   const [group, setGroup] = useState<Group>();
   const [isPrivate, setIsPrivate] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const user = useAppSelector((s) => s.auth.user);
 
   useEffect(() => {
@@ -90,7 +99,7 @@ function GroupDetail() {
     return (
       <Box
         sx={{
-          height: 600,
+          height: "calc(100vh - 68px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -110,102 +119,152 @@ function GroupDetail() {
   const hasTrivia = group.games.some((g) => g.id === -1);
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={2}>
-        <Box sx={{ mt: 2, ml: 2 }}>
-          <Typography>Users</Typography>
-          <UserList userData={group.members} />
-        </Box>
-      </Grid>
-      <Grid item container direction="column" xs={7}>
-        <Grid item container justifyContent="space-between">
-          <Box display="flex" alignItems="center">
-            <Typography
-              variant="h3"
-              sx={{ mt: 2, textTransform: "capitalize" }}>
-              {group.title}
-            </Typography>
-            {isOwner ? (
-              <Tooltip title="Edit">
-                <IconButton
-                  sx={{ mt: 2, height: 40, width: 40 }}
-                  component={Link}
-                  to={`/groups/${id}/edit`}>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            ) : null}
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            {isMember && !isOwner ? (
-              <Button variant="contained" onClick={leaveGroup}>
-                Leave Group
-              </Button>
-            ) : null}
-            {!isMember && user ? (
-              <Button variant="contained" onClick={joinGroup}>
-                Join Group
-              </Button>
-            ) : null}
-          </Box>
-        </Grid>
-        <Grid item>
-          <hr />
-          <Box>
-            {group.cityId ? (
-              <Typography>
-                Location: {group.address}, {group.city}
+    <>
+      <Grid container spacing={2} direction={{ xs: "column", md: "row" }}>
+        <Grid item container direction="column" xs={12} md={8}>
+          <Grid item container justifyContent="space-between" sx={{ px: 1 }}>
+            <Box display="flex" alignItems="center">
+              <Typography
+                variant="h3"
+                sx={{ mt: 2, textTransform: "capitalize" }}>
+                {group.title}
               </Typography>
-            ) : null}
-            <Typography>
-              Starting at: {group.startTime.format("LLL")}
-            </Typography>
-            <Typography>
-              Lasts{" "}
-              {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
-            </Typography>
-          </Box>
+              {isOwner ? (
+                <Tooltip title="Edit">
+                  <IconButton
+                    sx={{ mt: 2, height: 40, width: 40 }}
+                    component={Link}
+                    to={`/groups/${id}/edit`}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : null}
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+              {isMember && !isOwner ? (
+                <Button variant="contained" onClick={leaveGroup}>
+                  Leave Group
+                </Button>
+              ) : null}
+              {!isMember && user ? (
+                <Button variant="contained" onClick={joinGroup}>
+                  Join Group
+                </Button>
+              ) : null}
+            </Box>
+          </Grid>
+          <Grid item sx={{ px: 1 }}>
+            <hr />
+            <Box>
+              {group.cityId ? (
+                <Typography>
+                  Location: {group.address}, {group.city}
+                </Typography>
+              ) : null}
+              <Typography>
+                Starting at: {group.startTime.format("LLL")}
+              </Typography>
+              <Typography>
+                Lasts{" "}
+                {dayjs.duration(group.endTime.diff(group.startTime)).humanize()}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item sx={{ px: 1 }}>
+            <hr />
+            <Box sx={{ my: 2 }}>
+              <Typography sx={{ fontStyle: "italic" }}>
+                {group.description}
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item>
-          <hr />
-          <Box sx={{ my: 2 }}>
-            <Typography sx={{ fontStyle: "italic" }}>
-              {group.description}
-            </Typography>
-          </Box>
+        <Grid item container direction="column" md={4}>
+          {hasTrivia && isMember ? (
+            <Grid item container justifyContent="center">
+              <Button
+                sx={{ mt: 2 }}
+                variant="contained"
+                component={Link}
+                to={`/games/trivia/${id}`}>
+                Play Trivia
+              </Button>
+            </Grid>
+          ) : null}
+          <Grid item sx={{ px: 1 }}>
+            <Box sx={{ my: 2 }}>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="users-content"
+                  id="users-header">
+                  <Typography>Users</Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    backgroundColor: theme.palette.background.default,
+                    pt: 2,
+                  }}>
+                  <UserList userData={group.members} />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="games-content"
+                  id="games-header">
+                  <Typography>Games</Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    backgroundColor: theme.palette.background.default,
+                    pt: 2,
+                  }}>
+                  <GameList gameData={group.games} />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
-      <Grid
-        item
-        container
-        direction="column"
-        maxHeight="100vh"
-        height="calc(100vh - 84px)"
-        xs={3}>
-        {hasTrivia && isMember ? (
-          <Grid item container justifyContent="center">
-            <Button
-              sx={{ mt: 2 }}
-              variant="contained"
-              component={Link}
-              to={`/games/trivia/${id}`}>
-              Play Trivia
-            </Button>
-          </Grid>
-        ) : null}
-        <Grid item flexGrow={1}>
-          <Box sx={{ mt: 2, mr: 2, maxHeight: 390 }}>
-            <Typography>Games</Typography>
-            <GameList gameData={group.games} />
-          </Box>
-        </Grid>
-        {isMember ? (
-          <Grid item flexGrow={3} sx={{ maxHeight: 480 }}>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+        }}>
+        <Box sx={{ display: "flex", justifyContent: "end" }}>
+          <Tooltip title={showChat ? "Close" : "Chat"}>
+            <IconButton
+              aria-label={showChat ? "close" : "chat"}
+              sx={{ width: { xs: 48, md: 72 }, height: { xs: 48, md: 72 } }}
+              onClick={() => {
+                setShowChat(!showChat);
+              }}>
+              {showChat ? (
+                <CloseIcon
+                  sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
+                />
+              ) : (
+                <CommentIcon
+                  sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
+                />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Collapse in={showChat}>
+          <Box
+            sx={{
+              width: { xs: 300, md: 500 },
+              height: { xs: 400, md: 500 },
+              backgroundColor: theme.palette.background.default,
+            }}>
             <GroupChat />
-          </Grid>
-        ) : null}
-      </Grid>
-    </Grid>
+          </Box>
+        </Collapse>
+      </Box>
+    </>
   );
 }
 
