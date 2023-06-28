@@ -22,8 +22,10 @@ function NewGroup() {
   }
 
   return (
-    <Box sx={{ display: "grid", justifyItems: "center" }}>
-      <Typography variant="h3">Create New Group</Typography>
+    <Box sx={{ display: "grid", justifyItems: "center", mt: 2 }}>
+      <Typography sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}>
+        Create New Group
+      </Typography>
       <GroupForm
         initialState={INITIAL_STATE}
         formData={formData}

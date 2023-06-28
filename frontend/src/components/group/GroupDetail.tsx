@@ -104,7 +104,9 @@ function GroupDetail() {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <Typography variant="h2">This group is private!</Typography>
+        <Typography sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}>
+          This group is private!
+        </Typography>
       </Box>
     );
   }

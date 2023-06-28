@@ -10,7 +10,9 @@ function SomethingWentWrong() {
         justifyContent: "center",
         alignItems: "center",
       }}>
-      <Typography variant="h2">Something went wrong!</Typography>
+      <Typography sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}>
+        Something went wrong!
+      </Typography>
     </Box>
   );
 }

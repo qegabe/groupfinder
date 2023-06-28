@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 function Home() {
   return (
@@ -9,9 +9,10 @@ function Home() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        fontSize: { xs: "1.75rem", md: "3rem" },
       }}>
-      Welcome to Groupfinder!
+      <Typography sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}>
+        Welcome to Groupfinder!
+      </Typography>
     </Box>
   );
 }

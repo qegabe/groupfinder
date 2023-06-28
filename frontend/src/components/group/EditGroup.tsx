@@ -250,7 +250,9 @@ function EditGroup() {
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-        <Typography variant="h3">Edit Group</Typography>
+        <Typography sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}>
+          Edit Group
+        </Typography>
         <Tooltip title="Delete Group">
           <IconButton
             color="error"
