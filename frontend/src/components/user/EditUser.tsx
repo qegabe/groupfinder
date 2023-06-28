@@ -61,7 +61,7 @@ function EditUser() {
           display: "grid",
           my: 3,
           px: 1,
-          width: { xs: "100%", md: "60%" },
+          width: { xs: "100%", lg: "60%" },
           justifyItems: "center",
         }}
         onSubmit={handleSubmit}>
