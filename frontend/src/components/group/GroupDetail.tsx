@@ -229,43 +229,45 @@ function GroupDetail() {
           </Grid>
         </Grid>
       </Grid>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-        }}>
-        <Box sx={{ display: "flex", justifyContent: "end" }}>
-          <Tooltip title={showChat ? "Close" : "Chat"}>
-            <IconButton
-              aria-label={showChat ? "close" : "chat"}
-              sx={{ width: { xs: 48, md: 72 }, height: { xs: 48, md: 72 } }}
-              onClick={() => {
-                setShowChat(!showChat);
-              }}>
-              {showChat ? (
-                <CloseIcon
-                  sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
-                />
-              ) : (
-                <CommentIcon
-                  sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
-                />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Box>
-        <Collapse in={showChat}>
-          <Box
-            sx={{
-              width: { xs: 300, md: 500 },
-              height: { xs: 300, md: 500 },
-              backgroundColor: theme.palette.background.default,
-            }}>
-            <GroupChat />
+      {isMember ? (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+          }}>
+          <Box sx={{ display: "flex", justifyContent: "end" }}>
+            <Tooltip title={showChat ? "Close" : "Chat"}>
+              <IconButton
+                aria-label={showChat ? "close" : "chat"}
+                sx={{ width: { xs: 48, md: 72 }, height: { xs: 48, md: 72 } }}
+                onClick={() => {
+                  setShowChat(!showChat);
+                }}>
+                {showChat ? (
+                  <CloseIcon
+                    sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
+                  />
+                ) : (
+                  <CommentIcon
+                    sx={{ transform: { xs: "scale(1)", md: "scale(1.5)" } }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
           </Box>
-        </Collapse>
-      </Box>
+          <Collapse in={showChat}>
+            <Box
+              sx={{
+                width: { xs: 300, md: 500 },
+                height: { xs: 300, md: 500 },
+                backgroundColor: theme.palette.background.default,
+              }}>
+              <GroupChat />
+            </Box>
+          </Collapse>
+        </Box>
+      ) : null}
     </>
   );
 }
