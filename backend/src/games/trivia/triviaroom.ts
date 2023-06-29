@@ -94,6 +94,7 @@ class TriviaRoom extends Room {
     for (let user of this.scores) {
       s[user[0].name] = user[1];
     }
+    //console.log(this.scores, s);
     return s;
   }
 
@@ -118,8 +119,12 @@ class TriviaRoom extends Room {
 
   /** Ends game, updates high scores and sends final results */
   async endGame() {
-    for (let user of this.members) {
-      await User.updateHighScore(user.name, this.scores.get(user));
+    try {
+      for (let user of this.members) {
+        await User.updateHighScore(user.name, this.scores.get(user));
+      }
+    } catch (error) {
+      console.error(error);
     }
     this.broadcast({ type: "final", scores: this.formatScores() });
     this.reset();

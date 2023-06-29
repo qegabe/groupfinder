@@ -90,6 +90,7 @@ class TriviaRoom extends room_1.default {
         for (let user of this.scores) {
             s[user[0].name] = user[1];
         }
+        //console.log(this.scores, s);
         return s;
     }
     /** Gets the initial set of questions and sends them */
@@ -114,8 +115,13 @@ class TriviaRoom extends room_1.default {
     /** Ends game, updates high scores and sends final results */
     endGame() {
         return __awaiter(this, void 0, void 0, function* () {
-            for (let user of this.members) {
-                yield user_1.default.updateHighScore(user.name, this.scores.get(user));
+            try {
+                for (let user of this.members) {
+                    yield user_1.default.updateHighScore(user.name, this.scores.get(user));
+                }
+            }
+            catch (error) {
+                console.error(error);
             }
             this.broadcast({ type: "final", scores: this.formatScores() });
             this.reset();
