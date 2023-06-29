@@ -6,7 +6,7 @@ function TriviaRoundTransition({ round }: { round: number }) {
 
   return (
     <Box>
-      <Grid container height={800}>
+      <Grid container height={"calc(100vh - 114px)"}>
         <Grid sx={{ boxShadow: 1, p: 2, mt: 2 }} item xs={12}>
           <Box
             sx={{

@@ -5,7 +5,7 @@ import TriviaScores from "./TriviaScores";
 function TriviaGameOver({ users, scores, restartButton }: TriviaGameOverProps) {
   return (
     <Box>
-      <Grid container height={800}>
+      <Grid container height={"calc(100vh - 114px)"}>
         <Grid sx={{ boxShadow: 1, p: 2, mt: 2 }} item xs={12}>
           <Typography variant="h3" display="flex" justifyContent="center">
             Final Scores

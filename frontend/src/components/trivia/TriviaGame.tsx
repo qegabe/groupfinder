@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Collapse, Grid, Typography } from "@mui/material";
 import { startWebSocket } from "../../helpers/websocket";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
@@ -8,6 +8,7 @@ import GroupFinderApi from "../../api";
 import TriviaScores from "./TriviaScores";
 import TriviaGameOver from "./TriviaGameOver";
 import TriviaRoundTransition from "./TriviaRoundTransition";
+import { theme } from "../../theme";
 
 interface GameState {
   question: Question | undefined;
@@ -36,6 +37,7 @@ function TriviaGame() {
   const { token } = useAppSelector((s) => s.auth);
   const [groupUsers, setGroupUsers] = useState<Group["members"]>({});
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
+  const [showScores, setShowScores] = useState(false);
   const navigate = useNavigate();
 
   const ws = useRef<WebSocket>();
@@ -209,14 +211,27 @@ function TriviaGame() {
 
   return (
     <Box>
-      <Grid container height={800}>
+      <Grid
+        container
+        direction={{ xs: "column-reverse", md: "row" }}
+        height={"calc(100vh - 114px)"}
+        justifyContent="center"
+        px={{ xs: 1, md: 2 }}>
         <Grid
-          sx={{ boxShadow: 1, p: 2, mt: 2 }}
+          sx={{
+            display: { xs: "none", md: "flex" },
+            boxShadow: 1,
+            p: 2,
+            mt: 2,
+            backgroundImage:
+              "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
+          }}
           item
           container
           direction="column"
           justifyContent="flex-start"
-          xs={3}>
+          xs={0}
+          md={3}>
           <Grid item xs={11}>
             <Typography variant="h4" display="flex" justifyContent="center">
               Scores
@@ -238,12 +253,64 @@ function TriviaGame() {
         <Grid
           item
           container
-          xs={9}
+          xs={12}
+          md={9}
           justifyContent="center"
-          alignContent={gameState.started ? "baseline" : "center"}>
+          alignContent={gameState.started ? "baseline" : "center"}
+          sx={{ overflowY: "auto" }}>
           {side}
         </Grid>
       </Grid>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          display: { xs: "flex", md: "none" },
+          flexDirection: "column",
+          justifyContent: "center",
+        }}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            console.log("test");
+            setShowScores(!showScores);
+          }}>
+          {showScores ? "Close" : "Scores"}
+        </Button>
+        <Collapse in={showScores}>
+          <Grid
+            sx={{
+              boxShadow: 1,
+              p: 2,
+              backgroundColor: theme.palette.background.paper,
+              backgroundImage:
+                "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
+            }}
+            container
+            direction="column"
+            justifyContent="flex-start">
+            <Grid item xs={11}>
+              <Typography variant="h4" display="flex" justifyContent="center">
+                Scores
+              </Typography>
+              <Box>
+                <TriviaScores users={groupUsers} scores={gameState.scores} />
+              </Box>
+            </Grid>
+            <Grid item xs={1}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                {restartButton}
+              </Box>
+            </Grid>
+          </Grid>
+        </Collapse>
+      </Box>
     </Box>
   );
 }
