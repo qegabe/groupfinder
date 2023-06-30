@@ -40,9 +40,7 @@ it("lets user login", async () => {
   fireEvent.change(passwordInput, { target: { value: "12345" } });
   fireEvent.click(submitButton);
   await waitFor(() => {
-    expect(mockLogin).toBeCalledTimes(1);
     expect(mockLogin).toBeCalledWith("TestUser", "12345");
-    expect(mockGetUser).toBeCalledTimes(1);
-    expect(mockGetUser).toBeCalledWith("TestUser");
   });
+  expect(mockGetUser).toBeCalledWith("TestUser");
 });

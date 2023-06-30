@@ -79,8 +79,8 @@ function GroupChat() {
       );
     }
     return () => {
-      if (ws.current?.readyState === ws.current?.OPEN) {
-        ws.current?.close();
+      if (ws.current && ws.current.readyState === ws.current.OPEN) {
+        ws.current.close();
         ws.current = undefined;
       }
     };
@@ -89,8 +89,8 @@ function GroupChat() {
   function handleSubmit(evt: FormEvent<HTMLFormElement>) {
     evt.preventDefault();
     setText("");
-    if (user) {
-      ws.current?.send(
+    if (user && ws.current && ws.current.readyState === ws.current.OPEN) {
+      ws.current.send(
         JSON.stringify({
           text,
           username: user.username,
@@ -130,6 +130,7 @@ function GroupChat() {
         }}
         onSubmit={handleSubmit}>
         <TextField
+          inputProps={{ "data-testid": "chat-input" }}
           autoComplete="off"
           fullWidth
           value={text}

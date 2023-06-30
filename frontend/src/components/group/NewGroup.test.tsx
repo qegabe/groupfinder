@@ -36,15 +36,15 @@ it("allows user to create group", async () => {
 
   waitFor(() => {
     expect(screen.getByText("Create New Group")).not.toBeInTheDocument();
-    expect(mockCreateGroup).toBeCalledWith({
-      title: "Test",
-      description: "",
-      startTime: expect.any(dayjs.Dayjs),
-      endTime: expect.any(dayjs.Dayjs),
-      address: "",
-      cityData: null,
-      isPrivate: false,
-      maxMembers: 10,
-    });
+  });
+  expect(mockCreateGroup).toBeCalledWith({
+    title: "Test",
+    description: "",
+    startTime: dayjs("2023-06-23T16:00:00.000Z"),
+    endTime: dayjs("2023-06-23T17:00:00.000Z"),
+    address: "",
+    cityData: null,
+    isPrivate: false,
+    maxMembers: 10,
   });
 });

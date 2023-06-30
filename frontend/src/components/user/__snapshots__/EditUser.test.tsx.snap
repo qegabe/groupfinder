@@ -6,13 +6,13 @@ exports[`matches snapshot 1`] = `
     class="MuiBox-root css-1tx56hj"
   >
     <h3
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-vhs57-MuiTypography-root"
     >
       Edit Profile
     </h3>
     <form
       autocomplete="off"
-      class="MuiBox-root css-6feot8"
+      class="MuiBox-root css-u2f8ta"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1nin81k-MuiFormControl-root-MuiTextField-root"
@@ -96,7 +96,7 @@ exports[`matches snapshot 1`] = `
         class="MuiBox-root css-owjlnq"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-bh137t-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="submit"
         >
@@ -106,7 +106,7 @@ exports[`matches snapshot 1`] = `
           />
         </button>
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-zcbmsk-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1l9sosn-MuiButtonBase-root-MuiButton-root"
           href="/"
           tabindex="0"
         >

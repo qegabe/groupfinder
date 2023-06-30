@@ -74,7 +74,10 @@ afterEach(() => {
 });
 
 it("renders", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -84,7 +87,10 @@ it("renders", async () => {
 });
 
 it("matches snapshot", async () => {
-  const { container, asFragment } = render(<EditGroup />, "/groups/1/edit");
+  const { container, asFragment } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -92,7 +98,10 @@ it("matches snapshot", async () => {
 });
 
 it("lets owner edit basic info", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -101,13 +110,25 @@ it("lets owner edit basic info", async () => {
   fireEvent.change(titleInput as Element, { target: { value: "New Title" } });
   fireEvent.click(saveButton);
   await waitFor(() => {
-    expect(mockEditGroup).toHaveBeenCalledTimes(1);
+    expect(mockEditGroup).toBeCalledWith(1, {
+      title: "New Title",
+      description: "test",
+      startTime: dayjs("2023-06-23T16:00:00.000Z"),
+      endTime: dayjs("2023-06-23T17:00:00.000Z"),
+      address: "123 Test Street",
+      cityData: { city: "Test City", id: 1 },
+      isPrivate: false,
+      maxMembers: 10,
+    });
   });
   expect(titleInput).toHaveValue("New Title");
 });
 
 it("lets owner delete group", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -121,38 +142,43 @@ it("lets owner delete group", async () => {
   const deleteButton = screen.getByText("Delete");
   fireEvent.click(deleteButton);
   await waitFor(() => {
-    expect(mockDeleteGroup).toBeCalledTimes(1);
+    expect(mockDeleteGroup).toBeCalledWith(1);
   });
 });
 
 it("lets owner add game", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
   const autocomplete = screen.getByTestId("autocomplete-addgame");
-  const addGameForm = screen.getByTestId("form-addgame");
+  const addGameForm = screen.getByTestId("div-addgame");
   const input = within(addGameForm).getByLabelText("Add a game");
   const add = within(addGameForm).getByText("Add");
 
   autocomplete.focus();
   fireEvent.change(input, { target: { value: "a" } });
   await waitFor(() => {
-    const game = screen.getByText("Test Game 2");
-    expect(mockSearchGame).toHaveBeenCalledTimes(1);
-    expect(game).toBeInTheDocument();
-    fireEvent.click(game);
+    expect(screen.getByText("Test Game 2")).toBeInTheDocument();
   });
+  expect(mockSearchGame).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByText("Test Game 2"));
   fireEvent.click(add);
   await waitFor(() => {
     expect(screen.getByText("Test Game 2 added!")).toBeInTheDocument();
   });
 
-  expect(mockAddGame).toHaveBeenCalledTimes(1);
+  expect(mockAddGame).toHaveBeenCalledWith(1, 2);
 });
 
 it("lets owner remove game", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -163,37 +189,42 @@ it("lets owner remove game", async () => {
     expect(screen.getByText("Test Game 1 removed!")).toBeInTheDocument();
   });
 
-  expect(mockRemoveGame).toHaveBeenCalledTimes(1);
+  expect(mockRemoveGame).toHaveBeenCalledWith(1, 1);
 });
 
 it("lets owner add user", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
   const autocomplete = screen.getByTestId("autocomplete-adduser");
-  const addUserForm = screen.getByTestId("form-adduser");
+  const addUserForm = screen.getByTestId("div-adduser");
   const input = within(addUserForm).getByLabelText("Add a user");
   const add = within(addUserForm).getByText("Add");
 
   autocomplete.focus();
   fireEvent.change(input, { target: { value: "a" } });
   await waitFor(() => {
-    const user = screen.getByText("TestUser2");
-    expect(mockGetUsers).toHaveBeenCalledTimes(1);
-    expect(user).toBeInTheDocument();
-    fireEvent.click(user);
+    expect(screen.getByText("TestUser2")).toBeInTheDocument();
   });
+  expect(mockGetUsers).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByText("TestUser2"));
   fireEvent.click(add);
   await waitFor(() => {
     expect(screen.getByText("TestUser2 added!")).toBeInTheDocument();
   });
 
-  expect(mockAddUser).toHaveBeenCalledTimes(1);
+  expect(mockAddUser).toHaveBeenCalledWith(1, "TestUser2");
 });
 
 it("lets owner remove user", async () => {
-  const { container } = render(<EditGroup />, "/groups/1/edit");
+  const { container } = render(<EditGroup />, {
+    currentRoute: "/groups/1/edit",
+    routePath: "/groups/:id/edit",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -204,5 +235,5 @@ it("lets owner remove user", async () => {
     expect(screen.getByText("TestUser3 removed!")).toBeInTheDocument();
   });
 
-  expect(mockRemoveUser).toHaveBeenCalledTimes(1);
+  expect(mockRemoveUser).toHaveBeenCalledWith(1, "TestUser3");
 });

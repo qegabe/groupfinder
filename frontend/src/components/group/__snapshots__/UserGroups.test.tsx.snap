@@ -3,7 +3,7 @@
 exports[`matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="MuiBox-root css-zitybv"
+    class="MuiBox-root css-j26pjy"
   >
     <h4
       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -27,7 +27,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 3 days ago
+            Starting 7 days ago
           </p>
         </div>
         <div
@@ -56,7 +56,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 3 days ago
+            Starting 7 days ago
           </p>
         </div>
         <div
@@ -85,7 +85,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 3 days ago
+            Starting 7 days ago
           </p>
         </div>
         <div

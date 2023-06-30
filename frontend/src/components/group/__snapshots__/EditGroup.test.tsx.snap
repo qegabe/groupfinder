@@ -6,13 +6,13 @@ exports[`matches snapshot 1`] = `
     class="MuiBox-root css-1tx56hj"
   >
     <div
-      class="MuiBox-root css-70qvj9"
+      class="MuiBox-root css-1jcfcth"
     >
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-14jhf3t-MuiTypography-root"
       >
         Edit Group
-      </h3>
+      </p>
       <button
         aria-label="delete group"
         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1jo1f9u-MuiButtonBase-root-MuiIconButton-root"
@@ -35,7 +35,7 @@ exports[`matches snapshot 1`] = `
     </div>
     <form
       autocomplete="off"
-      class="MuiBox-root css-1vbpe4m"
+      class="MuiBox-root css-bxifig"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1nin81k-MuiFormControl-root-MuiTextField-root"
@@ -123,7 +123,7 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root css-1g1iitx-MuiFormControl-root-MuiTextField-root"
+        class="MuiFormControl-root MuiTextField-root css-5h9f05-MuiFormControl-root-MuiTextField-root"
       >
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
@@ -183,7 +183,7 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root css-1g1iitx-MuiFormControl-root-MuiTextField-root"
+        class="MuiFormControl-root MuiTextField-root css-5h9f05-MuiFormControl-root-MuiTextField-root"
       >
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
@@ -243,7 +243,7 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiBox-root css-k008qs"
+        class="MuiBox-root css-vtpeil"
       >
         <label
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -274,7 +274,7 @@ exports[`matches snapshot 1`] = `
           </span>
         </label>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-4acf0k-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1nin81k-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
@@ -316,7 +316,7 @@ exports[`matches snapshot 1`] = `
           </div>
         </div>
         <div
-          class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-phwh4w-MuiAutocomplete-root"
+          class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-1g2ur69-MuiAutocomplete-root"
         >
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -479,373 +479,485 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiBox-root css-1ykdma4"
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-direction-xs-[object Object] css-19gnjkh-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiAccordion-root MuiAccordion-rounded MuiAccordion-gutters css-1elwnq4-MuiPaper-root-MuiAccordion-root"
+          >
+            <div
+              aria-controls="users-content"
+              aria-expanded="false"
+              class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root"
+              id="users-header"
+              role="button"
+              tabindex="0"
+            >
+              <div
+                class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters css-o4b71y-MuiAccordionSummary-content"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                >
+                  Edit Users
+                </p>
+              </div>
+              <div
+                class="MuiAccordionSummary-expandIconWrapper css-yw020d-MuiAccordionSummary-expandIconWrapper"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="ExpandMoreIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
+              style="min-height: 0px;"
+            >
+              <div
+                class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+              >
+                <div
+                  class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+                >
+                  <div
+                    aria-labelledby="users-header"
+                    class="MuiAccordion-region"
+                    id="users-content"
+                    role="region"
+                  >
+                    <div
+                      class="MuiAccordionDetails-root css-wmaky3-MuiAccordionDetails-root"
+                    >
+                      <div
+                        class="MuiBox-root css-1l4w6pd"
+                        data-testid="div-adduser"
+                      >
+                        <div
+                          class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-52llsg-MuiAutocomplete-root"
+                          data-testid="autocomplete-adduser"
+                        >
+                          <div
+                            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                          >
+                            <label
+                              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+                              data-shrink="false"
+                              for=":rq:"
+                              id=":rq:-label"
+                            >
+                              Add a user
+                            </label>
+                            <div
+                              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
+                            >
+                              <input
+                                aria-autocomplete="both"
+                                aria-expanded="false"
+                                aria-invalid="false"
+                                autocapitalize="none"
+                                autocomplete="off"
+                                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                                id=":rq:"
+                                role="combobox"
+                                spellcheck="false"
+                                type="text"
+                                value=""
+                              />
+                              <div
+                                class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
+                              >
+                                <button
+                                  aria-label="Open"
+                                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
+                                  tabindex="-1"
+                                  title="Open"
+                                  type="button"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                    data-testid="ArrowDropDownIcon"
+                                    focusable="false"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      d="M7 10l5 5 5-5z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                              <fieldset
+                                aria-hidden="true"
+                                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                              >
+                                <legend
+                                  class="css-yjsfm1"
+                                >
+                                  <span>
+                                    Add a user
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+                          tabindex="0"
+                          type="button"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1yuhvjn"
+                      >
+                        <div
+                          class="MuiStack-root css-1p5q5e5-MuiStack-root"
+                        >
+                          <div
+                            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
+                            data-testid="usercard-TestUser"
+                          >
+                            <div
+                              class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
+                            >
+                              <div
+                                class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault css-hqywrk-MuiAvatar-root"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
+                                  data-testid="PersonIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                                  />
+                                </svg>
+                              </div>
+                              <a
+                                class="MuiTypography-root MuiTypography-h6 css-1805zfj-MuiTypography-root"
+                                href="/users/TestUser"
+                              >
+                                TestUser
+                              </a>
+                            </div>
+                            <div
+                              class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
+                            >
+                              <button
+                                aria-label="delete"
+                                class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
+                                disabled=""
+                                tabindex="-1"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                  data-testid="RemoveCircleIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <div
+                            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
+                            data-testid="usercard-TestUser3"
+                          >
+                            <div
+                              class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
+                            >
+                              <div
+                                class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault css-hqywrk-MuiAvatar-root"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
+                                  data-testid="PersonIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                                  />
+                                </svg>
+                              </div>
+                              <a
+                                class="MuiTypography-root MuiTypography-h6 css-1805zfj-MuiTypography-root"
+                                href="/users/TestUser3"
+                              >
+                                TestUser3
+                              </a>
+                            </div>
+                            <div
+                              class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
+                            >
+                              <button
+                                aria-label="delete"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
+                                tabindex="0"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                  data-testid="RemoveCircleIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
+        >
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiAccordion-root MuiAccordion-rounded MuiAccordion-gutters css-1elwnq4-MuiPaper-root-MuiAccordion-root"
+          >
+            <div
+              aria-controls="users-content"
+              aria-expanded="false"
+              class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root"
+              id="users-header"
+              role="button"
+              tabindex="0"
+            >
+              <div
+                class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters css-o4b71y-MuiAccordionSummary-content"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                >
+                  Edit Games
+                </p>
+              </div>
+              <div
+                class="MuiAccordionSummary-expandIconWrapper css-yw020d-MuiAccordionSummary-expandIconWrapper"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                  data-testid="ExpandMoreIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
+              style="min-height: 0px;"
+            >
+              <div
+                class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+              >
+                <div
+                  class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+                >
+                  <div
+                    aria-labelledby="users-header"
+                    class="MuiAccordion-region"
+                    id="users-content"
+                    role="region"
+                  >
+                    <div
+                      class="MuiAccordionDetails-root css-wmaky3-MuiAccordionDetails-root"
+                    >
+                      <div
+                        class="MuiBox-root css-1l4w6pd"
+                        data-testid="div-addgame"
+                      >
+                        <div
+                          class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-52llsg-MuiAutocomplete-root"
+                          data-testid="autocomplete-addgame"
+                        >
+                          <div
+                            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                          >
+                            <label
+                              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+                              data-shrink="false"
+                              for=":rs:"
+                              id=":rs:-label"
+                            >
+                              Add a game
+                            </label>
+                            <div
+                              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
+                            >
+                              <input
+                                aria-autocomplete="both"
+                                aria-expanded="false"
+                                aria-invalid="false"
+                                autocapitalize="none"
+                                autocomplete="off"
+                                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
+                                id=":rs:"
+                                role="combobox"
+                                spellcheck="false"
+                                type="text"
+                                value=""
+                              />
+                              <div
+                                class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
+                              >
+                                <button
+                                  aria-label="Open"
+                                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
+                                  tabindex="-1"
+                                  title="Open"
+                                  type="button"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                    data-testid="ArrowDropDownIcon"
+                                    focusable="false"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      d="M7 10l5 5 5-5z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                              <fieldset
+                                aria-hidden="true"
+                                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                              >
+                                <legend
+                                  class="css-yjsfm1"
+                                >
+                                  <span>
+                                    Add a game
+                                  </span>
+                                </legend>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+                          tabindex="0"
+                          type="button"
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <div
+                        class="MuiBox-root css-1yuhvjn"
+                      >
+                        <div
+                          class="MuiStack-root css-76scyl-MuiStack-root"
+                        >
+                          <div
+                            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
+                            data-testid="gamecard-1"
+                          >
+                            <div
+                              class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
+                            >
+                              <div
+                                class="MuiAvatar-root MuiAvatar-square css-137moi2-MuiAvatar-root"
+                              >
+                                <img
+                                  class="MuiAvatar-img css-1pqm26d-MuiAvatar-img"
+                                  src="/game-controller.png"
+                                />
+                              </div>
+                              <h6
+                                class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+                              >
+                                Test Game 1
+                              </h6>
+                            </div>
+                            <div
+                              class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
+                            >
+                              <button
+                                aria-label="delete"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
+                                tabindex="0"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                                  data-testid="RemoveCircleIcon"
+                                  focusable="false"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-a1o1ks"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-bh137t-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="submit"
         >
           Save
         </button>
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-zcbmsk-MuiButtonBase-root-MuiButton-root"
-          href="/groups"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1l9sosn-MuiButtonBase-root-MuiButton-root"
+          href="/groups/1"
           tabindex="0"
         >
           Cancel
         </a>
       </div>
     </form>
-    <div
-      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-2w2zq4-MuiGrid-root"
-    >
-      <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3 css-1equabv-MuiGrid-root"
-      >
-        <form
-          class="MuiBox-root css-1l4w6pd"
-          data-testid="form-adduser"
-        >
-          <div
-            class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1wuilmg-MuiAutocomplete-root"
-            data-testid="autocomplete-adduser"
-          >
-            <div
-              class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            >
-              <label
-                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-                data-shrink="false"
-                for=":rq:"
-                id=":rq:-label"
-              >
-                Add a user
-              </label>
-              <div
-                class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-              >
-                <input
-                  aria-autocomplete="both"
-                  aria-expanded="false"
-                  aria-invalid="false"
-                  autocapitalize="none"
-                  autocomplete="off"
-                  class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rq:"
-                  role="combobox"
-                  spellcheck="false"
-                  type="text"
-                  value=""
-                />
-                <div
-                  class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
-                >
-                  <button
-                    aria-label="Open"
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
-                    tabindex="-1"
-                    title="Open"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                      data-testid="ArrowDropDownIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M7 10l5 5 5-5z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <fieldset
-                  aria-hidden="true"
-                  class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-                >
-                  <legend
-                    class="css-yjsfm1"
-                  >
-                    <span>
-                      Add a user
-                    </span>
-                  </legend>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-            tabindex="0"
-            type="button"
-          >
-            Add
-          </button>
-        </form>
-        <div
-          class="MuiBox-root css-1ebprri"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-          >
-            Users
-          </p>
-          <div
-            class="MuiStack-root css-1p5q5e5-MuiStack-root"
-          >
-            <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
-              data-testid="usercard-TestUser"
-            >
-              <div
-                class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
-              >
-                <div
-                  class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault css-hqywrk-MuiAvatar-root"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
-                    data-testid="PersonIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                    />
-                  </svg>
-                </div>
-                <a
-                  class="MuiTypography-root MuiTypography-h6 css-41qgsz-MuiTypography-root"
-                  href="/users/TestUser"
-                >
-                  TestUser
-                </a>
-              </div>
-              <div
-                class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
-              >
-                <button
-                  aria-label="delete"
-                  class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                    data-testid="RemoveCircleIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
-              data-testid="usercard-TestUser3"
-            >
-              <div
-                class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
-              >
-                <div
-                  class="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault css-hqywrk-MuiAvatar-root"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
-                    data-testid="PersonIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                    />
-                  </svg>
-                </div>
-                <a
-                  class="MuiTypography-root MuiTypography-h6 css-41qgsz-MuiTypography-root"
-                  href="/users/TestUser3"
-                >
-                  TestUser3
-                </a>
-              </div>
-              <div
-                class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
-              >
-                <button
-                  aria-label="delete"
-                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
-                  tabindex="0"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                    data-testid="RemoveCircleIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3 css-1equabv-MuiGrid-root"
-      >
-        <form
-          class="MuiBox-root css-1l4w6pd"
-          data-testid="form-addgame"
-        >
-          <div
-            class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1wuilmg-MuiAutocomplete-root"
-            data-testid="autocomplete-addgame"
-          >
-            <div
-              class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-            >
-              <label
-                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-                data-shrink="false"
-                for=":rs:"
-                id=":rs:-label"
-              >
-                Add a game
-              </label>
-              <div
-                class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-              >
-                <input
-                  aria-autocomplete="both"
-                  aria-expanded="false"
-                  aria-invalid="false"
-                  autocapitalize="none"
-                  autocomplete="off"
-                  class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                  id=":rs:"
-                  role="combobox"
-                  spellcheck="false"
-                  type="text"
-                  value=""
-                />
-                <div
-                  class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
-                >
-                  <button
-                    aria-label="Open"
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
-                    tabindex="-1"
-                    title="Open"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                      data-testid="ArrowDropDownIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M7 10l5 5 5-5z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <fieldset
-                  aria-hidden="true"
-                  class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-                >
-                  <legend
-                    class="css-yjsfm1"
-                  >
-                    <span>
-                      Add a game
-                    </span>
-                  </legend>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-            tabindex="0"
-            type="button"
-          >
-            Add
-          </button>
-        </form>
-        <div
-          class="MuiBox-root css-1ebprri"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-          >
-            Games
-          </p>
-          <div
-            class="MuiStack-root css-1p5q5e5-MuiStack-root"
-          >
-            <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-gr0cqf-MuiPaper-root-MuiCard-root"
-              data-testid="gamecard-1"
-            >
-              <div
-                class="MuiCardContent-root css-1u0k5eo-MuiCardContent-root"
-              >
-                <div
-                  class="MuiAvatar-root MuiAvatar-square css-137moi2-MuiAvatar-root"
-                >
-                  <img
-                    class="MuiAvatar-img css-1pqm26d-MuiAvatar-img"
-                    src="/game-controller.png"
-                  />
-                </div>
-                <h6
-                  class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
-                >
-                  Test Game 1
-                </h6>
-              </div>
-              <div
-                class="MuiCardActions-root MuiCardActions-spacing css-1t6e9jv-MuiCardActions-root"
-              >
-                <button
-                  aria-label="delete"
-                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1yqnap0-MuiButtonBase-root-MuiIconButton-root"
-                  tabindex="0"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                    data-testid="RemoveCircleIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </DocumentFragment>
 `;

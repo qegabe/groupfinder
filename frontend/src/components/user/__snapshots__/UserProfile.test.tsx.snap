@@ -30,21 +30,21 @@ exports[`matches snapshot 1`] = `
       </h3>
     </div>
     <div
-      class="MuiBox-root css-1ebprri"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-p3gdy2-MuiTypography-root"
-      >
-        Test Bio
-      </p>
-    </div>
-    <div
       class="MuiBox-root css-0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
       >
         Trivia High Score: 1000
+      </p>
+    </div>
+    <div
+      class="MuiBox-root css-1ebprri"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-p3gdy2-MuiTypography-root"
+      >
+        Test Bio
       </p>
     </div>
   </div>

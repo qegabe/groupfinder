@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import useFormData from "../../hooks/useFormData";
+import useAlerts from "../../hooks/useAlerts";
 import GroupFinderApi from "../../api";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import parseFormErrors from "../../helpers/parseFormErrors";
@@ -9,7 +17,7 @@ import { setAvatar } from "../../actions/actionCreators";
 
 function EditUser() {
   const [formErrors, setFormErrors] = useState<any>({});
-  const [alertData, setAlertData] = useState<any[]>([]);
+  const [alertData, setAlertData, handleAlertClose] = useAlerts();
   const [formData, handleChange, setFormData] = useFormData({
     avatarUrl: "",
     bio: "",
@@ -33,7 +41,7 @@ function EditUser() {
     try {
       await GroupFinderApi.updateProfile(user?.username as string, formData);
       dispatch(setAvatar(formData.avatarUrl));
-      setAlertData([{ severity: "success", text: `Saved` }]);
+      setAlertData({ severity: "success", text: `Saved`, open: true });
     } catch (error: any) {
       if (typeof error === "string") {
         setFormErrors(parseFormErrors(error));
@@ -41,19 +49,11 @@ function EditUser() {
     }
   }
 
-  //Alerts
-  const alerts = alertData.map((a) => (
-    <Alert key={a.text} severity={a.severity}>
-      {a.text}
-    </Alert>
-  ));
-
   return (
     <Box sx={{ display: "grid", justifyItems: "center" }}>
       <Typography variant="h3" sx={{ mt: 2 }}>
         Edit Profile
       </Typography>
-      {alerts}
       <Box
         component="form"
         autoComplete="off"
@@ -107,6 +107,18 @@ function EditUser() {
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={alertData.open}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}>
+        <Alert
+          severity={alertData.severity}
+          sx={{ width: "100%" }}
+          onClose={handleAlertClose}>
+          {alertData.text}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

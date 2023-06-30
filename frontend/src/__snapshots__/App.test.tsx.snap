@@ -24,7 +24,7 @@ exports[`matches snapshot 1`] = `
             class="MuiBox-root css-1l0r181"
           >
             <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-2udk4g-MuiButtonBase-root-MuiButton-root"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1n9iijg-MuiButtonBase-root-MuiButton-root"
               href="/groups"
               tabindex="0"
             >
@@ -35,10 +35,10 @@ exports[`matches snapshot 1`] = `
             </a>
           </div>
           <div
-            class="MuiBox-root css-2uchni"
+            class="MuiBox-root css-1t0e2o"
           >
             <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1jlq4mj-MuiButtonBase-root-MuiButton-root"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1edv7fe-MuiButtonBase-root-MuiButton-root"
               href="/register"
               tabindex="0"
             >
@@ -48,7 +48,7 @@ exports[`matches snapshot 1`] = `
               />
             </a>
             <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1jlq4mj-MuiButtonBase-root-MuiButton-root"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1edv7fe-MuiButtonBase-root-MuiButton-root"
               href="/login"
               tabindex="0"
             >
@@ -58,17 +58,42 @@ exports[`matches snapshot 1`] = `
               />
             </a>
           </div>
+          <div
+            class="MuiBox-root css-1dnnhur"
+          >
+            <button
+              aria-haspopup="true"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-1pe4mpk-MuiButtonBase-root-MuiIconButton-root"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1xzmrr-MuiSvgIcon-root"
+                data-testid="MenuIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </header>
     <div
-      class="MuiBox-root css-15ji12"
+      class="MuiBox-root css-1j6eoi4"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h2 css-1sra7t5-MuiTypography-root"
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-14jhf3t-MuiTypography-root"
       >
         Welcome to Groupfinder!
-      </h2>
+      </p>
     </div>
   </div>
 </DocumentFragment>

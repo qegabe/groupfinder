@@ -35,26 +35,30 @@ afterEach(() => {
 });
 
 it("renders", async () => {
-  const { container } = render(<UserGroups />, undefined, {
-    auth: {
-      token: null,
-      user: { username: "TestUser", avatarUrl: null },
-      error: null,
+  const { container } = render(<UserGroups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+      },
     },
   });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
-  expect(mockGetGroups).toHaveBeenCalledTimes(1);
+  expect(mockGetGroups).toHaveBeenCalledWith({ hasUsers: ["TestUser"] });
   expect(screen.getByText("Test Group 1")).toBeInTheDocument();
 });
 
 it("matches snapshot", async () => {
-  const { container, asFragment } = render(<UserGroups />, undefined, {
-    auth: {
-      token: null,
-      user: { username: "TestUser", avatarUrl: null },
-      error: null,
+  const { container, asFragment } = render(<UserGroups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+      },
     },
   });
   await waitFor(() => {

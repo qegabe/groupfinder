@@ -58,8 +58,8 @@ interface GroupFilter {
 interface GroupFormData {
   title: string;
   description: string;
-  startTime: Dayjs | null;
-  endTime: Dayjs | null;
+  startTime: import("dayjs").Dayjs | null;
+  endTime: import("dayjs").Dayjs | null;
   address: string;
   cityData: { city: string; id: number } | null;
   isPrivate: boolean;

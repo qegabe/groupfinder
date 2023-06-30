@@ -80,18 +80,17 @@ it("lets users add game to filter", async () => {
   });
 
   const autocomplete = screen.getByTestId("autocomplete-addgame");
-  const addGameForm = screen.getByTestId("form-addgame");
+  const addGameForm = screen.getByTestId("div-addgame");
   const input = within(addGameForm).getByLabelText("Add a game");
   const add = within(addGameForm).getByText("Add");
 
   autocomplete.focus();
   fireEvent.change(input, { target: { value: "a" } });
   await waitFor(() => {
-    const game = screen.getByText("Test Game");
-    expect(mockSearchGame).toHaveBeenCalledTimes(1);
-    expect(game).toBeInTheDocument();
-    fireEvent.click(game);
+    expect(screen.getByText("Test Game")).toBeInTheDocument();
   });
+  expect(mockSearchGame).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByText("Test Game"));
   fireEvent.click(add);
   await waitFor(() => {
     expect(screen.getByTestId("gamecard-1")).toBeInTheDocument();

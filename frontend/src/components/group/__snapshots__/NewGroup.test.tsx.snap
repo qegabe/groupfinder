@@ -3,16 +3,16 @@
 exports[`matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="MuiBox-root css-1tx56hj"
+    class="MuiBox-root css-5mr1lz"
   >
-    <h3
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+    <p
+      class="MuiTypography-root MuiTypography-body1 css-14jhf3t-MuiTypography-root"
     >
       Create New Group
-    </h3>
+    </p>
     <form
       autocomplete="off"
-      class="MuiBox-root css-1vbpe4m"
+      class="MuiBox-root css-bxifig"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1nin81k-MuiFormControl-root-MuiTextField-root"
@@ -98,7 +98,7 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root css-1g1iitx-MuiFormControl-root-MuiTextField-root"
+        class="MuiFormControl-root MuiTextField-root css-5h9f05-MuiFormControl-root-MuiTextField-root"
       >
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -161,7 +161,7 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root css-1g1iitx-MuiFormControl-root-MuiTextField-root"
+        class="MuiFormControl-root MuiTextField-root css-5h9f05-MuiFormControl-root-MuiTextField-root"
       >
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -331,10 +331,10 @@ exports[`matches snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiBox-root css-1ykdma4"
+        class="MuiBox-root css-a1o1ks"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-bh137t-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="submit"
         >
@@ -344,7 +344,7 @@ exports[`matches snapshot 1`] = `
           />
         </button>
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-zcbmsk-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1l9sosn-MuiButtonBase-root-MuiButton-root"
           href="/groups"
           tabindex="0"
         >

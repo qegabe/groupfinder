@@ -20,11 +20,14 @@ afterEach(() => {
 });
 
 it("renders", async () => {
-  const { container } = render(<UserProfile />);
+  const { container } = render(<UserProfile />, {
+    currentRoute: "/users/TestUser",
+    routePath: "/users/:username",
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
-  expect(mockGetUser).toHaveBeenCalledTimes(1);
+  expect(mockGetUser).toHaveBeenCalledWith("TestUser");
   expect(screen.getByText("TestUser")).toBeInTheDocument();
 });
 
@@ -37,15 +40,20 @@ it("matches snapshot", async () => {
 });
 
 it("shows edit button if logged in and same user", async () => {
-  const { container } = render(<UserProfile />, undefined, {
-    auth: {
-      token: null,
-      user: { username: "TestUser", avatarUrl: null },
-      error: null,
+  const { container } = render(<UserProfile />, {
+    currentRoute: "/users/TestUser",
+    routePath: "/users/:username",
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+      },
     },
   });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
-  expect(screen.getByText("Edit")).toBeInTheDocument();
+  expect(mockGetUser).toHaveBeenCalledWith("TestUser");
+  expect(screen.getByLabelText("edit")).toBeInTheDocument();
 });

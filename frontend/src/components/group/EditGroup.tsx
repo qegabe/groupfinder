@@ -9,12 +9,14 @@ import {
   Grid,
   IconButton,
   Modal,
+  Snackbar,
   Tooltip,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useParams, useNavigate } from "react-router-dom";
+import useAlerts from "../../hooks/useAlerts";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -40,7 +42,7 @@ function EditGroup() {
   const groupId = +(id as string);
   const [groupData, setGroupData] = useState<Group>();
   const [formData, setFormData] = useState<GroupFormData>(INITIAL_STATE);
-  const [alertData, setAlertData] = useState<any[]>([]);
+  const [alertData, setAlertData, handleAlertClose] = useAlerts();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -65,7 +67,7 @@ function EditGroup() {
   async function submit() {
     if (formData) {
       await GroupFinderApi.editGroup(groupId, formData);
-      setAlertData([{ severity: "success", text: `Saved` }]);
+      setAlertData({ severity: "success", text: `Saved`, open: true });
     }
   }
 
@@ -128,9 +130,17 @@ function EditGroup() {
             },
           };
       });
-      setAlertData([{ severity: "success", text: `${user.username} added!` }]);
+      setAlertData({
+        severity: "success",
+        text: `${user.username} added!`,
+        open: true,
+      });
     } catch (error) {
-      setAlertData([{ severity: "error", text: `Couldn't add user!` }]);
+      setAlertData({
+        severity: "error",
+        text: `Couldn't add user!`,
+        open: true,
+      });
     }
   }
 
@@ -146,11 +156,17 @@ function EditGroup() {
             members,
           };
       });
-      setAlertData([
-        { severity: "success", text: `${user.username} removed!` },
-      ]);
+      setAlertData({
+        severity: "success",
+        text: `${user.username} removed!`,
+        open: true,
+      });
     } catch (error) {
-      setAlertData([{ severity: "error", text: `Couldn't remove user!` }]);
+      setAlertData({
+        severity: "error",
+        text: `Couldn't remove user!`,
+        open: true,
+      });
     }
   }
 
@@ -164,9 +180,17 @@ function EditGroup() {
             games: [...(gd.games as Game[]), game],
           };
       });
-      setAlertData([{ severity: "success", text: `${game.title} added!` }]);
+      setAlertData({
+        severity: "success",
+        text: `${game.title} added!`,
+        open: true,
+      });
     } catch (error) {
-      setAlertData([{ severity: "error", text: `Couldn't add game!` }]);
+      setAlertData({
+        severity: "error",
+        text: `Couldn't add game!`,
+        open: true,
+      });
     }
   }
 
@@ -180,18 +204,19 @@ function EditGroup() {
             games: (gd.games as Game[]).filter((g) => g.id !== game.id),
           };
       });
-      setAlertData([{ severity: "success", text: `${game.title} removed!` }]);
+      setAlertData({
+        severity: "success",
+        text: `${game.title} removed!`,
+        open: true,
+      });
     } catch (error) {
-      setAlertData([{ severity: "error", text: `Couldn't remove game!` }]);
+      setAlertData({
+        severity: "error",
+        text: `Couldn't remove game!`,
+        open: true,
+      });
     }
   }
-
-  //Alerts
-  const alerts = alertData.map((a) => (
-    <Alert key={a.text} severity={a.severity}>
-      {a.text}
-    </Alert>
-  ));
 
   //Loading spinner if group not loaded
   if (!groupData) return <LoadingSpinner />;
@@ -265,7 +290,19 @@ function EditGroup() {
         </Tooltip>
       </Box>
 
-      {alerts}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={alertData.open}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}>
+        <Alert
+          severity={alertData.severity}
+          sx={{ width: "100%" }}
+          onClose={handleAlertClose}>
+          {alertData.text}
+        </Alert>
+      </Snackbar>
+
       <GroupForm
         formData={formData as GroupFormData}
         setFormData={setFormData}

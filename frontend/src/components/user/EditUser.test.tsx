@@ -24,12 +24,20 @@ afterEach(() => {
 });
 
 it("renders", async () => {
-  const { container } = render(<EditUser />);
+  const { container } = render(<EditUser />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+      },
+    },
+  });
   await waitFor(() => {
     const bioInput = container.querySelector("#bio");
     expect(bioInput).toHaveValue("Test Bio");
   });
-  expect(mockGetUser).toHaveBeenCalledTimes(1);
+  expect(mockGetUser).toHaveBeenCalledWith("TestUser");
 });
 
 it("matches snapshot", async () => {
@@ -42,11 +50,13 @@ it("matches snapshot", async () => {
 });
 
 it("lets user update profile", async () => {
-  const { container } = render(<EditUser />, undefined, {
-    auth: {
-      token: null,
-      user: { username: "TestUser", avatarUrl: null },
-      error: null,
+  const { container } = render(<EditUser />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+      },
     },
   });
   await waitFor(() => {
