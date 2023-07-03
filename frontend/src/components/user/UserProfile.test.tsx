@@ -48,6 +48,7 @@ it("shows edit button if logged in and same user", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });

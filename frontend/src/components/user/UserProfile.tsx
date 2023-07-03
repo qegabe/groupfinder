@@ -5,18 +5,22 @@ import GroupFinderApi from "../../api";
 import { Link, useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import LoadingSpinner from "../common/LoadingSpinner";
+import { shallowEqual } from "react-redux";
 
 function UserProfile() {
   const { username } = useParams();
   const [userData, setUserData] = useState<User>();
-  const user = useAppSelector((s) => s.auth.user);
+  const user = useAppSelector((s) => s.auth.user, shallowEqual);
+  const authLoading = useAppSelector((s) => s.auth.loading);
 
   useEffect(() => {
     async function loadUser() {
       setUserData(await GroupFinderApi.getUser(username as string));
     }
-    loadUser();
-  }, [username]);
+    if (!authLoading) {
+      loadUser();
+    }
+  }, [username, authLoading]);
 
   if (!userData) return <LoadingSpinner />;
 

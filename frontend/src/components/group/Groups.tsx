@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import GroupFilter from "./GroupFilter";
 import GroupFinderApi from "../../api";
 import LoadingSpinner from "../common/LoadingSpinner";
+import { useAppSelector } from "../../hooks/redux";
 
 function Groups() {
   const [formData, setFormData] = useState<GroupFilterFormData>({
@@ -28,14 +29,17 @@ function Groups() {
   const [searchData, setSearchData] = useState<GroupFilter>({});
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+  const authLoading = useAppSelector((s) => s.auth.loading);
 
   useEffect(() => {
     async function loadGroups() {
       setGroupsData(await GroupFinderApi.getGroups(searchData));
       setLoading(false);
     }
-    loadGroups();
-  }, [searchData]);
+    if (!authLoading) {
+      loadGroups();
+    }
+  }, [searchData, authLoading]);
 
   function search(term: string) {
     const data: GroupFilter = {

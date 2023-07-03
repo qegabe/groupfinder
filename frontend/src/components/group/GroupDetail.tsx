@@ -27,6 +27,7 @@ import UserList from "../user/UserList";
 import SomethingWentWrong from "../common/SomethingWentWrong";
 import GroupChat from "./GroupChat";
 import { theme } from "../../theme";
+import { shallowEqual } from "react-redux";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -36,7 +37,8 @@ function GroupDetail() {
   const [isPrivate, setIsPrivate] = useState(false);
   const [isError, setIsError] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const user = useAppSelector((s) => s.auth.user);
+  const user = useAppSelector((s) => s.auth.user, shallowEqual);
+  const authLoading = useAppSelector((s) => s.auth.loading);
 
   useEffect(() => {
     async function loadGroup() {
@@ -50,8 +52,10 @@ function GroupDetail() {
         }
       }
     }
-    loadGroup();
-  }, [id]);
+    if (!authLoading) {
+      loadGroup();
+    }
+  }, [id, authLoading]);
 
   async function joinGroup() {
     try {

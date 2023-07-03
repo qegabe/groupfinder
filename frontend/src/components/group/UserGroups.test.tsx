@@ -41,6 +41,7 @@ it("renders", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -58,6 +59,7 @@ it("matches snapshot", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });

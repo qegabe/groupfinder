@@ -99,6 +99,7 @@ it("shows play trivia if trivia game in group and user is member", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -117,6 +118,7 @@ it("lets user join group if not member", async () => {
         token: null,
         user: { username: "TestUser2", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -140,6 +142,7 @@ it("lets user leave group if member", async () => {
         token: null,
         user: { username: "TestUser3", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -163,6 +166,7 @@ it("shows edit button if owner", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -181,6 +185,7 @@ it("connects to chatroom websocket server", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -205,6 +210,7 @@ it("displays messages received from the chatroom", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
@@ -240,6 +246,7 @@ it("lets user send messages to the chatroom", async () => {
         token: null,
         user: { username: "TestUser", avatarUrl: null },
         error: null,
+        loading: false,
       },
     },
   });
