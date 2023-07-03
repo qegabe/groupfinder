@@ -3,20 +3,22 @@ import { Alert, Snackbar } from "@mui/material";
 import GroupfinderRoutes from "./components/GroupfinderRoutes";
 import NavBar from "./components/NavBar";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
-import { closeAlert, getUser } from "./actions/actionCreators";
+import { closeAlert, getUser, noToken } from "./actions/actionCreators";
 import { shallowEqual } from "react-redux";
 
 function App() {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((s) => s.auth.token, shallowEqual);
+  const loading = useAppSelector((s) => s.auth.loading);
   const alertData = useAppSelector((s) => s.alert, shallowEqual);
 
   useEffect(() => {
     const localStorageToken = localStorage.getItem("groupfinder-token");
-    if (localStorageToken && token === null) {
+    if (localStorageToken && loading) {
       dispatch(getUser(localStorageToken));
+    } else if (loading) {
+      dispatch(noToken());
     }
-  }, [dispatch, token]);
+  }, [dispatch, loading]);
 
   function handleAlertClose(event?: SyntheticEvent | Event, reason?: string) {
     if (reason === "clickaway") {

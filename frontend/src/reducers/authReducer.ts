@@ -27,7 +27,7 @@ function authReducer(state = INITIAL_STATE, action: AnyAction): AuthState {
     case SET_ERROR:
       return { ...state, error: action.payload };
     case LOGOUT:
-      return { ...INITIAL_STATE };
+      return { ...INITIAL_STATE, loading: false };
     case SET_AVATAR:
       return {
         ...state,

@@ -78,6 +78,13 @@ function gotToken(token: string, user: User) {
   };
 }
 
+function noToken() {
+  return {
+    type: SET_TOKEN,
+    payload: { token: null, user: null, error: null },
+  };
+}
+
 function setAvatar(url: string) {
   return {
     type: SET_AVATAR,
@@ -101,4 +108,13 @@ function closeAlert() {
   };
 }
 
-export { register, login, getUser, logout, setAvatar, setAlert, closeAlert };
+export {
+  register,
+  login,
+  getUser,
+  logout,
+  setAvatar,
+  setAlert,
+  closeAlert,
+  noToken,
+};
