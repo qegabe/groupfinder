@@ -6,9 +6,11 @@ import {
   configureStore,
 } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authReducer";
+import alertReducer from "./reducers/alertReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  alert: alertReducer,
 });
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {

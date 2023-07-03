@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import useFormData from "../../hooks/useFormData";
-import useAlerts from "../../hooks/useAlerts";
 import GroupFinderApi from "../../api";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import parseFormErrors from "../../helpers/parseFormErrors";
 import { Link } from "react-router-dom";
-import { setAvatar } from "../../actions/actionCreators";
+import { setAlert, setAvatar } from "../../actions/actionCreators";
 
 function EditUser() {
   const [formErrors, setFormErrors] = useState<any>({});
-  const [alertData, setAlertData, handleAlertClose] = useAlerts();
   const [formData, handleChange, setFormData] = useFormData({
     avatarUrl: "",
     bio: "",
@@ -41,7 +32,7 @@ function EditUser() {
     try {
       await GroupFinderApi.updateProfile(user?.username as string, formData);
       dispatch(setAvatar(formData.avatarUrl));
-      setAlertData({ severity: "success", text: `Saved`, open: true });
+      dispatch(setAlert("success", "Saved"));
     } catch (error: any) {
       if (typeof error === "string") {
         setFormErrors(parseFormErrors(error));
@@ -107,18 +98,6 @@ function EditUser() {
           </Button>
         </Box>
       </Box>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={alertData.open}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}>
-        <Alert
-          severity={alertData.severity}
-          sx={{ width: "100%" }}
-          onClose={handleAlertClose}>
-          {alertData.text}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

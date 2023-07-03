@@ -1,5 +1,12 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { LOGOUT, SET_AVATAR, SET_ERROR, SET_TOKEN } from "./actionTypes";
+import {
+  CLOSE_ALERT,
+  LOGOUT,
+  SET_ALERT,
+  SET_AVATAR,
+  SET_ERROR,
+  SET_TOKEN,
+} from "./actionTypes";
 import GroupFinderApi from "../api";
 import decode from "jwt-decode";
 import { AppThunk } from "../store";
@@ -78,4 +85,20 @@ function setAvatar(url: string) {
   };
 }
 
-export { register, login, getUser, logout, setAvatar };
+function setAlert(
+  severity: "error" | "info" | "success" | "warning",
+  text: string
+) {
+  return {
+    type: SET_ALERT,
+    payload: { severity, text, open: true },
+  };
+}
+
+function closeAlert() {
+  return {
+    type: CLOSE_ALERT,
+  };
+}
+
+export { register, login, getUser, logout, setAvatar, setAlert, closeAlert };

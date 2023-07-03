@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
+import { useAppDispatch } from "../../hooks/redux";
+import { setAlert } from "../../actions/actionCreators";
 
 const INITIAL_STATE: GroupFormData = {
   title: "",
@@ -16,9 +18,11 @@ const INITIAL_STATE: GroupFormData = {
 
 function NewGroup() {
   const [formData, setFormData] = useState<GroupFormData>(INITIAL_STATE);
+  const dispatch = useAppDispatch();
 
   async function submit() {
     await GroupFinderApi.createGroup(formData);
+    dispatch(setAlert("success", "Group Created"));
   }
 
   return (

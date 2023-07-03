@@ -2,7 +2,8 @@ import React, { useRef, useMemo, useEffect, useState } from "react";
 import { Box, Button, Collapse, Grid, Typography } from "@mui/material";
 import { startWebSocket } from "../../helpers/websocket";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { setAlert } from "../../actions/actionCreators";
 import TriviaQuestion from "./TriviaQuestion";
 import GroupFinderApi from "../../api";
 import TriviaScores from "./TriviaScores";
@@ -39,6 +40,7 @@ function TriviaGame() {
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
   const [showScores, setShowScores] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const ws = useRef<WebSocket>();
 
@@ -51,6 +53,7 @@ function TriviaGame() {
           if (!msg.result) {
             ws.current?.close();
             ws.current = undefined;
+            dispatch(setAlert("error", "Couldn't Join Game"));
             navigate("/");
           }
           break;
@@ -109,7 +112,7 @@ function TriviaGame() {
           break;
       }
     },
-    [navigate]
+    [navigate, dispatch]
   );
 
   //Connect to websocket

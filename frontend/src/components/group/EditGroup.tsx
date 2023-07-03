@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -9,14 +8,12 @@ import {
   Grid,
   IconButton,
   Modal,
-  Snackbar,
   Tooltip,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useParams, useNavigate } from "react-router-dom";
-import useAlerts from "../../hooks/useAlerts";
 import GroupFinderApi from "../../api";
 import GroupForm from "./GroupForm";
 import LoadingSpinner from "../common/LoadingSpinner";
@@ -25,6 +22,8 @@ import GameList from "../game/GameList";
 import AddUser from "../user/AddUser";
 import UserList from "../user/UserList";
 import { theme } from "../../theme";
+import { useAppDispatch } from "../../hooks/redux";
+import { setAlert } from "../../actions/actionCreators";
 
 const INITIAL_STATE: GroupFormData = {
   title: "",
@@ -42,8 +41,8 @@ function EditGroup() {
   const groupId = +(id as string);
   const [groupData, setGroupData] = useState<Group>();
   const [formData, setFormData] = useState<GroupFormData>(INITIAL_STATE);
-  const [alertData, setAlertData, handleAlertClose] = useAlerts();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,13 +65,18 @@ function EditGroup() {
 
   async function submit() {
     if (formData) {
-      await GroupFinderApi.editGroup(groupId, formData);
-      setAlertData({ severity: "success", text: `Saved`, open: true });
+      try {
+        await GroupFinderApi.editGroup(groupId, formData);
+        dispatch(setAlert("success", "Saved"));
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
   async function deleteGroup() {
     await GroupFinderApi.deleteGroup(groupId);
+    dispatch(setAlert("info", "Group Deleted"));
     navigate("/");
   }
 
@@ -130,17 +134,9 @@ function EditGroup() {
             },
           };
       });
-      setAlertData({
-        severity: "success",
-        text: `${user.username} added!`,
-        open: true,
-      });
+      dispatch(setAlert("success", `${user.username} added!`));
     } catch (error) {
-      setAlertData({
-        severity: "error",
-        text: `Couldn't add user!`,
-        open: true,
-      });
+      dispatch(setAlert("error", `Couldn't add user!`));
     }
   }
 
@@ -156,17 +152,9 @@ function EditGroup() {
             members,
           };
       });
-      setAlertData({
-        severity: "success",
-        text: `${user.username} removed!`,
-        open: true,
-      });
+      dispatch(setAlert("info", `${user.username} removed!`));
     } catch (error) {
-      setAlertData({
-        severity: "error",
-        text: `Couldn't remove user!`,
-        open: true,
-      });
+      dispatch(setAlert("error", `Couldn't remove user!`));
     }
   }
 
@@ -180,17 +168,9 @@ function EditGroup() {
             games: [...(gd.games as Game[]), game],
           };
       });
-      setAlertData({
-        severity: "success",
-        text: `${game.title} added!`,
-        open: true,
-      });
+      dispatch(setAlert("success", `${game.title} added!`));
     } catch (error) {
-      setAlertData({
-        severity: "error",
-        text: `Couldn't add game!`,
-        open: true,
-      });
+      dispatch(setAlert("error", `Couldn't add game!`));
     }
   }
 
@@ -204,17 +184,9 @@ function EditGroup() {
             games: (gd.games as Game[]).filter((g) => g.id !== game.id),
           };
       });
-      setAlertData({
-        severity: "success",
-        text: `${game.title} removed!`,
-        open: true,
-      });
+      dispatch(setAlert("info", `${game.title} removed!`));
     } catch (error) {
-      setAlertData({
-        severity: "error",
-        text: `Couldn't remove game!`,
-        open: true,
-      });
+      dispatch(setAlert("error", `Couldn't remove game!`));
     }
   }
 
@@ -289,19 +261,6 @@ function EditGroup() {
           </IconButton>
         </Tooltip>
       </Box>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={alertData.open}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}>
-        <Alert
-          severity={alertData.severity}
-          sx={{ width: "100%" }}
-          onClose={handleAlertClose}>
-          {alertData.text}
-        </Alert>
-      </Snackbar>
 
       <GroupForm
         formData={formData as GroupFormData}
