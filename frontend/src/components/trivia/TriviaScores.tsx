@@ -19,7 +19,10 @@ function Score({
       <Typography variant="h6" component="span">
         {username}:
       </Typography>
-      <Typography component="span" sx={{ ml: 1 }}>
+      <Typography
+        data-testid={`${username}-score`}
+        component="span"
+        sx={{ ml: 1 }}>
         {score}
       </Typography>
     </Box>
