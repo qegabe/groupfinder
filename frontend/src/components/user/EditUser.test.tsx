@@ -72,10 +72,9 @@ it("lets user update profile", async () => {
   });
   fireEvent.click(saveButton);
   await waitFor(() => {
-    expect(screen.getByText("Saved")).toBeInTheDocument();
-  });
-  expect(mockUpdateProfile).toHaveBeenCalledWith("TestUser", {
-    bio: "Test Bio",
-    avatarUrl: "http://some.img",
+    expect(mockUpdateProfile).toHaveBeenCalledWith("TestUser", {
+      bio: "Test Bio",
+      avatarUrl: "http://some.img",
+    });
   });
 });

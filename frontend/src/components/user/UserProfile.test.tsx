@@ -23,6 +23,14 @@ it("renders", async () => {
   const { container } = render(<UserProfile />, {
     currentRoute: "/users/TestUser",
     routePath: "/users/:username",
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
   });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
@@ -32,7 +40,18 @@ it("renders", async () => {
 });
 
 it("matches snapshot", async () => {
-  const { container, asFragment } = render(<UserProfile />);
+  const { container, asFragment } = render(<UserProfile />, {
+    currentRoute: "/users/TestUser",
+    routePath: "/users/:username",
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });

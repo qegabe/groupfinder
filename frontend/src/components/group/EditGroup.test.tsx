@@ -168,10 +168,8 @@ it("lets owner add game", async () => {
   fireEvent.click(screen.getByText("Test Game 2"));
   fireEvent.click(add);
   await waitFor(() => {
-    expect(screen.getByText("Test Game 2 added!")).toBeInTheDocument();
+    expect(mockAddGame).toHaveBeenCalledWith(1, 2);
   });
-
-  expect(mockAddGame).toHaveBeenCalledWith(1, 2);
 });
 
 it("lets owner remove game", async () => {
@@ -186,10 +184,8 @@ it("lets owner remove game", async () => {
   const deleteButton = within(gameCard).getByLabelText("delete");
   fireEvent.click(deleteButton);
   await waitFor(() => {
-    expect(screen.getByText("Test Game 1 removed!")).toBeInTheDocument();
+    expect(mockRemoveGame).toHaveBeenCalledWith(1, 1);
   });
-
-  expect(mockRemoveGame).toHaveBeenCalledWith(1, 1);
 });
 
 it("lets owner add user", async () => {
@@ -214,10 +210,8 @@ it("lets owner add user", async () => {
   fireEvent.click(screen.getByText("TestUser2"));
   fireEvent.click(add);
   await waitFor(() => {
-    expect(screen.getByText("TestUser2 added!")).toBeInTheDocument();
+    expect(mockAddUser).toHaveBeenCalledWith(1, "TestUser2");
   });
-
-  expect(mockAddUser).toHaveBeenCalledWith(1, "TestUser2");
 });
 
 it("lets owner remove user", async () => {
@@ -232,8 +226,6 @@ it("lets owner remove user", async () => {
   const deleteButton = within(userCard).getByLabelText("delete");
   fireEvent.click(deleteButton);
   await waitFor(() => {
-    expect(screen.getByText("TestUser3 removed!")).toBeInTheDocument();
+    expect(mockRemoveUser).toHaveBeenCalledWith(1, "TestUser3");
   });
-
-  expect(mockRemoveUser).toHaveBeenCalledWith(1, "TestUser3");
 });

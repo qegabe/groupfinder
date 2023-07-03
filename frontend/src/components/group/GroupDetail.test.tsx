@@ -71,6 +71,14 @@ it("renders", async () => {
   const { container } = render(<GroupDetail />, {
     currentRoute: "/groups/1",
     routePath: "/groups/:id",
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+        loading: false,
+      },
+    },
   });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
@@ -83,6 +91,14 @@ it("matches snapshot", async () => {
   const { container, asFragment } = render(<GroupDetail />, {
     currentRoute: "/groups/1",
     routePath: "/groups/:id",
+    preloadedState: {
+      auth: {
+        token: null,
+        user: { username: "TestUser", avatarUrl: null },
+        error: null,
+        loading: false,
+      },
+    },
   });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();

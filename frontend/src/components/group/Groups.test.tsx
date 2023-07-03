@@ -41,7 +41,16 @@ afterEach(() => {
 });
 
 it("renders", async () => {
-  const { container } = render(<Groups />);
+  const { container } = render(<Groups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -50,7 +59,16 @@ it("renders", async () => {
 });
 
 it("matches snapshot", async () => {
-  const { container, asFragment } = render(<Groups />);
+  const { container, asFragment } = render(<Groups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -58,7 +76,16 @@ it("matches snapshot", async () => {
 });
 
 it("lets users filter groups", async () => {
-  const { container } = render(<Groups />);
+  const { container } = render(<Groups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
@@ -74,7 +101,16 @@ it("lets users filter groups", async () => {
 });
 
 it("lets users add game to filter", async () => {
-  const { container } = render(<Groups />);
+  const { container } = render(<Groups />, {
+    preloadedState: {
+      auth: {
+        token: null,
+        user: null,
+        error: null,
+        loading: false,
+      },
+    },
+  });
   await waitFor(() => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });

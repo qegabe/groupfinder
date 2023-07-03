@@ -19,6 +19,25 @@ exports[`matches snapshot 1`] = `
           >
             Test Group
           </h3>
+          <a
+            aria-label="Edit"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-t5hioc-MuiButtonBase-root-MuiIconButton-root"
+            data-mui-internal-clone-element="true"
+            href="/groups/1/edit"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="EditIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+              />
+            </svg>
+          </a>
         </div>
         <div
           class="MuiBox-root css-1jcfcth"
@@ -66,6 +85,17 @@ exports[`matches snapshot 1`] = `
     <div
       class="MuiGrid-root MuiGrid-container MuiGrid-item MuiGrid-direction-xs-column MuiGrid-grid-md-4 css-q299g3-MuiGrid-root"
     >
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-item css-1h16bbz-MuiGrid-root"
+      >
+        <a
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-lll1vm-MuiButtonBase-root-MuiButton-root"
+          href="/games/trivia/1"
+          tabindex="0"
+        >
+          Play Trivia
+        </a>
+      </div>
       <div
         class="MuiGrid-root MuiGrid-item css-1e5jr70-MuiGrid-root"
       >
@@ -310,6 +340,99 @@ exports[`matches snapshot 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="MuiBox-root css-mgur8"
+  >
+    <div
+      class="MuiBox-root css-ckyhk3"
+    >
+      <button
+        aria-label="chat"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-bmfwhx-MuiButtonBase-root-MuiIconButton-root"
+        data-mui-internal-clone-element="true"
+        tabindex="0"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-w7ndv1-MuiSvgIcon-root"
+          data-testid="CommentIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden css-bz4dnt-MuiCollapse-root"
+      style="min-height: 0px;"
+    >
+      <div
+        class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+      >
+        <div
+          class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+        >
+          <div
+            class="MuiBox-root css-sh748x"
+          >
+            <div
+              class="MuiBox-root css-19jsyuu"
+            >
+              <div
+                class="MuiBox-root css-tfcj3f"
+              />
+              <form
+                class="MuiBox-root css-k008qs"
+              >
+                <div
+                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                >
+                  <div
+                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
+                  >
+                    <input
+                      aria-invalid="false"
+                      autocomplete="off"
+                      class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+                      data-testid="chat-input"
+                      id=":r5:"
+                      type="text"
+                      value=""
+                    />
+                    <fieldset
+                      aria-hidden="true"
+                      class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                    >
+                      <legend
+                        class="css-ihdtdm"
+                      >
+                        <span
+                          class="notranslate"
+                        >
+                          ​
+                        </span>
+                      </legend>
+                    </fieldset>
+                  </div>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+                  tabindex="0"
+                  type="submit"
+                >
+                  Send
+                </button>
+              </form>
             </div>
           </div>
         </div>
