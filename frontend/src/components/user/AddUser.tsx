@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Grid,
   TextField,
   Typography,
@@ -11,51 +12,80 @@ import {
 } from "@mui/material";
 import GroupFinderApi from "../../api";
 
+interface AddUserState {
+  inputValue: string;
+  user: User | null;
+  users: User[];
+  loading: boolean;
+}
+
 function AddUser({ addUser }: AddUserProps) {
-  const [inputValue, setInputValue] = useState("");
-  const [user, setUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [state, setState] = useState<AddUserState>({
+    inputValue: "",
+    user: null,
+    users: [],
+    loading: false,
+  });
 
   const search = useMemo(
     () =>
       debounce(async (username: string) => {
         const options = await GroupFinderApi.getUsers(username);
-        setUsers(options);
+        setState((s) => ({
+          ...s,
+          users: options,
+          loading: false,
+        }));
       }, 400),
     []
   );
 
   useEffect(() => {
-    if (inputValue === "") {
-      setUsers([]);
-    } else if (!user) {
-      search(inputValue);
+    if (state.inputValue === "") {
+      setState((s) => ({
+        ...s,
+        users: [],
+      }));
+    } else if (!state.user) {
+      setState((s) => ({
+        ...s,
+        loading: true,
+      }));
+      search(state.inputValue);
     }
-  }, [inputValue, search, user]);
+  }, [state.inputValue, search, state.user]);
 
   return (
     <Box
       data-testid="div-adduser"
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
+        loading={state.loading}
+        loadingText={<CircularProgress />}
         data-testid="autocomplete-adduser"
         sx={{ width: "100%" }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.username
         }
         filterOptions={(x) => x}
-        options={users}
+        options={state.users}
         autoComplete
         includeInputInList
         filterSelectedOptions
-        value={user}
+        value={state.user}
         noOptionsText="Start typing to search for users..."
         onChange={(e: any, newValue: User | null) => {
-          setUsers(newValue ? [newValue, ...users] : users);
-          setUser(newValue);
+          setState((s) => ({
+            ...s,
+            users: newValue ? [newValue, ...s.users] : s.users,
+            user: newValue,
+          }));
         }}
         onInputChange={(e: any, newInputValue) => {
-          setInputValue(newInputValue);
+          setState((s) => ({
+            ...s,
+            inputValue: newInputValue,
+          }));
         }}
         renderInput={(params) => (
           <TextField {...params} label="Add a user" fullWidth />
@@ -81,7 +111,7 @@ function AddUser({ addUser }: AddUserProps) {
       <Button
         variant="contained"
         onClick={() => {
-          addUser(user as User);
+          if (state.user) addUser(state.user);
         }}>
         Add
       </Button>

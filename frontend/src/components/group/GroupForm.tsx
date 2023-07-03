@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   FormControlLabel,
   Switch,
   TextField,
@@ -20,6 +21,12 @@ interface City {
   id: number;
 }
 
+interface CityAutocompleteState {
+  searchValue: string;
+  cities: City[];
+  loading: boolean;
+}
+
 function GroupForm({
   initialState,
   formData,
@@ -31,8 +38,11 @@ function GroupForm({
   extra,
 }: GroupFormProps) {
   const [isOnline, setIsOnline] = useState(formData.address ? false : true);
-  const [cities, setCities] = useState<City[]>([]);
-  const [searchValue, setSearchValue] = useState("");
+  const [cityACState, setCityACState] = useState<CityAutocompleteState>({
+    searchValue: "",
+    cities: [],
+    loading: false,
+  });
   const [formErrors, setFormErrors] = useState<any>({});
   const navigate = useNavigate();
 
@@ -40,18 +50,29 @@ function GroupForm({
     () =>
       debounce(async (term: string) => {
         const options = await GroupFinderApi.searchCities(term);
-        setCities(options);
+        setCityACState((cs) => ({
+          ...cs,
+          cities: options,
+          loading: false,
+        }));
       }, 400),
     []
   );
 
   useEffect(() => {
-    if (searchValue === "") {
-      setCities([]);
+    if (cityACState.searchValue === "") {
+      setCityACState((cs) => ({
+        ...cs,
+        cities: [],
+      }));
     } else if (!formData.cityData) {
-      search(searchValue);
+      setCityACState((cs) => ({
+        ...cs,
+        loading: true,
+      }));
+      search(cityACState.searchValue);
     }
-  }, [searchValue, search, formData.cityData]);
+  }, [cityACState.searchValue, search, formData.cityData]);
 
   function onlineToggle(evt: ChangeEvent<HTMLInputElement>) {
     setIsOnline(evt.target.checked);
@@ -173,26 +194,34 @@ function GroupForm({
             {...formErrors.address}
           />
           <Autocomplete
+            loading={cityACState.loading}
+            loadingText={<CircularProgress />}
             sx={{ my: 1, width: { xs: "100%", md: "60%" } }}
             getOptionLabel={(option) =>
               typeof option === "string" ? option : option.city
             }
             filterOptions={(x) => x}
-            options={cities}
+            options={cityACState.cities}
             autoComplete
             includeInputInList
             filterSelectedOptions
             value={formData.cityData}
             noOptionsText="Start typing to search cities..."
             onChange={(e: any, newValue: City | null) => {
-              setCities(newValue ? [newValue, ...cities] : cities);
+              setCityACState((cs) => ({
+                ...cs,
+                cities: newValue ? [newValue, ...cs.cities] : cs.cities,
+              }));
               setFormData((fd: GroupFormData) => ({
                 ...fd,
                 cityData: newValue,
               }));
             }}
             onInputChange={(e: any, newInputValue) => {
-              setSearchValue(newInputValue);
+              setCityACState((cs) => ({
+                ...cs,
+                searchValue: newInputValue,
+              }));
             }}
             renderInput={(params) => (
               <TextField {...params} label="City" fullWidth required />

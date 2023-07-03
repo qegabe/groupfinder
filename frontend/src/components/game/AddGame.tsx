@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Avatar,
   Box,
+  CircularProgress,
   Button,
   Grid,
   TextField,
@@ -11,51 +12,80 @@ import {
 } from "@mui/material";
 import GroupFinderApi from "../../api";
 
+interface AddGameState {
+  inputValue: string;
+  game: Game | null;
+  games: Game[];
+  loading: boolean;
+}
+
 function AddGame({ addGame }: AddGameProps) {
-  const [inputValue, setInputValue] = useState("");
-  const [game, setGame] = useState<Game | null>(null);
-  const [games, setGames] = useState<Game[]>([]);
+  const [state, setState] = useState<AddGameState>({
+    inputValue: "",
+    game: null,
+    games: [],
+    loading: false,
+  });
 
   const search = useMemo(
     () =>
       debounce(async (term: string) => {
         const options = await GroupFinderApi.searchGame(term);
-        setGames(options);
+        setState((s) => ({
+          ...s,
+          games: options,
+          loading: false,
+        }));
       }, 1000),
     []
   );
 
   useEffect(() => {
-    if (inputValue === "") {
-      setGames([]);
-    } else if (!game) {
-      search(inputValue);
+    if (state.inputValue === "") {
+      setState((s) => ({
+        ...s,
+        games: [],
+      }));
+    } else if (!state.game) {
+      setState((s) => ({
+        ...s,
+        loading: true,
+      }));
+      search(state.inputValue);
     }
-  }, [inputValue, search, game]);
+  }, [state.inputValue, search, state.game]);
 
   return (
     <Box
       data-testid="div-addgame"
       sx={{ display: "flex", justifyContent: "center" }}>
       <Autocomplete
+        loading={state.loading}
+        loadingText={<CircularProgress />}
         data-testid="autocomplete-addgame"
         sx={{ width: "100%" }}
         getOptionLabel={(option) =>
           typeof option === "string" ? option : option.title
         }
         filterOptions={(x) => x}
-        options={games}
+        options={state.games}
         autoComplete
         includeInputInList
         filterSelectedOptions
-        value={game}
+        value={state.game}
         noOptionsText="Start typing to search for games..."
         onChange={(e: any, newValue: Game | null) => {
-          setGames(newValue ? [newValue, ...games] : games);
-          setGame(newValue);
+          setState((s) => ({
+            ...s,
+            games: newValue ? [newValue, ...s.games] : s.games,
+            game: newValue,
+          }));
         }}
         onInputChange={(e: any, newInputValue) => {
-          setInputValue(newInputValue);
+          setState((s) => ({
+            ...s,
+            inputValue: newInputValue,
+          }));
         }}
         renderInput={(params) => (
           <TextField {...params} label="Add a game" fullWidth />
@@ -86,7 +116,7 @@ function AddGame({ addGame }: AddGameProps) {
       <Button
         variant="contained"
         onClick={() => {
-          addGame(game as Game);
+          if (state.game) addGame(state.game);
         }}>
         Add
       </Button>
