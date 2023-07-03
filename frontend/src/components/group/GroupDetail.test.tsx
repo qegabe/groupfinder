@@ -76,7 +76,7 @@ it("renders", async () => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
   expect(mockGetGroup).toHaveBeenCalledWith(1);
-  expect(screen.getByText("Test Group"));
+  expect(screen.getByText("Test Group")).toBeInTheDocument();
 });
 
 it("matches snapshot", async () => {
