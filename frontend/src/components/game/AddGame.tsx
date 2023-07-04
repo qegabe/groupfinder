@@ -11,6 +11,8 @@ import {
   debounce,
 } from "@mui/material";
 import GroupFinderApi from "../../api";
+import { useAppDispatch } from "../../hooks/redux";
+import { setAlert } from "../../actions/actionCreators";
 
 interface AddGameState {
   inputValue: string;
@@ -26,16 +28,23 @@ function AddGame({ addGame }: AddGameProps) {
     games: [],
     loading: false,
   });
+  const dispatch = useAppDispatch();
 
   const search = useMemo(
     () =>
       debounce(async (term: string) => {
-        const options = await GroupFinderApi.searchGame(term);
-        setState((s) => ({
-          ...s,
-          games: options,
-          loading: false,
-        }));
+        try {
+          const options = await GroupFinderApi.searchGame(term);
+          setState((s) => ({
+            ...s,
+            games: options,
+            loading: false,
+          }));
+        } catch (error) {
+          console.error(error);
+          setState((s) => ({ ...s, loading: false }));
+          dispatch(setAlert("error", "Couldn't get games"));
+        }
       }, 1000),
     []
   );

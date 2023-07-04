@@ -129,22 +129,28 @@ class TriviaRoom extends room_1.default {
     }
     restartGame() {
         this.reset();
-        this.broadcast({ type: "restart" });
+        this.broadcast({ type: "restart", reason: "restart requested" });
     }
     /** Increments the round counter and gets new questions, ends game if last round */
     nextRound() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.round += 1;
-            if (this.round < 3) {
-                this.broadcast({ type: "nextRound", round: this.round + 1 });
-                this.questions = this.questions = yield getQuestions(roundDifficulty[this.round]);
-                this.currentQuestion = 0;
-                setTimeout(() => {
-                    this.broadcastQuestion();
-                }, 2000);
+            try {
+                this.round += 1;
+                if (this.round < 3) {
+                    this.broadcast({ type: "nextRound", round: this.round + 1 });
+                    this.questions = this.questions = yield getQuestions(roundDifficulty[this.round]);
+                    this.currentQuestion = 0;
+                    setTimeout(() => {
+                        this.broadcastQuestion();
+                    }, 2000);
+                }
+                else {
+                    this.endGame();
+                }
             }
-            else {
-                this.endGame();
+            catch (error) {
+                console.error(error);
+                this.broadcast({ type: "restart", reason: `error: ${error}` });
             }
         });
     }

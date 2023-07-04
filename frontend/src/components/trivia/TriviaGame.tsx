@@ -107,6 +107,9 @@ function TriviaGame() {
           break;
         case "restart":
           setGameState(INITIAL_STATE);
+          if ((msg.reason as string).startsWith("error:")) {
+            dispatch(setAlert("error", "Something went wrong restarting..."));
+          }
           break;
         default:
           break;
