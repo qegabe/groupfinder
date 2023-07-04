@@ -5,6 +5,7 @@ import {
   Button,
   CircularProgress,
   FormControlLabel,
+  Link as MuiLink,
   Switch,
   TextField,
   Typography,
@@ -286,6 +287,19 @@ function GroupForm({
           color="secondary">
           {buttons.cancel}
         </Button>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 5,
+        }}>
+        <Typography sx={{ fontSize: "0.75rem" }}>
+          City information provided by:{" "}
+          <MuiLink href="https://simplemaps.com/data/world-cities">
+            simplemaps
+          </MuiLink>
+        </Typography>
       </Box>
     </Box>
   );
