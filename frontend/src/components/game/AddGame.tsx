@@ -46,7 +46,7 @@ function AddGame({ addGame }: AddGameProps) {
           dispatch(setAlert("error", "Couldn't get games"));
         }
       }, 1000),
-    []
+    [dispatch]
   );
 
   useEffect(() => {
