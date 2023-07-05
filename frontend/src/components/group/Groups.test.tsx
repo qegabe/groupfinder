@@ -59,6 +59,7 @@ it("renders", async () => {
 });
 
 it("matches snapshot", async () => {
+  jest.useFakeTimers().setSystemTime(new Date("2023-06-22T08:00:00.000Z"));
   const { container, asFragment } = render(<Groups />, {
     preloadedState: {
       auth: {
@@ -73,6 +74,7 @@ it("matches snapshot", async () => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
   expect(asFragment()).toMatchSnapshot();
+  jest.useRealTimers();
 });
 
 it("lets users filter groups", async () => {

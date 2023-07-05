@@ -957,6 +957,21 @@ exports[`matches snapshot 1`] = `
           Cancel
         </a>
       </div>
+      <div
+        class="MuiBox-root css-144iql5"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1m6glrx-MuiTypography-root"
+        >
+          City information provided by: 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://simplemaps.com/data/world-cities"
+          >
+            simplemaps
+          </a>
+        </p>
+      </div>
     </form>
   </div>
 </DocumentFragment>

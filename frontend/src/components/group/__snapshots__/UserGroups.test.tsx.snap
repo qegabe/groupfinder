@@ -27,7 +27,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 10 days ago
+            Starting in a day
           </p>
         </div>
         <div
@@ -39,6 +39,9 @@ exports[`matches snapshot 1`] = `
             tabindex="0"
           >
             Details
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
           </a>
         </div>
       </div>
@@ -56,7 +59,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 10 days ago
+            Starting in a day
           </p>
         </div>
         <div
@@ -68,6 +71,9 @@ exports[`matches snapshot 1`] = `
             tabindex="0"
           >
             Details
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
           </a>
         </div>
       </div>
@@ -85,7 +91,7 @@ exports[`matches snapshot 1`] = `
           <p
             class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
           >
-            Starting 10 days ago
+            Starting in a day
           </p>
         </div>
         <div
@@ -97,6 +103,9 @@ exports[`matches snapshot 1`] = `
             tabindex="0"
           >
             Details
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
           </a>
         </div>
       </div>

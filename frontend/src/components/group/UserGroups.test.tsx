@@ -2,8 +2,10 @@ import React from "react";
 import { render, waitFor, screen } from "../../testutils";
 import "@testing-library/jest-dom";
 import GroupFinderApi from "../../api";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import UserGroups from "./UserGroups";
+dayjs.extend(relativeTime);
 
 const mockGetGroups = jest
   .spyOn(GroupFinderApi, "getGroups")
@@ -53,6 +55,7 @@ it("renders", async () => {
 });
 
 it("matches snapshot", async () => {
+  jest.useFakeTimers().setSystemTime(new Date("2023-06-22T08:00:00.000Z"));
   const { container, asFragment } = render(<UserGroups />, {
     preloadedState: {
       auth: {
@@ -67,4 +70,5 @@ it("matches snapshot", async () => {
     expect(container.querySelector(".LoadingSpinner")).not.toBeInTheDocument();
   });
   expect(asFragment()).toMatchSnapshot();
+  jest.useRealTimers();
 });
